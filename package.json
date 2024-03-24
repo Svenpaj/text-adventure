@@ -1,0 +1,16 @@
+{
+  "name": "text-adventure",
+  "version": "1.0.0",
+  "description": "A small project composed with a Text Adventure RPG in your browser",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./backend/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.1"
+  }
+}
