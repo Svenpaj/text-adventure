@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SvenJolt Studio</title>
-  <link rel="stylesheet" href="./main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textbaserat spel</title>
+    <link rel="stylesheet" href="./main.css">
 </head>
-
 <body>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
-  <div>
-    <h1>Welcome to a fabulous and epic text adventure</h1>
-  </div>
-  <div>
-    <p>Click the button below to start your adventure</p>
-    <button id="start-btn">Start</button>
-  </div>
-  <footer>
-    <p>&copy; 2024 SvenJolt Studio</p>
-  </footer>
-  <script src="./main.js"></script>
+    <div class="background"></div>
+    <div class="content-container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="info.html">Info</a></li>
+                <li><a href="account.html">Account</a></li>
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="login-box">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <button onclick="window.location.href='account.html'">Create Account</button>
+            </div>
+        </div>
+    </div>
+    <script src="./main.js"></script>
 </body>
-
 </html>

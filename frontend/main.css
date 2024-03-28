@@ -1,41 +1,99 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
-.container {
-    width: 80%;
-    margin: 0 auto;
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('./images/background1.jpg'); /* Replace 'background.jpg' with your mysterious background image */
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(50%);
+    z-index: -1; /* Ensures the background is behind other elements */
 }
 
-header {
-    background-color: #333;
+.content-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
-    padding: 1em 0;
-    text-align: center;
 }
 
-header h1 {
-    margin: 0;
-}
-
-nav {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1em 0;
-}
-
-nav ul {
+.sidebar ul {
     list-style-type: none;
     padding: 0;
+    margin: 20px 0;
 }
 
-.start-btn {
-    background-color: #333;
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
     color: #fff;
-    padding: 0.5em 1em;
     text-decoration: none;
+    text-align: center;
+    text-size-adjust: 80%;
+    display: block;
+    padding: 40px;
+    font-size: x-large;
+    transition: background-color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+    margin-left: 200px; /* Ensure content doesn't overlap sidebar */
+}
+
+.login-box {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    padding: 10%;
+    text-align: center;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-box button:hover {
+    background-color: #0056b3;
 }
