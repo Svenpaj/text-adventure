@@ -5,7 +5,7 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
 });
-
+let playerStats = { health: 10, attack: 1, defense: 0, equippedArmor: null, equippedWeapon: null };
 let currentRoom = 'start';
 const inventory = [];
 
@@ -14,6 +14,13 @@ function showRoomInfo(roomName) {
     if (rooms[roomName].items) {
         rooms[roomName].items.forEach(item => {
             console.log(item.description);
+        });
+    }
+    // Display enemies in the room if any - this is a new feature - does not work at this time - will need to be fixed
+    if (rooms[roomName].enemies) {
+        console.log('Enemies present in the room:')
+        rooms[roomName].enemies.forEach(enemy => {
+            console.log(`${enemy.description} (${enemy.health} HP, ${enemy.attack} ATK)`);
         });
     }
     console.log('Exits:', Object.keys(rooms[roomName].exits).join(', '));
@@ -82,6 +89,126 @@ function useItem(itemName) {
     }
 }
 
+function equipItem(itemName) {
+    const itemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'armor' || item.type === 'weapon');
+    if (itemIndex === -1) {
+        console.log(`You don't have ${itemName} in your inventory.`);
+        return;
+    }
+
+    const item = inventory[itemIndex];
+    // Equip the item based on its type
+    switch (item.type) {
+        case 'armor':
+            playerStats.defense += item.defense;
+            playerStats.equippedArmor = item; // Store the equipped armor for reference
+            console.log(`You equipped the ${item.name}. Defense is now ${playerStats.defense}.`);
+            break;
+        case 'weapon':
+            playerStats.attack += item.attack;
+            playerStats.equippedWeapon = item; // Store the equipped weapon for reference
+            console.log(`You equipped the ${item.name}. Attack is now ${playerStats.attack}.`);
+            break;
+        default:
+            console.log('This item cannot be equipped.');
+            return;
+    }
+
+    // Mark the item as equipped
+    item.equipped = true;
+}
+
+/*function equipWeapon(itemName) {
+    const itemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'weapon');
+    if (itemIndex === -1) {
+        console.log(`You don't have a ${itemName} to equip.`);
+        return;
+    }
+
+    const weapon = inventory[itemIndex];
+    playerStats.attack += weapon.attack; // Adjust player stats based on the weapon
+    console.log(`You equipped the ${weapon.name}. Attack is now ${playerStats.attack}.`);
+    // Consider how you'll handle swapping weapons or unequipping items.
+
+    // Mark the weapon as equipped
+    weapon.equipped = true;
+}
+
+function unequipWeapon(itemName) {
+    const itemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'weapon' && item.equipped);
+    if (itemIndex === -1) {
+        console.log(`You don't have ${itemName} equipped.`);
+        return;
+    }
+
+    const weapon = inventory[itemIndex];
+    playerStats.attack -= weapon.attack;
+    console.log(`You unequipped the ${itemName}. Attack is now ${playerStats.attack}.`);
+
+    // Mark the weapon as unequipped
+    weapon.equipped = false;
+}*/
+
+
+function unequipItem(itemName) {
+    const itemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'armor' && item.equipped);
+    if (itemIndex === -1) {
+        console.log(`You don't have ${itemName} equipped.`);
+        return;
+    }
+
+    const item = inventory[itemIndex];
+    // Equip the item based on its type
+    switch (item.type) {
+        case 'armor':
+            playerStats.defense -= item.defense;
+            console.log(`You unequipped the ${item.name}. Defense is now ${playerStats.defense}.`);
+            break;
+        case 'weapon':
+            playerStats.attack -= item.attack;
+            console.log(`You unequipped the ${item.name}. Attack is now ${playerStats.attack}.`);
+            break;
+        default:
+            console.log('This item cannot be unequipped.');
+            return;
+    }
+
+    // Mark the item as unequipped
+    item.equipped = false;
+}
+
+function attackEnemy(enemyName) {
+    const room = rooms[currentRoom];
+    if (!room.enemies) {
+        console.log('There are no enemies here.');
+        return;
+    }
+
+    const enemyIndex = room.enemies.findIndex(enemy => enemy.name.toLowerCase() === enemyName.toLowerCase());
+    if (enemyIndex === -1) {
+        console.log(`There is no ${enemyName} here to attack.`);
+        return;
+    }
+
+    const enemy = room.enemies[enemyIndex];
+    // Simple combat calculation
+    enemy.health -= playerStats.attack;
+    console.log(`You attack the ${enemy.name} for ${playerStats.attack} damage. Its health is now ${enemy.health}.`);
+
+    if (enemy.health <= 0) {
+        console.log(`You defeated the ${enemy.name}!`);
+        room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy
+    } else {
+        // Enemy attacks back
+        playerStats.health -= enemy.attack;
+        console.log(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${playerStats.health}.`);
+        if (playerStats.health <= 0) {
+            console.log('You have been defeated. Game Over.');
+            rl.close();
+        }
+    }
+}
+
 function startGame() {
     console.log('Welcome to the adventure game!');
     showRoomInfo(currentRoom);
@@ -89,27 +216,35 @@ function startGame() {
 }
 
 function waitForCommand() {
-    rl.question('What do you want to do? ', (command) => {
-        // Extract the action (first word) and the rest of the command as the item name
+    rl.question('What do you want to do? => ', (command) => {
         const [action, ...rest] = command.toLowerCase().split(' ');
-        const itemName = rest.join(' '); // Join the rest back together for multi-word item names
+        const target = rest.join(' ');
 
-        if (action === 'go') {
-            moveToRoom(itemName);
-        } else if (action === 'take') {
-            pickUpItem(itemName);
-        } else if (action === 'use') {
-            useItem(itemName);
-        } else if (action === 'inventory') {
-            console.log('Inventory:', inventory.map(item => item.name).join(', '));
-        } else if (action === 'look') {
-            console.log('Inventory:', inventory.map(item => item.name).join(', '));
-        } else {
-            console.log('Unknown command.');
+        switch (action) {
+            case 'go': moveToRoom(target); break;
+            case 'take': pickUpItem(target); break;
+            case 'use': useItem(target); break;
+            case 'equip': equipItem(target); break;
+            case 'unequip': unequipItem(target); break;
+            case 'inventory': console.log('Inventory:', inventory.map(item => item.name).join(', ')); break;
+            case 'stats': console.log('Stats:', playerStats); break;
+            /*case 'equip':
+                if (target.includes("sword") || target.includes("dagger")) { // Simple check to differentiate weapon types
+                    equipWeapon(target);
+                } else {
+                    equipItem(target); // For non-weapon equipment
+                }
+            case 'unequip':
+                if (target.includes("sword") || target.includes("dagger")) { // Simple check to differentiate weapon types
+                    unequipWeapon(target);
+                } else {
+                    unequipItem(target); // For non-weapon equipment
+                }*/
+            case 'attack': attackEnemy(target); break;
+            default: console.log('Unknown command.'); break;
         }
 
-        // Check for game end condition or other global checks here
-        continueGame();
+        continueGame(); // Function to prompt for the next action or check game state
     });
 }
 
