@@ -1,5 +1,5 @@
 let player = {
-    name: 'Player 1',
+    name: 'Bob',
     life: 100,
     attack: 10,
     defend: 5,
@@ -13,4 +13,6 @@ let player = {
     quests: [],
 }
 
-export { player }
+let playerPromise = Promise.resolve(player);
+
+export default playerPromise;

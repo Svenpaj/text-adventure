@@ -7,6 +7,15 @@ let goblin = {
     level: 1,
 }
 
+let wolf = {
+    name: 'Wolf',
+    life: 75,
+    attack: 7,
+    defend: 3,
+    speed: 4,
+    level: 1,
+}
+
 let orc = {
     name: 'Orc',
     life: 100,

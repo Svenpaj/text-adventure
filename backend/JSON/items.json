@@ -1,0 +1,21 @@
+[{
+    "name": "Club",
+    "damage": 5
+},
+{
+    "name": "Sword",
+    "damage": 10
+},
+{
+    "name": "Axe",
+    "damage": 15
+},
+{
+    "name": "Bow",
+    "damage": 20
+},
+{
+    "name": "Magic Staff",
+    "damage": 25
+}
+]
