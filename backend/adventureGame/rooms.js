@@ -10,6 +10,14 @@ export const rooms = {
         exits: {
             south: 'start',
             west: 'library',
+            north: { roomId: 'treasureRoom', locked: true },
+        },
+        interactions: {
+            'golden key': {
+                unlocks: 'north',
+                message: 'You use the golden key to unlock the door to the golden door.',
+                consume: true,
+            },
         },
     },
     library: {
@@ -30,15 +38,18 @@ export const rooms = {
         },
     },
     secretRoom: {
-        description: 'You\'ve discovered a secret room! There\'s something shiny here.',
+        description: 'You\'ve discovered a secret room! There\'s something shiny here. You squint and see a golden key tucked away behind some dusty old books.',
         exits: {
             south: 'library',
         },
+        items: [
+            { name: 'Golden key', description: 'A shiny golden key is here.' },
+        ],
         requires: 'key', // This exit requires a key.
     },
     treasureRoom: {
         description: 'You\'ve found the treasure room! Congratulations!',
         exits: {},
     },
-    requires: 'treasureKey', // This exit requires a key.
+    requires: 'golden key', // This exit requires a key.
 };

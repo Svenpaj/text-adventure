@@ -42,46 +42,45 @@ function moveToRoom(direction) {
 
 function pickUpItem(itemName) {
     const roomItems = rooms[currentRoom].items || [];
-    const itemIndex = roomItems.findIndex(item => item.name === itemName);
+    const itemIndex = roomItems.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
     if (itemIndex > -1) {
-        const [item] = roomItems.splice(itemIndex, 1);
-        inventory.push(item);
-        console.log(`${itemName} added to inventory.`);
+        const [item] = roomItems.splice(itemIndex, 1); // Remove item from room
+        inventory.push(item); // Add to inventory
+        console.log(`${item.name} added to inventory.`);
     } else {
-        console.log(`There's no ${itemName} here.`);
+        console.log(`There is no ${itemName} here.`);
     }
 }
 
 function useItem(itemName) {
-    const itemIndex = inventory.findIndex(item => item.name === itemName);
+    const itemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
     if (itemIndex === -1) {
         console.log(`You don't have a ${itemName}.`);
         return;
     }
 
+    const item = inventory[itemIndex];
     const room = rooms[currentRoom];
-    const interaction = room.interactions?.[itemName];
+    const interaction = room.interactions?.[itemName.toLowerCase()];
 
     if (interaction) {
         if (interaction.unlocks) {
             const exit = room.exits[interaction.unlocks];
-            if (exit && exit.locked) {
-                delete exit.locked; // Unlock the exit
+            if (exit && typeof exit === 'object' && exit.locked) {
+                exit.locked = false; // Unlock the exit
                 console.log(interaction.message);
-
                 if (interaction.consume) {
-                    inventory.splice(itemIndex, 1); // Remove the item from the inventory if it's consumed
+                    inventory.splice(itemIndex, 1); // Optionally remove the item from inventory
                 }
             } else {
                 console.log('There is nothing to unlock here.');
             }
         }
-        // You can add more interaction types here, such as "reveal", "give", etc.
+        // Add more interaction types as needed
     } else {
         console.log(`You can't use the ${itemName} here.`);
     }
 }
-
 
 function startGame() {
     console.log('Welcome to the adventure game!');
@@ -91,7 +90,9 @@ function startGame() {
 
 function waitForCommand() {
     rl.question('What do you want to do? ', (command) => {
-        const [action, itemName] = command.toLowerCase().split(' ');
+        // Extract the action (first word) and the rest of the command as the item name
+        const [action, ...rest] = command.toLowerCase().split(' ');
+        const itemName = rest.join(' '); // Join the rest back together for multi-word item names
 
         if (action === 'go') {
             moveToRoom(itemName);
@@ -99,19 +100,26 @@ function waitForCommand() {
             pickUpItem(itemName);
         } else if (action === 'use') {
             useItem(itemName);
+        } else if (action === 'inventory') {
+            console.log('Inventory:', inventory.map(item => item.name).join(', '));
+        } else if (action === 'look') {
+            console.log('Inventory:', inventory.map(item => item.name).join(', '));
         } else {
             console.log('Unknown command.');
         }
 
-        if (currentRoom === 'treasureRoom') {
-            console.log('Game Over. You\'ve won!');
-            rl.close();
-        } else {
-            waitForCommand(); // Wait for the next command
-        }
+        // Check for game end condition or other global checks here
+        continueGame();
     });
 }
 
-
+function continueGame() {
+    if (currentRoom === 'treasureRoom') {
+        console.log('Game Over. You\'ve won!');
+        rl.close();
+    } else {
+        waitForCommand(); // Wait for the next command
+    }
+}
 
 startGame();
