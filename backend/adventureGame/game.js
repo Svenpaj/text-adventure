@@ -5,30 +5,59 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
 });
-let playerStats = { health: 10, attack: 1, defense: 0, equippedArmor: null, equippedWeapon: null };
+let playerStats = { health: 10, attack: 10, defense: 0, equippedArmor: null, equippedWeapon: null };
 let currentRoom = 'start';
 const inventory = [];
 
-function showRoomInfo(roomName) {
-    console.log(rooms[roomName].description);
+function look(roomName) {
+    console.log(`You are in the ${roomName}. And you can see exits to the ${Object.keys(rooms[roomName].exits).join(', ')}.`);
+    if (!rooms[roomName].detailedDescription) {
+        console.log(rooms[roomName].detailedDescription)
+    }
     if (rooms[roomName].items) {
         rooms[roomName].items.forEach(item => {
-            console.log(item.description);
+            console.log(`You spot a ${item.description}`);
         });
     }
-    // Display enemies in the room if any - this is a new feature - does not work at this time - will need to be fixed
     if (rooms[roomName].enemies) {
-        console.log('Enemies present in the room:')
         rooms[roomName].enemies.forEach(enemy => {
-            console.log(`${enemy.description} (${enemy.health} HP, ${enemy.attack} ATK)`);
+            console.log(`You see a ${enemy.name}`);
         });
     }
-    console.log('Exits:', Object.keys(rooms[roomName].exits).join(', '));
+}
+// fix inspect function
+function inspect(itemName) {
+    if (rooms[currentRoom].items) {
+        const itemIndex = rooms[currentRoom].items.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
+        if (itemIndex > -1) {
+            console.log(rooms[currentRoom].items[itemIndex]);
+        } else if (inventory.length > 0) {
+            const inventoryItemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
+            if (inventoryItemIndex > -1) {
+                console.log(inventory[inventoryItemIndex].description);
+            } else {
+                console.log(`You don't see nor have a ${itemName}.`);
+            }
+        }
+    }
+}
+
+function showRoomInfo(roomName) {
+    console.log(rooms[roomName].description);
 }
 
 function moveToRoom(direction) {
     const room = rooms[currentRoom];
     let exit = room.exits[direction];
+
+    if (exit && typeof exit === 'object' && exit.guarded) {
+        room.enemies.forEach(enemy => {
+            if (enemy.guarding) {
+                console.log(`The way to the ${direction} is guarded by by a ${enemy.name}.`);
+                return; // Prevent moving through a guarded exit
+            }
+        })
+    }
 
     // Check if the exit is an object with a roomId (which may also include a locked state)
     if (exit && typeof exit === 'object') {
@@ -124,31 +153,30 @@ function equipItem(itemName) {
         console.log(`You don't have a ${itemName} to equip.`);
         return;
     }
-
+ 
     const weapon = inventory[itemIndex];
     playerStats.attack += weapon.attack; // Adjust player stats based on the weapon
     console.log(`You equipped the ${weapon.name}. Attack is now ${playerStats.attack}.`);
     // Consider how you'll handle swapping weapons or unequipping items.
-
+ 
     // Mark the weapon as equipped
     weapon.equipped = true;
 }
-
+ 
 function unequipWeapon(itemName) {
     const itemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'weapon' && item.equipped);
     if (itemIndex === -1) {
         console.log(`You don't have ${itemName} equipped.`);
         return;
     }
-
+ 
     const weapon = inventory[itemIndex];
     playerStats.attack -= weapon.attack;
     console.log(`You unequipped the ${itemName}. Attack is now ${playerStats.attack}.`);
-
+ 
     // Mark the weapon as unequipped
     weapon.equipped = false;
 }*/
-
 
 function unequipItem(itemName) {
     const itemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'armor' && item.equipped);
@@ -197,14 +225,23 @@ function attackEnemy(enemyName) {
 
     if (enemy.health <= 0) {
         console.log(`You defeated the ${enemy.name}!`);
-        room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy
-    } else {
-        // Enemy attacks back
-        playerStats.health -= enemy.attack;
-        console.log(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${playerStats.health}.`);
-        if (playerStats.health <= 0) {
-            console.log('You have been defeated. Game Over.');
-            rl.close();
+        if (enemy.guarding) {
+            for (const direction in room.exits) {
+                const exit = room.exits[direction];
+                if (exit && typeof exit === 'object' && exit.guarded) {
+                    console.log(`The ${enemy.name} was guarding the way to the ${direction}.`);
+                    exit.guarded = false; // Remove the guard
+                }
+            }
+            room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy
+        } else {
+            // Enemy attacks back
+            playerStats.health -= enemy.attack;
+            console.log(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${playerStats.health}.`);
+            if (playerStats.health <= 0) {
+                console.log('You have been defeated. Game Over.');
+                rl.close();
+            }
         }
     }
 }
@@ -221,13 +258,20 @@ function waitForCommand() {
         const target = rest.join(' ');
 
         switch (action) {
+            case 'help': console.log('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help'); break;
+            case 'stats': console.log('Stats:', playerStats); break;
             case 'go': moveToRoom(target); break;
             case 'take': pickUpItem(target); break;
             case 'use': useItem(target); break;
             case 'equip': equipItem(target); break;
             case 'unequip': unequipItem(target); break;
             case 'inventory': console.log('Inventory:', inventory.map(item => item.name).join(', ')); break;
-            case 'stats': console.log('Stats:', playerStats); break;
+            case 'inspect': inspect(target); break; // Placeholder for inspect command
+            case 'look': look(currentRoom); break;
+            case 'attack': attackEnemy(target); break;
+            default: console.log('Unknown command.'); break;
+
+
             /*case 'equip':
                 if (target.includes("sword") || target.includes("dagger")) { // Simple check to differentiate weapon types
                     equipWeapon(target);
@@ -240,8 +284,7 @@ function waitForCommand() {
                 } else {
                     unequipItem(target); // For non-weapon equipment
                 }*/
-            case 'attack': attackEnemy(target); break;
-            default: console.log('Unknown command.'); break;
+
         }
 
         continueGame(); // Function to prompt for the next action or check game state
@@ -249,7 +292,10 @@ function waitForCommand() {
 }
 
 function continueGame() {
-    if (currentRoom === 'treasureRoom') {
+    if (playerStats.health <= 0) {
+        console.log('Game Over. You have been defeated.');
+        rl.close();
+    } else if (currentRoom === 'treasureRoom') {
         console.log('Game Over. You\'ve won!');
         rl.close();
     } else {

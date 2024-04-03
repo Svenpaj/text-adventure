@@ -10,10 +10,11 @@ export const rooms = {
         exits: {
             south: 'start',
             west: 'library',
-            north: { roomId: 'treasureRoom', locked: true },
+            north: { roomId: 'treasureRoom', locked: true, description: 'A sneaky goblin is guarding the door.', guarded: true },
         },
         enemies: [
-            { name: 'Goblin', description: 'A sneaky goblin is blocking your way.', health: 5, attack: 1 },
+            { name: 'Goblin', description: 'A little weak goblin.', health: 5, attack: 1, guarding: true },
+            { name: 'Orc', description: 'A big, strong orc.', health: 10, attack: 2, guarding: false }
         ],
         interactions: {
             'golden key': {
@@ -30,8 +31,8 @@ export const rooms = {
             north: { roomId: 'secretRoom', locked: true }, // Indicate that the exit is initially locked
         },
         items: [
-            { name: 'Ornate key', description: 'A small, ornate key lies here.' },
-            { name: 'Leather Armor', description: 'A sturdy set of leather armor lies here.', type: 'armor', defense: 2, equipped: false },
+            { name: 'Ornate key', description: 'A small ornate key.' },
+            { name: 'Leather Armor', description: 'A sturdy set of leather armor.', type: 'armor', defense: 2, equipped: false },
         ],
         interactions: {
             'ornate key': {
@@ -42,13 +43,14 @@ export const rooms = {
         },
     },
     secretRoom: {
-        description: 'You\'ve discovered a secret room! There\'s something shiny here. You squint and see a golden key tucked away behind some dusty old books.',
+        description: 'You\'ve discovered a secret room!',
+        detailedDescription: 'There\'s something shiny here. You squint and see a golden key tucked away behind some dusty old books. You also see a door to the south.',
         exits: {
             south: 'library',
         },
         items: [
-            { name: 'Golden key', description: 'A shiny golden key is here.' },
-            { name: 'Silver Sword', description: 'A gleaming silver sword is propped up against the wall.', type: 'weapon', attack: 3, equipped: false },
+            { name: 'Golden key', description: 'A shiny golden key.' },
+            { name: 'Silver Sword', description: 'A gleaming silver sword.', type: 'weapon', attack: 3, equipped: false },
         ],
         requires: 'key', // This exit requires a key.
     },
@@ -57,5 +59,5 @@ export const rooms = {
         exits: {},
     },
     requires: 'golden key', // This exit requires a key.
-}
 };
+
