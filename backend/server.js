@@ -6,7 +6,7 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 /*app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+   res.send('Hello this the backend telling you that the server is running. And I have a secret to tell you.. I am hiding a an adventure game in the backend.');
 });*/
 
 app.listen(port, () => {
