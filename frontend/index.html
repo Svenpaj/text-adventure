@@ -4,29 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SvenJolt Studio</title>
-  <link rel="stylesheet" href="./main.css">
+  <title>Text Adventure Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    #gameConsole {
+      background-color: #f0f0f0;
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 9px;
+    }
+  </style>
 </head>
 
 <body>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
-  <div>
-    <h1>Welcome to a fabulous and epic text adventure</h1>
-  </div>
-  <div>
-    <p>Click the button below to start your adventure</p>
-    <button id="start-btn">Start</button>
-  </div>
-  <footer>
-    <p>&copy; 2024 SvenJolt Studio</p>
-  </footer>
-  <script src="./main.js"></script>
+  <div id="gameConsole"></div>
+  <input type="text" id="commandInput" placeholder="Type your command here...">
+  <script src="game.js"></script>
 </body>
 
 </html>

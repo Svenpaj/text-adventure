@@ -270,21 +270,6 @@ function waitForCommand() {
             case 'look': look(currentRoom); break;
             case 'attack': attackEnemy(target); break;
             default: console.log('Unknown command.'); break;
-
-
-            /*case 'equip':
-                if (target.includes("sword") || target.includes("dagger")) { // Simple check to differentiate weapon types
-                    equipWeapon(target);
-                } else {
-                    equipItem(target); // For non-weapon equipment
-                }
-            case 'unequip':
-                if (target.includes("sword") || target.includes("dagger")) { // Simple check to differentiate weapon types
-                    unequipWeapon(target);
-                } else {
-                    unequipItem(target); // For non-weapon equipment
-                }*/
-
         }
 
         continueGame(); // Function to prompt for the next action or check game state
