@@ -13,11 +13,6 @@ class TextAdventureGame {
         this.startGame();
     }
 
-    writeText(message) {
-        this.gameConsole.innerHTML += `<p>${message}</p>`;
-        this.gameConsole.scrollTop = this.gameConsole.scrollHeight;
-    }
-
     setupInputListener() {
         this.commandInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && this.commandInput.value.trim() !== '') {
@@ -32,11 +27,11 @@ class TextAdventureGame {
         const target = params.join(' ');
         switch (action.toLowerCase()) {
             case 'help':
-                this.writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
+                writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
                 break;
             case 'stats':
                 const statsText = `Stats: Health=${this.playerStats.health}, Attack=${this.playerStats.attack}, Defense=${this.playerStats.defense}, EquippedArmor=${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, EquippedWeapon=${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
-                this.writeText(statsText);
+                writeText(statsText);
                 break;
             case 'go':
                 this.moveToRoom(target);
@@ -55,7 +50,7 @@ class TextAdventureGame {
                 break;
             case 'inventory':
                 const inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
-                this.writeText(inventoryText);
+                writeText(inventoryText);
                 break;
             case 'inspect':
                 this.inspect(target);
@@ -67,7 +62,7 @@ class TextAdventureGame {
                 this.attackEnemy(target);
                 break;
             default:
-                this.writeText('Unknown command.');
+                writeText('Unknown command.');
                 break;
         }
         // Optionally, invoke a method to check game state or continue the game loop here.

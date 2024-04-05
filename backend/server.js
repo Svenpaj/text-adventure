@@ -1,15 +1,20 @@
+// server.js
 import express from 'express';
+import path from 'path';
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 
 app.use(express.static('frontend'));
+app.use(express.json()); // To parse JSON bodies
 
-/*app.get('/', (req, res) => {
-   res.send('Hello this the backend telling you that the server is running. And I have a secret to tell you.. I am hiding a an adventure game in the backend.');
-});*/
+app.post('/api/command', (req, res) => {
+    const { command } = req.body;
+    res.json({ message: `Command received: ${command}` });
+});
 
 app.listen(port, () => {
-    console.log(`Game server listening at http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
+
