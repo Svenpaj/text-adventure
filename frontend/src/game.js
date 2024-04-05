@@ -1,6 +1,10 @@
 import { rooms } from './rooms.js';
 import { writeText } from './writeText.js';
 
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 class TextAdventureGame {
     constructor() {
         this.gameConsole = document.getElementById('gameConsole');
@@ -16,10 +20,11 @@ class TextAdventureGame {
 
     updateRoomBackground() {
         const room = rooms[this.currentRoom];
-        const imageUrl = room.image ? `url('./images/${room.image}')` : 'none';
+        const imagePath = room.image ? `./images/${room.image}` : 'none';
 
         const roomImageContainer = document.getElementById('roomImageContainer');
-        roomImageContainer.style.backgroundImage = imageUrl;
+        roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${room.name}">`;
+        //roomImageContainer.style.backgroundImage = imageUrl;
     }
 
     setupInputListener() {
@@ -120,8 +125,10 @@ class TextAdventureGame {
         this.updateRoomBackground();
     }
 
-    moveToRoom(direction) {
+    async moveToRoom(direction) {
         // moveToRoom function implementation
+        writeText(`You move ${direction}...`);
+        await wait(10000); // Wait for 1 second per (1000ms) before moving to the new room
         const room = rooms[this.currentRoom];
         let exit = room.exits[direction];
 

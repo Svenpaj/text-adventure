@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Text Adventure Game</title>
   <style>
-    body {
+    /*body {
       font-family: Arial, sans-serif;
     }
 
@@ -21,18 +22,22 @@
     input[type="text"] {
       width: calc(100% - 20px);
       padding: 9px;
-    }
+    }*/
   </style>
 </head>
 
 <body>
   <h1>Text Adventure Game</h1>
   <p>Welcome to the text adventure game. Type your commands in the input below and press Enter to play.</p>
-  <div id="roomImageContainer" style="width: 600px; height: 400px;"></div>
+  <div id="roomImageContainer"></div>
   <div id="gameConsole"></div>
-  <input type="text" id="commandInput" placeholder="Type your command here...">
-  <div id="gameCommands"></div>
-  <script type="module" src="./src/frontendGame.js"></script>
+  <div id="commandConsole">
+    <input type="text" id="commandInput" placeholder="Type your command here...">
+  </div>
+  <div id="gameCommands">
+    <p>Your game commands are shown here</p>
+  </div>
+  <script type="module" src="./src/game.js"></script>
 </body>
 
 </html>
