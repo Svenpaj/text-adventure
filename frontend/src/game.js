@@ -24,7 +24,7 @@ class TextAdventureGame {
 
         const roomImageContainer = document.getElementById('roomImageContainer');
         roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${room.name}">`;
-        //roomImageContainer.style.backgroundImage = imageUrl;
+
     }
 
     setupInputListener() {
@@ -94,6 +94,9 @@ class TextAdventureGame {
             rooms[roomName].items.forEach(item => {
                 writeText(`You spot a ${item.description}`);
             });
+            const imagePath = rooms[roomName].imageItems ? `./images/${rooms[roomName].imageItems}` : 'none';
+            const roomImageContainer = document.getElementById('roomImageContainer');
+            roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${rooms[roomName].name}">`;
         }
         if (rooms[roomName].enemies) {
             rooms[roomName].enemies.forEach(enemy => {
@@ -128,7 +131,7 @@ class TextAdventureGame {
     async moveToRoom(direction) {
         // moveToRoom function implementation
         writeText(`You move ${direction}...`);
-        await wait(10000); // Wait for 1 second per (1000ms) before moving to the new room
+        await wait(1000); // Wait for 1 second per (1000ms) before moving to the new room
         const room = rooms[this.currentRoom];
         let exit = room.exits[direction];
 
