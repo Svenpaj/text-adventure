@@ -1,75 +1,21 @@
+import readline from 'readline';
 import { rooms } from './rooms.js';
 import { writeText } from './writeText.js';
 
+// Path: backend/adventureGame/game.js
+
 class TextAdventureGame {
     constructor() {
-        this.gameConsole = document.getElementById('gameConsole');
-        this.commandInput = document.getElementById('commandInput');
-        this.setupInputListener();
-        // Initialize any other game state variables here
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
         this.playerStats = { health: 10, attack: 10, defense: 0, equippedArmor: null, equippedWeapon: null };
         this.currentRoom = 'start';
         this.inventory = [];
         this.startGame();
     }
 
-    setupInputListener() {
-        this.commandInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && this.commandInput.value.trim() !== '') {
-                this.processCommand(this.commandInput.value.trim());
-                this.commandInput.value = '';
-            }
-        });
-    }
-
-    processCommand(command) {
-        const [action, ...params] = command.split(' ');
-        const target = params.join(' ');
-        switch (action.toLowerCase()) {
-            case 'help':
-                writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
-                break;
-            case 'stats':
-                const statsText = `Stats: Health=${this.playerStats.health}, Attack=${this.playerStats.attack}, Defense=${this.playerStats.defense}, EquippedArmor=${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, EquippedWeapon=${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
-                writeText(statsText);
-                break;
-            case 'go':
-                this.moveToRoom(target);
-                break;
-            case 'take':
-                this.pickUpItem(target);
-                break;
-            case 'use':
-                this.useItem(target);
-                break;
-            case 'equip':
-                this.equipItem(target);
-                break;
-            case 'unequip':
-                this.unequipItem(target);
-                break;
-            case 'inventory':
-                const inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
-                writeText(inventoryText);
-                break;
-            case 'inspect':
-                this.inspect(target);
-                break;
-            case 'look':
-                this.look(); // Assuming `look` method defaults to looking in the current room
-                break;
-            case 'attack':
-                this.attackEnemy(target);
-                break;
-            default:
-                writeText('Unknown command.');
-                break;
-        }
-        // Optionally, invoke a method to check game state or continue the game loop here.
-        this.continueGame(); // Function to prompt for the next action or check game state
-    }
-
-    // Game Logic Methods
     look(roomName = this.currentRoom) {
         writeText(`You are in the ${roomName}. And you can see exits to the ${Object.keys(rooms[roomName].exits).join(', ')}.`);
         if (rooms[roomName].detailedDescription) {
@@ -288,32 +234,59 @@ class TextAdventureGame {
         }
     }
 
-    continueGame() {
-        if (this.playerStats.health <= 0) {
-            this.writeText('Game Over. You have been defeated.');
-            this.endGame();
-        } else if (this.currentRoom === 'treasureRoom') {
-            this.writeText('Game Over. You\'ve won!');
-            this.endGame();
-        }
-        // In a browser environment, no need to explicitly wait for the next command.
-        // The setupInputListener method handles command input continuously.
+    waitForCommand() {
+        // waitForCommand function implementation
+        this.rl.question('What do you want to do? => ', (command) => {
+            const [action, ...rest] = command.toLowerCase().split(' ');
+            const target = rest.join(' ');
+
+            switch (action) {
+                case 'help': writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help'); break;
+                // case 'stats': writeText('Stats:', this.playerStats); break;
+                case 'stats':
+                    const statsText = `Stats: Health=${this.playerStats.health}, Attack=${this.playerStats.attack}, Defense=${this.playerStats.defense}, EquippedArmor=${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, EquippedWeapon=${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
+                    writeText(statsText);
+                    break;
+
+                case 'go': this.moveToRoom(target); break;
+                case 'take': this.pickUpItem(target); break;
+                case 'use': this.useItem(target); break;
+                case 'equip': this.equipItem(target); break;
+                case 'unequip': this.unequipItem(target); break;
+                case 'inventory':
+                    const inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
+                    writeText(inventoryText);
+                    break;
+                //case 'inventory': writeText('Inventory:', this.inventory.map(item => item.name).join(', ')); break;
+                case 'inspect': this.inspect(target); break; // Placeholder for inspect command
+                case 'look': this.look(this.currentRoom); break;
+                case 'attack': this.attackEnemy(target); break;
+                default: writeText('Unknown command.'); break;
+            }
+
+            this.continueGame(); // Function to prompt for the next action or check game state
+        });
     }
 
-    endGame() {
-        // Disable the command input field to prevent further input.
-        this.commandInput.disabled = true;
-        // Optionally, you could provide a way to restart the game.
-        this.writeText('Refresh the page to play again or implement a restart game feature.');
+    continueGame() {
+        // continueGame function implementation
+        if (this.playerStats.health <= 0) {
+            writeText('Game Over. You have been defeated.');
+            this.rl.close();
+        } else if (this.currentRoom === 'treasureRoom') {
+            writeText('Game Over. You\'ve won!');
+            this.rl.close();
+        } else {
+            this.waitForCommand(); // Wait for the next command
+        }
     }
 
     startGame() {
         writeText('Welcome to the adventure game!');
         this.showRoomInfo(this.currentRoom);
+        this.waitForCommand();
     }
-
 }
 
-window.onload = () => {
-    const game = new TextAdventureGame();
-};
+// Creating an instance of the game
+const game = new TextAdventureGame();
