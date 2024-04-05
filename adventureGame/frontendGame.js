@@ -5,6 +5,7 @@ class TextAdventureGame {
     constructor() {
         this.gameConsole = document.getElementById('gameConsole');
         this.commandInput = document.getElementById('commandInput');
+        this.gameCommands = document.getElementById('gameCommands');
         this.setupInputListener();
         // Initialize any other game state variables here
         this.playerStats = { health: 10, attack: 10, defense: 0, equippedArmor: null, equippedWeapon: null };
@@ -13,14 +14,18 @@ class TextAdventureGame {
         this.startGame();
     }
 
-    writeText(message) {
-        this.gameConsole.innerHTML += `<p>${message}</p>`;
-        this.gameConsole.scrollTop = this.gameConsole.scrollHeight;
+    updateRoomBackground() {
+        const room = rooms[this.currentRoom];
+        const imageUrl = room.image ? `url('./images/${room.image}')` : 'none';
+
+        const roomImageContainer = document.getElementById('roomImageContainer');
+        roomImageContainer.style.backgroundImage = imageUrl;
     }
 
     setupInputListener() {
         this.commandInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && this.commandInput.value.trim() !== '') {
+                this.gameCommands.innerHTML += `<p>${this.commandInput.value}</p>`;
                 this.processCommand(this.commandInput.value.trim());
                 this.commandInput.value = '';
             }
@@ -32,11 +37,11 @@ class TextAdventureGame {
         const target = params.join(' ');
         switch (action.toLowerCase()) {
             case 'help':
-                this.writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
+                writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
                 break;
             case 'stats':
                 const statsText = `Stats: Health=${this.playerStats.health}, Attack=${this.playerStats.attack}, Defense=${this.playerStats.defense}, EquippedArmor=${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, EquippedWeapon=${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
-                this.writeText(statsText);
+                writeText(statsText);
                 break;
             case 'go':
                 this.moveToRoom(target);
@@ -55,7 +60,7 @@ class TextAdventureGame {
                 break;
             case 'inventory':
                 const inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
-                this.writeText(inventoryText);
+                writeText(inventoryText);
                 break;
             case 'inspect':
                 this.inspect(target);
@@ -67,7 +72,7 @@ class TextAdventureGame {
                 this.attackEnemy(target);
                 break;
             default:
-                this.writeText('Unknown command.');
+                writeText('Unknown command.');
                 break;
         }
         // Optionally, invoke a method to check game state or continue the game loop here.
@@ -112,6 +117,7 @@ class TextAdventureGame {
     showRoomInfo(roomName) {
         // showRoomInfo function implementation
         writeText(rooms[roomName].description);
+        this.updateRoomBackground();
     }
 
     moveToRoom(direction) {
