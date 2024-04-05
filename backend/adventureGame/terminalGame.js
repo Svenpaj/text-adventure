@@ -242,13 +242,22 @@ class TextAdventureGame {
 
             switch (action) {
                 case 'help': writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help'); break;
-                case 'stats': writeText('Stats:', this.playerStats); break;
+                // case 'stats': writeText('Stats:', this.playerStats); break;
+                case 'stats':
+                    const statsText = `Stats: Health=${this.playerStats.health}, Attack=${this.playerStats.attack}, Defense=${this.playerStats.defense}, EquippedArmor=${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, EquippedWeapon=${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
+                    writeText(statsText);
+                    break;
+
                 case 'go': this.moveToRoom(target); break;
                 case 'take': this.pickUpItem(target); break;
                 case 'use': this.useItem(target); break;
                 case 'equip': this.equipItem(target); break;
                 case 'unequip': this.unequipItem(target); break;
-                case 'inventory': writeText('Inventory:', this.inventory.map(item => item.name).join(', ')); break;
+                case 'inventory':
+                    const inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
+                    writeText(inventoryText);
+                    break;
+                //case 'inventory': writeText('Inventory:', this.inventory.map(item => item.name).join(', ')); break;
                 case 'inspect': this.inspect(target); break; // Placeholder for inspect command
                 case 'look': this.look(this.currentRoom); break;
                 case 'attack': this.attackEnemy(target); break;
