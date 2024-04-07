@@ -58,7 +58,7 @@ export const rooms = {
         },
         items: [
             { name: 'Golden key', description: 'a shiny golden key.' },
-            { name: 'Silver Sword', description: 'a gleaming silver sword.', type: 'weapon', attack: 3, equipped: false },
+            { name: 'Silver Sword', description: 'a gleaming silver sword.', type: 'weapon', attack: 3, equipped: false, image: 'silverSword.webp' },
         ],
         requires: 'key', // This exit requires a key.
     },

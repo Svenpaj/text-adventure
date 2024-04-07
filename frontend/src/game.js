@@ -111,10 +111,14 @@ class TextAdventureGame {
             const itemIndex = rooms[this.currentRoom].items.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
             if (itemIndex > -1) {
                 writeText(rooms[this.currentRoom].items[itemIndex]);
-            } else if (inventory.length > 0) {
-                const inventoryItemIndex = inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
+            } else if (this.inventory.length > 0) {
+                const inventoryItemIndex = this.inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
                 if (inventoryItemIndex > -1) {
-                    writeText(inventory[inventoryItemIndex].description);
+                    writeText(this.inventory[inventoryItemIndex].description);
+                    if (this.inventory[inventoryItemIndex].image) {
+                        const roomImageContainer = document.getElementById('roomImageContainer');
+                        roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${this.inventory[inventoryItemIndex].image}" style="margin: auto;" alt="${this.inventory[inventoryItemIndex].name}">`;
+                    }
                 } else {
                     writeText(`You don't see nor have a ${itemName}.`);
                 }
