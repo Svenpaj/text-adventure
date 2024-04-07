@@ -325,7 +325,7 @@ class TextAdventureGame {
         // Disable the command input field to prevent further input.
         this.commandInput.disabled = true;
         // Optionally, you could provide a way to restart the game.
-        this.writeText('Refresh the page to play again or implement a restart game feature.');
+        this.writeText('Refresh the page to play again.');
     }
 
     startGame() {
