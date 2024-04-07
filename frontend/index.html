@@ -4,39 +4,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" type="module">
   <title>Text Adventure Game</title>
   <style>
-    /*body {
-      font-family: Arial, sans-serif;
+    body {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      font-size: large;
+      background-color: rgb(33, 33, 33);
+      color: white;
+    }
+
+    .gameContainer {
+      display: flex;
+    }
+
+    .child {
+      flex: 1;
+      margin: 10px;
+      padding: 20px;
+      border: 1px solid white;
+    }
+
+    #roomImageContainer {
+      animation: fadeIn 3s;
+      border-radius: 5px;
+      max-width: fit-content;
     }
 
     #gameConsole {
-      background-color: #f0f0f0;
-      padding: 10px;
-      height: 300px;
+      font-size: x-large;
+      float: right;
+      width: 30%;
+      border: 1px solid white;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.1);
+      max-height: 600px;
       overflow-y: auto;
-      margin-bottom: 10px;
+      animation: fadeIn 3s;
+      max-width: fit-content;
     }
 
-    input[type="text"] {
-      width: calc(100% - 20px);
-      padding: 9px;
-    }*/
+    #commandConsole {
+      display: flex;
+      animation: fadeIn 3s;
+      padding: auto;
+      max-height: 30px;
+      max-width: fit-content;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #gameCommands {
+      animation: fadeIn 3s;
+      max-width: fit-content;
+    }
+
+    #commandInput {
+      font-size: large;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
   </style>
 </head>
 
 <body>
   <h1>Text Adventure Game</h1>
   <p>Welcome to the text adventure game. Type your commands in the input below and press Enter to play.</p>
-  <div id="roomImageContainer"></div>
-  <div id="gameConsole"></div>
-  <div id="commandConsole">
-    <input type="text" id="commandInput" placeholder="Type your command here...">
+  <div class="gameContainer">
+    <div class="child" id="roomImageContainer"></div>
+    <div class="child" id="gameConsole"></div>
+    <div class="child" id="commandConsole">
+      <input type="text" id="commandInput" placeholder="Type command =>">
+    </div>
+    <div class="child" id="gameCommands">
+      <p>Command log</p>
+    </div>
   </div>
-  <div id="gameCommands">
-    <p>Your game commands are shown here</p>
-  </div>
+
   <script type="module" src="./src/game.js"></script>
 </body>
 

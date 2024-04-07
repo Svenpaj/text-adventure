@@ -69,5 +69,7 @@ export const rooms = {
         exits: {},
     },
     requires: 'golden key', // This exit requires a key.
+
+    // Add more rooms as needed
 };
 
