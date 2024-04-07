@@ -14,6 +14,15 @@
       color: white;
     }
 
+    h1,
+    h3 {
+      text-align: center;
+    }
+
+    p {
+      margin-top: 5px
+    }
+
     .gameContainer {
       display: flex;
     }
@@ -29,10 +38,12 @@
       animation: fadeIn 3s;
       border-radius: 5px;
       max-width: fit-content;
+      padding: 2px;
     }
 
     #gameConsole {
       font-size: x-large;
+      font-weight: normal;
       float: right;
       width: 30%;
       border: 1px solid white;
@@ -80,19 +91,19 @@
 
 <body>
   <h1>Text Adventure Game</h1>
-  <p>Welcome to the text adventure game. Type your commands in the input below and press Enter to play.</p>
-  <div class="gameContainer">
-    <div class="child" id="roomImageContainer"></div>
-    <div class="child" id="gameConsole"></div>
-    <div class="child" id="commandConsole">
-      <input type="text" id="commandInput" placeholder="Type command =>">
+  <h3>Welcome to the text adventure game. Type your commands in the input below and press Enter to play.</p>
+    <div class="gameContainer">
+      <div class="child" id="roomImageContainer"></div>
+      <div class="child" id="gameConsole"></div>
+      <div class="child" id="commandConsole">
+        <input type="text" id="commandInput" placeholder="Type command =>">
+      </div>
+      <div class="child" id="gameCommands">
+        <p>Command log</p>
+      </div>
     </div>
-    <div class="child" id="gameCommands">
-      <p>Command log</p>
-    </div>
-  </div>
 
-  <script type="module" src="./src/game.js"></script>
+    <script type="module" src="./src/game.js"></script>
 </body>
 
 </html>
