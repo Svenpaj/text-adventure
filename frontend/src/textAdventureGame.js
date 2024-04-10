@@ -344,7 +344,7 @@ class TextAdventureGame {
             this.showRoomInfo(this.currentRoom);
         });
     }
-
+    // test and remove save and load from gamecode
     async saveGameState(userId) {
         const state = { currentRoom: this.currentRoom, playerStats: this.playerStats, inventory: this.inventory };
         const db = await openDB();
