@@ -314,26 +314,6 @@ class TextAdventureGame {
         }
     }
 
-    async saveGameState(userId) {
-        const state = { currentRoom: this.currentRoom, playerStats: this.playerStats, inventory: this.inventory };
-        const db = await openDB();
-        const data = JSON.stringify(state);
-        await db.run('REPLACE INTO game_states (user_id, state) VALUES (?, ?)', [userId, data]);
-    }
-
-    async loadGameState(userId) {
-        const db = await openDB();
-        const row = await db.get('SELECT state FROM game_states WHERE user_id = ?', [userId]);
-        if (row) {
-            const state = JSON.parse(row.state);
-            // Load the state...
-            this.currentRoom = state.currentRoom;
-            this.playerStats = state.playerStats;
-            this.inventory = state.inventory;
-        }
-    }
-
-
     continueGame() {
         if (this.playerStats.health <= 0) {
             this.writeText('Game Over. You have been defeated.');
@@ -364,6 +344,26 @@ class TextAdventureGame {
             this.showRoomInfo(this.currentRoom);
         });
     }
+
+    async saveGameState(userId) {
+        const state = { currentRoom: this.currentRoom, playerStats: this.playerStats, inventory: this.inventory };
+        const db = await openDB();
+        const data = JSON.stringify(state);
+        await db.run('REPLACE INTO game_states (user_id, state) VALUES (?, ?)', [userId, data]);
+    }
+
+    async loadGameState(userId) {
+        const db = await openDB();
+        const row = await db.get('SELECT state FROM game_states WHERE user_id = ?', [userId]);
+        if (row) {
+            const state = JSON.parse(row.state);
+            // Load the state...
+            this.currentRoom = state.currentRoom;
+            this.playerStats = state.playerStats;
+            this.inventory = state.inventory;
+        }
+    }
+
 
 }
 
