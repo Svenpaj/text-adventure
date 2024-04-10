@@ -4,53 +4,97 @@ import { fileURLToPath } from 'url';
 import { dirname, join, parse } from 'path';
 import openDB from './database.js';
 import bcrypt from 'bcrypt';
+import session from 'express-session';
 
 const app = express();
 const port = 3000;
 const saltRounds = 10;
 
-app.use(express.json()); // To parse JSON bodies
-app.use(express.urlencoded({ extended: true })); // To parse URL-encoded bodies)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'mySecret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1200000, secure: false }, // 15 minute
+}));
 
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const db = await openDB();
 
-//app.use(express.static('frontend'));
-//app.use(express.json()); // To parse JSON bodies
 
-app.get('/', (req, res) => {
-    res.redirect('/login');
+// Middleware to check if the user is authenticated
+function ensureAuthenticated(req, res, next) {
+    if (req.session.userId) {
+        next();
+    } else {
+        res.status(401).send('You must be logged in');
+    }
+}
+
+// API routes
+
+app.get('/api/users', async (req, res) => {
+    const db = await openDB();
+    const users = await db.all('SELECT * FROM users');
+    res.json(users);
 });
 
-/*app.post('/api/register', async (req, res) => {
+app.get('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    const db = await openDB();
+    const user = await db.get('SELECT * FROM users WHERE id = ?', [id]);
+    if (user) {
+        res.json(user);
+    } else {
+        res.status(404).send('User not found');
+    }
+});
+
+app.post('/api/login', async (req, res) => {
+    // Check if the user is already logged in
+    if (req.session.userId) {
+        return res.status(200).send('Already logged in');
+    }
+
     const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).send('Username and password are required');
     }
 
-    bcrypt.hash(password, saltRounds, async function (err, hash) {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).send('Failed to register the user');
-        }
-        try {
-            const query = `INSERT INTO users (username, password) VALUES (?, ?)`;
-            console.log(password);
-            const result = await db.run(query, [username, password]);
-            console.log(`A new row has been inserted with rowid ${result.lastID}`);
-            res.send('User registered successfully');
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).send('Failed to register the user');
-        }
-    });
-    res.redirect('/login');
-});*/
+    try {
+        const db = await openDB();
+        // Retrieve user by username
+        const query = `SELECT * FROM users WHERE username = ?`;
+        const user = await db.get(query, [username]);
 
-app.post('/api/register', async (req, res) => {
+        if (user) {
+            // Compare submitted password with stored hashed password
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                // Passwords match
+                // Create a session
+                req.session.userId = user.id;
+                console.log(username, ": ", user.id, ' has logged in')
+                console.log(req.session);
+                return res.send('Login successful');
+            } else {
+                // Passwords do not match
+                return res.status(401).send('Incorrect username or password');
+            }
+        } else {
+            // No user found with the provided username
+            return res.status(401).send('Incorrect username or password');
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('An error occurred while trying to log in');
+    }
+});
+
+app.post('/api/users', async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).send('Username and password are required');
@@ -79,73 +123,64 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+app.post('/api/game/save', ensureAuthenticated, async (req, res) => {
+    const userId = req.session.userId;
+    const gameState = req.body.state; // game state passed in the request body
 
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).send('Username and password are required');
-    }
-
-    const db = await openDB();
     try {
-        // Retrieve user by username
-        const query = `SELECT * FROM users WHERE username = ?`;
-        const user = await db.get(query, [username]);
-
-        if (user) {
-            // Compare submitted password with stored hashed password
-            const match = await bcrypt.compare(password, user.password);
-            if (match) {
-                // Passwords match
-                return res.redirect('/game');
-                //return res.send('Login successful');
-            } else {
-                // Passwords do not match
-                return res.status(401).send('Incorrect username or password');
-            }
-        } else {
-            // No user found with the provided username
-            return res.status(401).send('Incorrect username or password');
-        }
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('An error occurred while trying to log in');
+        await saveGameState(userId, gameState); // 
+        res.json({ message: "Game state saved successfully." });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error saving game state.");
     }
 });
 
-/*app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).send('Username and password are required');
-    }
-    console.log("unsaltedpassword: ", password);
-    bcrypt.hash(password, saltRounds, async function (err, hash) {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).send('Failed to login the user');
-        }
-        console.log("salted: ", password);
-        try {
-            const query = `SELECT * FROM users WHERE username = ? AND password = ?`;
-            const result = await db.get(query, [username, password]);
-            if (result) {
-                console.log(`User logged in: `, result);
-                res.send('User logged in successfully');
-                return res.redirect('/game');
-            } else {
-                res.status(401).send('Username or password is incorrect');
-            }
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).send('Failed to login the user');
-        }
-    });
-});
-*/
+// This would be similar for loading, but retrieving from the database instead
 
+app.get('/api/game/load', ensureAuthenticated, async (req, res) => {
+    const userId = req.session.userId;
+
+    try {
+        const gameState = await loadGameState(userId);
+        res.json({ state: gameState });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error loading game state.");
+    }
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    const db = await openDB();
+    const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
+    if (result.changes > 0) {
+        res.send('User deleted successfully');
+    } else {
+        res.status(404).send('User not found');
+    }
+});
+
+// Open routes
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
 // fix the login route / register route
 app.get('/login', (req, res) => {
     res.sendFile(join(__dirname, '../frontend/login.html'));
+});
+
+app.get('/logout', (req, res) => {
+    if (!req.session.userId) {
+        return res.send('You are not logged in');
+    }
+    console.log(req.session.userId, ' has logged out');
+    req.session.destroy((err) => {
+        if (err) {
+            return console.log(err);
+        }
+        res.redirect('/login');
+    });
 });
 
 app.get('/register', (req, res) => {
@@ -153,16 +188,10 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/game', (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
     res.sendFile(join(__dirname, '../frontend/index.html'));
-});
-
-
-
-// Parse the data from the database into JSON
-app.get('/api/users/', (req, res) => {
-    const query = 'SELECT * FROM users';
-    const result = db.run(query);
-    res.json(result);
 });
 
 app.use(express.static('frontend'));

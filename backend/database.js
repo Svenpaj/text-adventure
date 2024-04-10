@@ -15,10 +15,14 @@ async function setup() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
-        gamestate BLOB NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`);
+    await db.exec(`CREATE TABLE IF NOT EXISTS game_data (
+        user_id INTEGER PRIMARY KEY,
+        state TEXT NOT NULL
+    )`);
+
     console.log('Connected to the SQLite database.');
 }
 

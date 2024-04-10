@@ -8,10 +8,16 @@
   <title>Text Adventure Game</title>
   <style>
     body {
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      font-family: monospace, serif;
       font-size: large;
       background-color: rgb(33, 33, 33);
       color: white;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      background-color: rgba(33, 33, 33);
     }
 
     h1,
@@ -86,10 +92,157 @@
         opacity: 1;
       }
     }
+
+    .block-cube.block-input .bg-top,
+    .block-cube.block-input .bg-right,
+    .block-cube.block-input .bg {
+      background: rgba(255, 255, 255, 0.5);
+      transition: background 0.2s ease-in-out;
+    }
+
+    .block-cube.block-input .bg-right .bg-inner,
+    .block-cube.block-input .bg-top .bg-inner {
+      transition: all 0.2s ease-in-out;
+    }
+
+    .block-cube.block-input:focus .bg-top,
+    .block-cube.block-input:focus .bg-right,
+    .block-cube.block-input:focus .bg,
+    .block-cube.block-input:hover .bg-top,
+    .block-cube.block-input:hover .bg-right,
+    .block-cube.block-input:hover .bg {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .block-cube.block-cube-hover:focus .bg .bg-inner,
+    .block-cube.block-cube-hover:hover .bg .bg-inner {
+      top: 100%;
+    }
+
+    .text a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .text {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .form .btn {
+      width: 100%;
+      display: block;
+      padding: 14px 16px;
+      background: transparent;
+      outline: none;
+      border: 0;
+      color: #fff;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+      font-family: monospace;
+      font-size: 16px;
+    }
+
+    .block-cube {
+      position: relative;
+    }
+
+    .block-cube .bg-top {
+      position: absolute;
+      height: 10px;
+      background: #020024;
+      background: linear-gradient(90deg, #020024 0%, #340979 37%, #00d4ff 94%);
+      bottom: 100%;
+      left: 5px;
+      right: -5px;
+      transform: skew(-45deg, 0);
+      margin: 0;
+    }
+
+    .block-cube .bg-top .bg-inner {
+      bottom: 0;
+    }
+
+    .block-cube .bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: #020024;
+      background: linear-gradient(90deg, #020024 0%, #340979 37%, #00d4ff 94%);
+    }
+
+    .block-cube .bg-right {
+      position: absolute;
+      background: #020024;
+      background: #00d4ff;
+      top: -5px;
+      z-index: 0;
+      bottom: 5px;
+      width: 10px;
+      left: 100%;
+      transform: skew(0, -45deg);
+    }
+
+    .block-cube .bg-right .bg-inner {
+      left: 0;
+    }
+
+    .block-cube .bg .bg-inner {
+      transition: all 0.2s ease-in-out;
+    }
+
+    .block-cube .bg-inner {
+      background: #212121;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      right: 2px;
+      bottom: 2px;
+    }
+
+    .block-cube .text {
+      position: relative;
+      z-index: 2;
+    }
+
+    .block-cube.block-input input {
+      position: relative;
+      z-index: 2;
+    }
   </style>
 </head>
 
 <body>
+  <nav>
+    <button class='control block-cube block-input' type='submit'>
+      <div class='bg-top'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg-right'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg'>
+        <div class='bg-inner'></div>
+      </div>
+      <div id="saveGameButton" class='text'>Save Game</div>
+    </button>
+    </div>
+    <button class='control block-cube block-input' type='submit'>
+      <div class='bg-top'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg-right'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg'>
+        <div class='bg-inner'></div>
+      </div>
+      <div id="loadGameButton" class='text'>Load Game</div>
+    </button>
+
+  </nav>
   <h1>Text Adventure Game</h1>
   <h3>Welcome to the text adventure game. Type your commands in the input below and press Enter to play.</p>
     <div class="gameContainer">

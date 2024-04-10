@@ -5,6 +5,57 @@ function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+// Save and Load Game State
+// Implement this inside the TextAdventureGame class
+function saveGameState(state) {
+    fetch('/api/game/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ state })
+    })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Error saving game state:', error));
+}
+
+function loadGameState() {
+    fetch('/api/game/load')
+        .then(response => response.json())
+        .then(data => {
+            const state = data.state;
+            return state;
+            // Load the state...
+        })
+        .catch(error => console.error('Error loading game state:', error));
+}
+
+getCurrentGameState = () => {
+    return {
+        currentRoom: this.currentRoom,
+        playerStats: this.playerStats,
+        inventory: this.inventory
+    }; // Assuming these are the relevant game state variables
+}
+
+// Add event listeners to the buttons
+
+document.getElementById('saveGameButton').addEventListener('click', () => {
+    const state = getCurrentGameState(); // Implement this function to retrieve the current game state
+    saveGameState(state);
+});
+
+document.getElementById('loadGameButton').addEventListener('click', () => {
+    loadGameState();
+});
+
+// ---------------------------------//
+//implement the obove to the game class
+
+
+
 class TextAdventureGame {
     constructor() {
         this.gameConsole = document.getElementById('gameConsole');
@@ -36,6 +87,10 @@ class TextAdventureGame {
             }
         });
     }
+
+
+
+
 
     processCommand(command) {
         const [action, ...params] = command.split(' ');
@@ -313,6 +368,23 @@ class TextAdventureGame {
         }
     }
 
+    async saveGameState(userId) {
+        const state = { currentRoom: this.currentRoom, playerStats: this.playerStats, inventory: this.inventory };
+        const db = await openDB();
+        const data = JSON.stringify(state);
+        await db.run('REPLACE INTO game_states (user_id, state) VALUES (?, ?)', [userId, data]);
+    }
+
+    async loadGameState(userId) {
+        const db = await openDB();
+        const row = await db.get('SELECT state FROM game_states WHERE user_id = ?', [userId]);
+        if (row) {
+            const state = JSON.parse(row.state);
+            // Load the state...
+        }
+    }
+
+
     continueGame() {
         if (this.playerStats.health <= 0) {
             this.writeText('Game Over. You have been defeated.');
@@ -335,6 +407,13 @@ class TextAdventureGame {
     startGame() {
         writeText('Welcome to the adventure game!');
         this.showRoomInfo(this.currentRoom);
+    }
+
+    startGameWithLoad() {
+        writeText('Welcome to the adventure game!');
+        this.loadGameState().then(() => {
+            this.showRoomInfo(this.currentRoom);
+        });
     }
 
 }
