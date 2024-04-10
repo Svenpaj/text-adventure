@@ -20,7 +20,9 @@ async function setup() {
     )`);
     await db.exec(`CREATE TABLE IF NOT EXISTS game_data (
         user_id INTEGER PRIMARY KEY,
-        state TEXT NOT NULL
+        state TEXT NOT NULL,
+        modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`);
 
     console.log('Connected to the SQLite database.');

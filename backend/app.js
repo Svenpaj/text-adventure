@@ -79,7 +79,7 @@ app.post('/api/login', async (req, res) => {
                 req.session.userId = user.id;
                 console.log(username, ": ", user.id, ' has logged in')
                 console.log(req.session);
-                return res.send('Login successful');
+                return res.redirect('/game');
             } else {
                 // Passwords do not match
                 return res.status(401).send('Incorrect username or password');
@@ -123,17 +123,20 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
-app.post('/api/game/save', ensureAuthenticated, async (req, res) => {
+app.put('/api/game/save', ensureAuthenticated, async (req, res) => {
     const userId = req.session.userId;
-    const gameState = req.body.state; // game state passed in the request body
+    const gameState = req.body; // game state passed in the request body
 
     try {
-        await saveGameState(userId, gameState); // 
-        res.json({ message: "Game state saved successfully." });
+        const db = await openDB();
+        const data = JSON.stringify(gameState);
+        await db.run('REPLACE INTO game_data (user_id, state) VALUES (?, ?)', [userId, data]);
+        console.log('Game state saved for user', userId, 'with data:', data);
     } catch (error) {
         console.error(error);
         res.status(500).send("Error saving game state.");
     }
+    res.json({ status: 'Game state saved' });
 });
 
 // This would be similar for loading, but retrieving from the database instead
@@ -142,12 +145,17 @@ app.get('/api/game/load', ensureAuthenticated, async (req, res) => {
     const userId = req.session.userId;
 
     try {
-        const gameState = await loadGameState(userId);
-        res.json({ state: gameState });
+        const db = await openDB();
+        const data = await db.get('SELECT state FROM game_data WHERE user_id = ?', [userId]);
+        if (data) {
+            res.json({ state: JSON.parse(data.state) });
+        } else {
+            res.status(404).send('No game state found');
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send("Error loading game state.");
-    }
+    };
 });
 
 app.delete('/api/users/:id', async (req, res) => {
