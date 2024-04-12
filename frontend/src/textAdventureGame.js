@@ -55,6 +55,8 @@ class TextAdventureGame {
             case 'take':
                 this.pickUpItem(target);
                 break;
+            case 'loot':
+                this.lootEnemy(target);
             case 'use':
                 this.useItem(target);
                 break;
@@ -101,29 +103,67 @@ class TextAdventureGame {
         }
         if (rooms[roomName].enemies) {
             rooms[roomName].enemies.forEach(enemy => {
-                writeText(`You see a ${enemy.name}`);
+                writeText(`You see a ${enemy.name} here.`);
             });
         }
     }
 
     inspect(itemName) {
-        // Inspect function implementation
-        if (rooms[this.currentRoom].items) {
-            const itemIndex = rooms[this.currentRoom].items.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
-            if (itemIndex > -1) {
-                writeText(rooms[this.currentRoom].items[itemIndex]);
-            } else if (this.inventory.length > 0) {
-                const inventoryItemIndex = this.inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
-                if (inventoryItemIndex > -1) {
-                    writeText(this.inventory[inventoryItemIndex].description);
-                    if (this.inventory[inventoryItemIndex].image) {
-                        const roomImageContainer = document.getElementById('roomImageContainer');
-                        roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${this.inventory[inventoryItemIndex].image}" style="margin: auto;" alt="${this.inventory[inventoryItemIndex].name}">`;
-                    }
-                } else {
-                    writeText(`You don't see nor have a ${itemName}.`);
-                }
+        const normalizedItemName = itemName.toLowerCase();
+        // First check the room's items
+        if (this.inspectRoomItems(normalizedItemName)) {
+            return;
+        }
+        // Then check the player's inventory
+        if (this.inspectInventoryItems(normalizedItemName)) {
+            return;
+        }
+        // Lastly, check the room's enemies
+        this.inspectRoomEnemies(normalizedItemName);
+    }
+
+    inspectRoomItems(itemName) {
+        const roomItems = rooms[this.currentRoom].items;
+        if (!roomItems) return false;
+
+        const item = roomItems.find(item => item.name.toLowerCase() === itemName);
+        if (item) {
+            writeText(item.description);
+            return true;
+        }
+        return false;
+    }
+
+    inspectInventoryItems(itemName) {
+        const item = this.inventory.find(item => item.name.toLowerCase() === itemName);
+        if (item) {
+            this.displayItemWithImage(item);
+            writeText(item.description);
+            if (item.type === 'weapon' || item.type === 'armor') {
+                writeText(`Attack: ${item.attack || 0}, Defense: ${item.defense || 0}`);
             }
+            return true;
+        }
+        return false;
+    }
+
+    inspectRoomEnemies(itemName) {
+        const enemies = rooms[this.currentRoom].enemies;
+        if (!enemies) return;
+
+        const enemy = enemies.find(enemy => enemy.name.toLowerCase() === itemName);
+        if (enemy) {
+            writeText(enemy.description);
+            writeText(`Health: ${enemy.health}, Attack: ${enemy.attack}`);
+        } else {
+            writeText(`You don't see a ${itemName} here.`);
+        }
+    }
+
+    displayItemWithImage(item) {
+        if (item.image) {
+            const roomImageContainer = document.getElementById('roomImageContainer');
+            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${item.image}" alt="${item.name}" style="width: 100%;">`;
         }
     }
 
@@ -185,6 +225,17 @@ class TextAdventureGame {
         }
     }
 
+    lootEnemy(enemy) {
+        if (enemy.loot && enemy.loot.length > 0) {
+            enemy.loot.forEach(item => {
+                this.inventory.push(item);  // Add loot to player's inventory
+                writeText(`You found ${item.name} on ${enemy.name}.`);
+            });
+        } else {
+            writeText(`${enemy.name} had nothing to loot.`);
+        }
+    }
+
     useItem(itemName) {
         const itemIndex = this.inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
         if (itemIndex === -1) {
@@ -192,7 +243,7 @@ class TextAdventureGame {
             return;
         }
 
-        const item = this.inventory[itemIndex];
+        const item = this.inventory[itemIndex]; // I might take away this line
         const room = rooms[this.currentRoom];
         const interaction = room.interactions?.[itemName.toLowerCase()];
 
@@ -216,22 +267,38 @@ class TextAdventureGame {
     }
 
     equipItem(itemName) {
-        // equipItem function implementation
-        const itemIndex = this.inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'armor' || item.type === 'weapon');
+        // Make sure the logical grouping is correct to properly filter items by type.
+        const itemIndex = this.inventory.findIndex(item =>
+            item.name.toLowerCase() === itemName.toLowerCase() && (item.type === 'armor' || item.type === 'weapon')
+        );
+
         if (itemIndex === -1) {
             writeText(`You don't have ${itemName} in your inventory.`);
             return;
         }
 
         const item = this.inventory[itemIndex];
+        if (item.equipped) {
+            writeText(`You already have ${item.name} equipped.`);
+            return;
+        }
+
         // Equip the item based on its type
         switch (item.type) {
             case 'armor':
+                if (this.playerStats.equippedArmor) {
+                    writeText(`You already have armor equipped. Unequip it first.`);
+                    return;
+                }
                 this.playerStats.defense += item.defense;
                 this.playerStats.equippedArmor = item; // Store the equipped armor for reference
                 writeText(`You equipped the ${item.name}. Defense is now ${this.playerStats.defense}.`);
                 break;
             case 'weapon':
+                if (this.playerStats.equippedWeapon) {
+                    writeText(`You already have a weapon equipped. Unequip it first.`);
+                    return;
+                }
                 this.playerStats.attack += item.attack;
                 this.playerStats.equippedWeapon = item; // Store the equipped weapon for reference
                 writeText(`You equipped the ${item.name}. Attack is now ${this.playerStats.attack}.`);
@@ -245,23 +312,28 @@ class TextAdventureGame {
         item.equipped = true;
     }
 
+
     unequipItem(itemName) {
-        // unequipItem function implementation
-        const itemIndex = this.inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase() && item.type === 'armor' && item.equipped);
+        // Search for the item regardless of its type but ensure it is equipped.
+        const itemIndex = this.inventory.findIndex(item =>
+            item.name.toLowerCase() === itemName.toLowerCase() && item.equipped
+        );
+
         if (itemIndex === -1) {
             writeText(`You don't have ${itemName} equipped.`);
             return;
         }
 
         const item = this.inventory[itemIndex];
-        // Equip the item based on its type
         switch (item.type) {
             case 'armor':
                 this.playerStats.defense -= item.defense;
+                this.playerStats.equippedArmor = null; // Clear the reference
                 writeText(`You unequipped the ${item.name}. Defense is now ${this.playerStats.defense}.`);
                 break;
             case 'weapon':
                 this.playerStats.attack -= item.attack;
+                this.playerStats.equippedWeapon = null; // Clear the reference
                 writeText(`You unequipped the ${item.name}. Attack is now ${this.playerStats.attack}.`);
                 break;
             default:
@@ -293,6 +365,7 @@ class TextAdventureGame {
 
         if (enemy.health <= 0) {
             writeText(`You defeated the ${enemy.name}!`);
+            this.lootEnemy(enemy);
             if (enemy.guarding) {
                 for (const direction in room.exits) {
                     const exit = room.exits[direction];
@@ -302,24 +375,24 @@ class TextAdventureGame {
                     }
                 }
                 room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy
-            } else {
-                // Enemy attacks back
-                this.playerStats.health -= enemy.attack;
-                writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
-                if (this.playerStats.health <= 0) {
-                    writeText('You have been defeated. Game Over.');
-                    this.rl.close(); // Assuming rl is a part of this class now
-                }
+            }
+        } else {
+            // Enemy attacks back
+            this.playerStats.health -= enemy.attack;
+            writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
+            if (this.playerStats.health <= 0) {
+                writeText('You have been defeated. Game Over.');
+                this.rl.close(); // Assuming rl is a part of this class now
             }
         }
     }
 
     continueGame() {
         if (this.playerStats.health <= 0) {
-            this.writeText('Game Over. You have been defeated.');
+            writeText('Game Over. You have been defeated.');
             this.endGame();
         } else if (this.currentRoom === 'treasureRoom') {
-            this.writeText('Game Over. You\'ve won!');
+            writeText('Game Over. You\'ve won!');
             this.endGame();
         }
         // In a browser environment, no need to explicitly wait for the next command.
@@ -330,7 +403,7 @@ class TextAdventureGame {
         // Disable the command input field to prevent further input.
         this.commandInput.disabled = true;
         // Optionally, you could provide a way to restart the game.
-        this.writeText('Refresh the page to play again.');
+        writeText('Refresh the page to play again.');
     }
 
     startGame() {

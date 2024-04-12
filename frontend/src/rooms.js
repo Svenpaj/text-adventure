@@ -17,8 +17,12 @@ export const rooms = {
             north: { roomId: 'treasureRoom', locked: true, description: 'a sneaky goblin is guarding the door.', guarded: true },
         },
         enemies: [
-            { name: 'Goblin', description: 'a little weak goblin.', health: 5, attack: 1, guarding: true },
-            { name: 'Orc', description: 'a big, strong orc.', health: 10, attack: 2, guarding: false }
+            { name: 'Goblin', description: 'little weak goblin.', health: 5, attack: 1, guarding: true },
+            {
+                name: 'Orc', description: 'big, strong orc.', health: 10, attack: 2, guarding: false, loot: [
+                    { name: 'Axe', description: 'a sharp axe.', type: 'weapon', attack: 2, equipped: false }
+                ]
+            }
         ],
         interactions: {
             'golden key': {
@@ -37,8 +41,8 @@ export const rooms = {
             north: { roomId: 'secretRoom', locked: true }, // Indicate that the exit is initially locked
         },
         items: [
-            { name: 'Ornate key', description: 'a small ornate key.' },
-            { name: 'Leather Armor', description: 'a sturdy set of leather armor.', type: 'armor', defense: 2, equipped: false },
+            { name: 'Ornate key', description: 'small ornate key.' },
+            { name: 'Leather Armor', description: 'sturdy set of leather armor.', type: 'armor', defense: 2, equipped: false },
         ],
         interactions: {
             'ornate key': {
