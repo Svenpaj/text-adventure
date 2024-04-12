@@ -20,13 +20,25 @@
       background-color: rgba(33, 33, 33);
     }
 
+    button {
+      font-size: large;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid white;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
     h1,
     h3 {
       text-align: center;
     }
 
     p {
-      margin-top: 5px
+      margin-top: 5px;
     }
 
     .gameContainer {
@@ -41,10 +53,13 @@
     }
 
     #roomImageContainer {
-      animation: fadeIn 3s;
       border-radius: 5px;
       max-width: fit-content;
       padding: 2px;
+    }
+
+    #roomImageContainer img {
+      animation: fadeIn 5s;
     }
 
     #gameConsole {
@@ -239,6 +254,18 @@
         <div class='bg-inner'></div>
       </div>
       <div id="loadGameButton" class='text'>Load Game</div>
+    </button>
+    <button class='control block-cube block-input' type="button">
+      <div class='bg-top'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg-right'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg'>
+        <div class='bg-inner'></div>
+      </div>
+      <div id="logOutButton" class='text'><a href="/logout">Logout</a></div>
     </button>
 
   </nav>
