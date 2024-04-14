@@ -199,8 +199,14 @@ app.get('/game', (req, res) => {
     if (!req.session.userId) {
         return res.redirect('/login');
     }
+
+    // TODO - Load the game state from the database and pass it to the frontend from the homepage and do not instantly redirect to the game page
     res.sendFile(join(__dirname, '../frontend/index.html'));
 });
+
+// TODO - Fix the homepage route to load the game state from the database and pass it to the frontend
+
+// TODO - Fix a gameover route that will redirect to the homepage or give you a heartfelt goodbye message
 
 app.use(express.static('frontend'));
 

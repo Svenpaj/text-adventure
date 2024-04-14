@@ -9,7 +9,7 @@ window.onload = () => {
 function setupEventListeners(game) {
     // Assuming you have buttons in your HTML for saving/loading
     document.getElementById('saveGameButton').addEventListener('click', () => saveGameState(game));
-    document.getElementById('loadGameButton').addEventListener('click', () => loadGameState(game));
+    document.getElementById('loadGameButton').addEventListener('click', () => loadGameState());
 }
 
 function saveGameState(game) {
@@ -33,7 +33,7 @@ function saveGameState(game) {
         .catch(error => console.error('Error saving game state:', error));
 }
 
-function loadGameState(game) {
+function loadGameState() {
 
     fetch(`/api/game/load`, {
         method: 'GET',
@@ -42,10 +42,21 @@ function loadGameState(game) {
         .then(response => response.json())
         .then(data => {
             console.log('Game state loaded', data);
-            game.currentRoom = data.state.currentRoom;
-            game.playerStats = data.state.playerStats;
-            game.inventory = data.state.inventory;
+            if (data) {
+                initializeGame(data.state);
+            }
+            //game.currentRoom = data.state.currentRoom;
+            //game.playerStats = data.state.playerStats;
+            //game.inventory = data.state.inventory;
             // Update the UI as needed based on the loaded state
         })
         .catch(error => console.error('Error loading game state:', error));
+}
+
+function initializeGame(savedState) {
+    // Initialize the game state, load the initial room, etc.
+    const game = new TextAdventureGame();
+    game.currentRoom = savedState.currentRoom;
+    game.playerStats = savedState.playerStats;
+    game.inventory = savedState.inventory;
 }

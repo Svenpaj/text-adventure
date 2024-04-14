@@ -6,16 +6,23 @@ function wait(ms) {
 }
 
 class TextAdventureGame {
-    constructor() {
+    constructor(initialState) {
         // Initialize the game state
         this.gameConsole = document.getElementById('gameConsole');
         this.commandInput = document.getElementById('commandInput');
         this.gameCommands = document.getElementById('gameCommands');
         this.setupInputListener();
-        // Initialize any other game state variables here
-        this.playerStats = { health: 10, attack: 10, defense: 0, equippedArmor: null, equippedWeapon: null };
-        this.currentRoom = 'start';
-        this.inventory = [];
+        if (initialState) {
+            this.currentRoom = initialState.currentRoom;
+            this.playerStats = initialState.playerStats;
+            this.inventory = initialState.inventory;
+        }
+        else {
+            // Initialize any other game state variables here
+            this.playerStats = { health: 10, attack: 10, defense: 0, equippedArmor: null, equippedWeapon: null };
+            this.currentRoom = 'start';
+            this.inventory = [];
+        }
         this.startGame();
     }
 
