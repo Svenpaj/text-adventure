@@ -43,11 +43,14 @@ function loadGameState() {
         .then(data => {
             console.log('Game state loaded', data);
             if (data) {
-                initializeGame(data.state);
+                const state = {
+                    currentRoom: data.state.gameState.currentRoom,
+                    playerStats: data.state.gameState.playerStats,
+                    inventory: data.state.gameState.inventory
+                }
+                initializeGame(state);
             }
-            //game.currentRoom = data.state.currentRoom;
-            //game.playerStats = data.state.playerStats;
-            //game.inventory = data.state.inventory;
+
             // Update the UI as needed based on the loaded state
         })
         .catch(error => console.error('Error loading game state:', error));
@@ -55,8 +58,6 @@ function loadGameState() {
 
 function initializeGame(savedState) {
     // Initialize the game state, load the initial room, etc.
-    const game = new TextAdventureGame();
-    game.currentRoom = savedState.currentRoom;
-    game.playerStats = savedState.playerStats;
-    game.inventory = savedState.inventory;
+    const game = new TextAdventureGame(savedState);
+    setupEventListeners(game);
 }
