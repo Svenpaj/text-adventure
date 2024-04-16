@@ -1,5 +1,5 @@
 // server.js
-import express, { query, response } from 'express';
+import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join, parse } from 'path';
 import openDB from './database.js';
