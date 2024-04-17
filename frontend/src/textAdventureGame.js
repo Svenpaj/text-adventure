@@ -13,9 +13,14 @@ class TextAdventureGame {
         this.gameCommands = document.getElementById('gameCommands');
         this.setupInputListener();
         if (initialState) {
+            console.log('initialState:', initialState)
             this.currentRoom = initialState.currentRoom;
             this.playerStats = initialState.playerStats;
-            this.inventory = initialState.inventory;
+            this.inventory = initialState.inventory || [];
+            console.log('this.currentRoom:', this.currentRoom)
+            console.log('this.playerStats:', this.playerStats)
+            // problem with inventory being empty, but the data is there...?
+            console.log('this.inventory:', this.inventory)
         }
         else {
             // Initialize any other game state variables here
@@ -81,7 +86,7 @@ class TextAdventureGame {
                 this.inspect(target);
                 break;
             case 'look':
-                this.look(); // Assuming `look` method defaults to looking in the current room
+                this.look(); // At this moment `look` method defaults to looking in the current room
                 break;
             case 'attack':
                 this.attackEnemy(target);
@@ -417,12 +422,10 @@ class TextAdventureGame {
         writeText('Welcome to the adventure game!');
         this.showRoomInfo(this.currentRoom);
     }
-
+    // not using at this moment..
     startGameWithLoad() {
-        writeText('Welcome to the adventure game!');
-        this.loadGameState().then(() => {
-            this.showRoomInfo(this.currentRoom);
-        });
+        writeText('Welcome back to the adventure game!');
+        this.showRoomInfo(this.currentRoom);
     }
 }
 

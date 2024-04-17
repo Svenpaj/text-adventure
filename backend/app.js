@@ -182,7 +182,7 @@ app.get('/logout', (req, res) => {
     if (!req.session.userId) {
         return res.send('You are not logged in');
     }
-    console.log(req.session.userId, ' has logged out');
+    console.log('id:', req.session.userId, ' has logged out');
     req.session.destroy((err) => {
         if (err) {
             return console.log(err);
