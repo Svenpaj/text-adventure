@@ -422,11 +422,6 @@ class TextAdventureGame {
         writeText('Welcome to the adventure game!');
         this.showRoomInfo(this.currentRoom);
     }
-    // not using at this moment..
-    startGameWithLoad() {
-        writeText('Welcome back to the adventure game!');
-        this.showRoomInfo(this.currentRoom);
-    }
 }
 
 export { TextAdventureGame };

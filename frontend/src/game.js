@@ -1,15 +1,19 @@
 import { TextAdventureGame } from './textAdventureGame.js';
 
 window.onload = () => {
-    const game = new TextAdventureGame();
     // You can now use 'game' for UI interactions, saving, and loading
-    setupEventListeners(game);
+    setupEventListeners();
 };
 
-function setupEventListeners(game) {
+function setupEventListeners() {
     // Assuming you have buttons in your HTML for saving/loading
+    document.getElementById('newGameButton').addEventListener('click', () => newGame());
     document.getElementById('saveGameButton').addEventListener('click', () => saveGameState(game));
     document.getElementById('loadGameButton').addEventListener('click', () => loadGameState());
+}
+
+function newGame() {
+    const game = new TextAdventureGame();
 }
 
 function saveGameState(game) {
