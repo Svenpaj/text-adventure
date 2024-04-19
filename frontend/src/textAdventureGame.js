@@ -7,6 +7,10 @@ function wait(ms) {
 
 class TextAdventureGame {
     constructor(initialState) {
+        // Make a particular copy of all room data for this game
+        // if we want to inject new propterties in a room
+        // it will now only for this copy
+        this.rooms = JSON.parse(JSON.stringify(rooms));
         // Initialize the game state
         this.gameConsole = document.getElementById('gameConsole');
         this.commandInput = document.getElementById('commandInput');
@@ -17,6 +21,8 @@ class TextAdventureGame {
             this.currentRoom = initialState.currentRoom;
             this.playerStats = initialState.playerStats;
             this.inventory = initialState.inventory || [];
+            this.rooms = initialState.rooms;
+            
             console.log('this.currentRoom:', this.currentRoom)
             console.log('this.playerStats:', this.playerStats)
             // problem with inventory being empty, but the data is there...?
@@ -27,12 +33,13 @@ class TextAdventureGame {
             this.playerStats = { health: 10, attack: 10, defense: 0, equippedArmor: null, equippedWeapon: null };
             this.currentRoom = 'start';
             this.inventory = [];
+            this.rooms = this.rooms;
         }
         this.startGame();
     }
 
     updateRoomBackground() {
-        const room = rooms[this.currentRoom];
+        const room = this.rooms[this.currentRoom];
         const imagePath = room.image ? `./images/${room.image}` : 'none';
 
         const roomImageContainer = document.getElementById('roomImageContainer');
@@ -101,20 +108,20 @@ class TextAdventureGame {
 
     // Game Logic Methods
     look(roomName = this.currentRoom) {
-        writeText(`You are in the ${roomName}. And you can see exits to the ${Object.keys(rooms[roomName].exits).join(', ')}.`);
-        if (rooms[roomName].detailedDescription) {
-            writeText(rooms[roomName].detailedDescription);
+        writeText(`You are in the ${roomName}. And you can see exits to the ${Object.keys(this.rooms[roomName].exits).join(', ')}.`);
+        if (this.rooms[roomName].detailedDescription) {
+            writeText(this.rooms[roomName].detailedDescription);
         }
-        if (rooms[roomName].items) {
-            rooms[roomName].items.forEach(item => {
+        if (this.rooms[roomName].items) {
+            this.rooms[roomName].items.forEach(item => {
                 writeText(`You spot a ${item.description}`);
             });
-            const imagePath = rooms[roomName].imageItems ? `./images/${rooms[roomName].imageItems}` : 'none';
+            const imagePath = this.rooms[roomName].imageItems ? `./images/${this.rooms[roomName].imageItems}` : 'none';
             const roomImageContainer = document.getElementById('roomImageContainer');
-            roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${rooms[roomName].name}">`;
+            roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${this.rooms[roomName].name}">`;
         }
-        if (rooms[roomName].enemies) {
-            rooms[roomName].enemies.forEach(enemy => {
+        if (this.rooms[roomName].enemies) {
+            this.rooms[roomName].enemies.forEach(enemy => {
                 writeText(`You see a ${enemy.name} here.`);
             });
         }
@@ -135,7 +142,7 @@ class TextAdventureGame {
     }
 
     inspectRoomItems(itemName) {
-        const roomItems = rooms[this.currentRoom].items;
+        const roomItems = this.rooms[this.currentRoom].items;
         if (!roomItems) return false;
 
         const item = roomItems.find(item => item.name.toLowerCase() === itemName);
@@ -160,7 +167,7 @@ class TextAdventureGame {
     }
 
     inspectRoomEnemies(itemName) {
-        const enemies = rooms[this.currentRoom].enemies;
+        const enemies = this.rooms[this.currentRoom].enemies;
         if (!enemies) return;
 
         const enemy = enemies.find(enemy => enemy.name.toLowerCase() === itemName);
@@ -181,7 +188,7 @@ class TextAdventureGame {
 
     showRoomInfo(roomName) {
         // showRoomInfo function implementation
-        writeText(rooms[roomName].description);
+        writeText(this.rooms[roomName].description);
         this.updateRoomBackground();
     }
 
@@ -189,7 +196,7 @@ class TextAdventureGame {
         // moveToRoom function implementation
         writeText(`You move ${direction}...`);
         await wait(1000); // Wait for 1 second per (1000ms) before moving to the new room
-        const room = rooms[this.currentRoom];
+        const room = this.rooms[this.currentRoom];
         let exit = room.exits[direction];
 
         // First check if the exit is guarded
@@ -226,7 +233,7 @@ class TextAdventureGame {
 
     pickUpItem(itemName) {
         // pickUpItem function implementation
-        const roomItems = rooms[this.currentRoom].items || [];
+        const roomItems = this.rooms[this.currentRoom].items || [];
         const itemIndex = roomItems.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
         if (itemIndex > -1) {
             const [item] = roomItems.splice(itemIndex, 1); // Remove item from room
@@ -256,7 +263,7 @@ class TextAdventureGame {
         }
 
         const item = this.inventory[itemIndex]; // I might take away this line
-        const room = rooms[this.currentRoom];
+        const room = this.rooms[this.currentRoom];
         const interaction = room.interactions?.[itemName.toLowerCase()];
 
         if (interaction) {
@@ -358,7 +365,7 @@ class TextAdventureGame {
     }
 
     attackEnemy(enemyName) {
-        const room = rooms[this.currentRoom];
+        const room = this.rooms[this.currentRoom];
         if (!room.enemies) {
             writeText('There are no enemies here.');
             return;

@@ -4,7 +4,7 @@
 
 * Resize images to be the same size, execpt for grand views.
 
-* Fix so the state of the world is both saved and loaded. (currently the world is not saved or loaded -> resulting in the possibility to cheat and loot the same item several times).
+* Fix so the state of the world is both saved and loaded. (currently the world is not saved or loaded -> resulting in the possibility to cheat and loot the same item several times). [CHECK!]
 
 * Break out code and move out game functions to seperate files.
 
@@ -18,3 +18,5 @@
 * Create boss fights.
 
 * Give the player stats, that will reflect on health, damage, defence and mana (possibly more).
+
+* Thinking about implementing a global clock with nighttime and daytime

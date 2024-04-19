@@ -2,7 +2,7 @@ import { TextAdventureGame } from './textAdventureGame.js';
 
 setupEventListeners();
 
-function setupEventListeners() {
+function setupEventListeners(game) {
     // Assuming you have buttons in your HTML for saving/loading
     document.getElementById('newGameButton').addEventListener('click', () => newGame());
     document.getElementById('saveGameButton').addEventListener('click', () => saveGameState(game));
@@ -11,6 +11,7 @@ function setupEventListeners() {
 
 function newGame() {
     const game = new TextAdventureGame();
+    setupEventListeners(game);
 }
 
 function saveGameState(game) {
@@ -18,7 +19,8 @@ function saveGameState(game) {
     const gameState = {
         currentRoom: game.currentRoom,
         playerStats: game.playerStats,
-        inventory: game.inventory
+        inventory: game.inventory,
+        rooms: game.rooms
     };
 
     fetch('/api/game/save', {
@@ -47,7 +49,8 @@ function loadGameState() {
                 const state = {
                     currentRoom: data.state.gameState.currentRoom,
                     playerStats: data.state.gameState.playerStats,
-                    inventory: data.state.gameState.inventory
+                    inventory: data.state.gameState.inventory,
+                    rooms: data.state.gameState.rooms
                 }
                 initializeGame(state);
             }

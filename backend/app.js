@@ -109,10 +109,13 @@ app.post('/api/users', async (req, res) => {
         const db = await openDB(); // Make sure you have a function to get your DB connection
         const result = await db.run(query, [username, hash]);
         console.log(`A new row has been inserted with rowid ${result.lastID}`);
+        console.log('User successfully registered:', username);
+        const registerBody = document.getElementById('register');
+        registerBody.innerHTML = `<h2>User successfully registered: ${username}</h2>`;
 
         // After successful registration, redirect to login page or send a success message
         // res.redirect('/login'); // Use this for redirect OR
-        res.send('User registered successfully'); // Use this to send a response back
+        res.redirect('/login'); // Use this for sending a response
     } catch (err) {
         console.error(err.message);
         if (err.code === 'SQLITE_CONSTRAINT') {
