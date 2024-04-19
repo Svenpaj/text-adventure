@@ -9,7 +9,7 @@ export const rooms = {
     },
     hallway: {
         description: 'You are in a long hallway. There is a door to the back to the south and another to the west. You also see a golden door to the north.',
-        image: 'hallway.webp',
+        image: 'hallway3small.webp',
         imageEnemies: 'hallwayEnemies.webp',
         exits: {
             south: 'start',
