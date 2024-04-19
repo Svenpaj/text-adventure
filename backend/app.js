@@ -110,8 +110,6 @@ app.post('/api/users', async (req, res) => {
         const result = await db.run(query, [username, hash]);
         console.log(`A new row has been inserted with rowid ${result.lastID}`);
         console.log('User successfully registered:', username);
-        const registerBody = document.getElementById('register');
-        registerBody.innerHTML = `<h2>User successfully registered: ${username}</h2>`;
 
         // After successful registration, redirect to login page or send a success message
         // res.redirect('/login'); // Use this for redirect OR

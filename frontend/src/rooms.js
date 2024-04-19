@@ -34,7 +34,7 @@ export const rooms = {
     },
     library: {
         description: 'You are in a dusty old library. There is a door to the east and a strange door to the north.',
-        image: 'library.webp',
+        image: 'librarysmall.webp',
         imageItems: 'libraryItems.webp',
         exits: {
             east: 'hallway',
