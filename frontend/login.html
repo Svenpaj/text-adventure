@@ -231,6 +231,21 @@
             <div class='text'><a href="/register">Register</a></div>
         </button>
     </form>
+    <button onclick="typeWriter()">Typewriter effect</button>
+    <p id="demo"></p>
+    <script>
+        var i = 0;
+        var txt = 'Welcome to the Text Adventure Game!';
+        var speed = 40;
+
+        function typeWriter() {
+            if (i < txt.length) {
+                document.getElementById("demo").innerHTML += txt.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+    </script>
 </body>
 
 </html>
