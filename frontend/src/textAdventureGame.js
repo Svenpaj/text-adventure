@@ -22,6 +22,7 @@ class TextAdventureGame {
             this.playerStats = initialState.playerStats;
             this.inventory = initialState.inventory || [];
             this.rooms = initialState.rooms;
+            // this.playerAbilities = initialState.playerAbilities;
             
             console.log('this.currentRoom:', this.currentRoom)
             console.log('this.playerStats:', this.playerStats)
@@ -30,7 +31,8 @@ class TextAdventureGame {
         }
         else {
             // Initialize any other game state variables here
-            this.playerStats = { health: 10, attack: 10, defense: 0, equippedArmor: null, equippedWeapon: null };
+            this.playerStats = { health: 20, attack: 3, defense: 0, speed: 10, equippedArmor: null, equippedWeapon: null };
+            // this.playerAbilities = {}
             this.currentRoom = 'start';
             this.inventory = [];
             this.rooms = this.rooms;
@@ -47,10 +49,11 @@ class TextAdventureGame {
 
     }
 
+
     setupInputListener() {
         this.commandInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && this.commandInput.value.trim() !== '') {
-                this.gameCommands.innerHTML += `<p>${this.commandInput.value}</p>`;
+                // this.gameCommands.innerHTML += `<p>${this.commandInput.value}</p>`;
                 this.processCommand(this.commandInput.value.trim());
                 this.commandInput.value = '';
             }
@@ -364,6 +367,11 @@ class TextAdventureGame {
         item.equipped = false;
     }
 
+    rollDice() {
+        return Math.floor(Math.random() * 20) + 1;
+    }
+
+    // Combat logic
     attackEnemy(enemyName) {
         const room = this.rooms[this.currentRoom];
         if (!room.enemies) {
@@ -379,8 +387,19 @@ class TextAdventureGame {
 
         const enemy = room.enemies[enemyIndex];
         // Simple combat calculation
-        enemy.health -= this.playerStats.attack;
-        writeText(`You attack the ${enemy.name} for ${this.playerStats.attack} damage. Its health is now ${enemy.health}.`);
+        // Testing out diceRoll in combat
+        // Making speed a factor in combat
+        let playerSpeed = this.playerStats.speed;
+        let enemySpeed = enemy.speed;
+        let pDice = this.rollDice();
+        // add critical hit
+        if (pDice >= 17) {
+            enemy.health -= ((this.playerStats.attack * 2) - enemy.defense);
+            writeText(`Critical Hit! You attack the ${enemy.name} for ${((this.playerStats.attack * 2) - enemy.defense)} damage. Its health is now ${enemy.health}.`);
+        }
+        else if (pDice >= 7 && pDice < 17) {
+            enemy.health -= (this.playerStats.attack - enemy.defense);
+        writeText(`You attack the ${enemy.name} for ${(this.playerStats.attack - enemy.defense)} damage. Its health is now ${enemy.health}.`);
 
         if (enemy.health <= 0) {
             writeText(`You defeated the ${enemy.name}!`);
@@ -397,6 +416,24 @@ class TextAdventureGame {
             }
         } else {
             // Enemy attacks back
+            let eDice = this.rollDice();
+            if (eDice >= 10) {
+                this.playerStats.health -= (enemy.attack - this.playerStats.defense);
+                writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
+                if (this.playerStats.health <= 0) {
+                    writeText('You have been defeated. Game Over.');
+                    this.rl.close(); // Assuming rl is a part of this class now
+                }
+            }
+            else {
+                writeText(`The ${enemy.name} missed you!`);
+                }
+            }
+        }
+        else {
+            writeText(`You missed the ${enemy.name}!`);
+            // Enemy attacks back
+
             this.playerStats.health -= enemy.attack;
             writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
             if (this.playerStats.health <= 0) {

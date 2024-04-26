@@ -17,9 +17,12 @@ export const rooms = {
             north: { roomId: 'treasureRoom', locked: true, description: 'a sneaky goblin is guarding the door.', guarded: true },
         },
         enemies: [
-            { name: 'Goblin', description: 'little weak goblin.', health: 5, attack: 1, guarding: true },
             {
-                name: 'Orc', description: 'big, strong orc.', health: 10, attack: 2, guarding: false, loot: [
+                name: 'Goblin', description: 'little weak goblin.', health: 5, attack: 1, defense: 1, speed: 2, guarding: true, loot:
+                    [{ name: 'Dagger', description: 'a rusty dagger.', type: 'weapon', attack: 1, equipped: false }]
+            },
+            {
+                name: 'Orc', description: 'big, strong orc.', health: 10, attack: 2, defense: 1, speed: 1, guarding: false, loot: [
                     { name: 'Axe', description: 'a sharp axe.', type: 'weapon', attack: 2, equipped: false }
                 ]
             }
