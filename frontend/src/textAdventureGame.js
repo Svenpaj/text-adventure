@@ -22,8 +22,7 @@ class TextAdventureGame {
             this.playerStats = initialState.playerStats;
             this.inventory = initialState.inventory || [];
             this.rooms = initialState.rooms;
-            // this.playerAbilities = initialState.playerAbilities;
-            
+
             console.log('this.currentRoom:', this.currentRoom)
             console.log('this.playerStats:', this.playerStats)
             // problem with inventory being empty, but the data is there...?
@@ -32,10 +31,8 @@ class TextAdventureGame {
         else {
             // Initialize any other game state variables here
             this.playerStats = { health: 20, attack: 3, defense: 0, speed: 10, equippedArmor: null, equippedWeapon: null };
-            // this.playerAbilities = {}
             this.currentRoom = 'start';
             this.inventory = [];
-            this.rooms = this.rooms;
         }
         this.startGame();
     }
@@ -53,7 +50,6 @@ class TextAdventureGame {
     setupInputListener() {
         this.commandInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && this.commandInput.value.trim() !== '') {
-                // this.gameCommands.innerHTML += `<p>${this.commandInput.value}</p>`;
                 this.processCommand(this.commandInput.value.trim());
                 this.commandInput.value = '';
             }
@@ -79,6 +75,7 @@ class TextAdventureGame {
                 break;
             case 'loot':
                 this.lootEnemy(target);
+                break;
             case 'use':
                 this.useItem(target);
                 break;
@@ -265,7 +262,8 @@ class TextAdventureGame {
             return;
         }
 
-        const item = this.inventory[itemIndex]; // I might take away this line
+        // const item = this.inventory[itemIndex]; // I might take away this line
+
         const room = this.rooms[this.currentRoom];
         const interaction = room.interactions?.[itemName.toLowerCase()];
 
@@ -388,19 +386,37 @@ class TextAdventureGame {
         const enemy = room.enemies[enemyIndex];
         // Simple combat calculation
         // Testing out diceRoll in combat
-        // Making speed a factor in combat
-        let playerSpeed = this.playerStats.speed;
-        let enemySpeed = enemy.speed;
         let pDice = this.rollDice();
         // add critical hit
         if (pDice >= 17) {
-            enemy.health -= ((this.playerStats.attack * 2) - enemy.defense);
-            writeText(`Critical Hit! You attack the ${enemy.name} for ${((this.playerStats.attack * 2) - enemy.defense)} damage. Its health is now ${enemy.health}.`);
+            this.attackWithCriticalHit(enemy);
+        } else if (pDice >= 7 && pDice < 17) {
+            this.attackEnemyWithNormalHit(enemy);
+        } else {
+            this.missedAttack(enemy);
         }
-        else if (pDice >= 7 && pDice < 17) {
-            enemy.health -= (this.playerStats.attack - enemy.defense);
-        writeText(`You attack the ${enemy.name} for ${(this.playerStats.attack - enemy.defense)} damage. Its health is now ${enemy.health}.`);
+    }
 
+    attackWithCriticalHit(enemy) {
+        enemy.health -= ((this.playerStats.attack * 2) - enemy.defense);
+        writeText(`Critical Hit! You attack the ${enemy.name} for ${((this.playerStats.attack * 2) - enemy.defense)} damage. Its health is now ${enemy.health}.`);
+        this.handleEnemyHealth(enemy);
+    }
+
+    attackEnemyWithNormalHit(enemy) {
+        enemy.health -= (this.playerStats.attack - enemy.defense);
+        writeText(`You attack the ${enemy.name} for ${(this.playerStats.attack - enemy.defense)} damage. Its health is now ${enemy.health}.`);
+        this.handleEnemyHealth(enemy);
+    }
+
+    missedAttack(enemy) {
+        writeText(`You missed the ${enemy.name}!`);
+        this.playerStats.health -= enemy.attack;
+        writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
+        this.handlePlayerHealth();
+    }
+
+    handleEnemyHealth(enemy) {
         if (enemy.health <= 0) {
             writeText(`You defeated the ${enemy.name}!`);
             this.lootEnemy(enemy);
@@ -415,31 +431,25 @@ class TextAdventureGame {
                 room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy
             }
         } else {
-            // Enemy attacks back
-            let eDice = this.rollDice();
-            if (eDice >= 10) {
-                this.playerStats.health -= (enemy.attack - this.playerStats.defense);
-                writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
-                if (this.playerStats.health <= 0) {
-                    writeText('You have been defeated. Game Over.');
-                    this.rl.close(); // Assuming rl is a part of this class now
-                }
-            }
-            else {
-                writeText(`The ${enemy.name} missed you!`);
-                }
-            }
+            this.enemyAttacksBack(enemy);
         }
-        else {
-            writeText(`You missed the ${enemy.name}!`);
-            // Enemy attacks back
+    }
 
-            this.playerStats.health -= enemy.attack;
+    enemyAttacksBack(enemy) {
+        let eDice = this.rollDice();
+        if (eDice >= 10) {
+            this.playerStats.health -= (enemy.attack - this.playerStats.defense);
             writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
-            if (this.playerStats.health <= 0) {
-                writeText('You have been defeated. Game Over.');
-                this.rl.close(); // Assuming rl is a part of this class now
-            }
+            this.handlePlayerHealth();
+        } else {
+            writeText(`The ${enemy.name} missed you!`);
+        }
+    }
+
+    handlePlayerHealth() {
+        if (this.playerStats.health <= 0) {
+            writeText('You have been defeated. Game Over.');
+            this.rl.close(); // Assuming rl is a part of this class now
         }
     }
 
