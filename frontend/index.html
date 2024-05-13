@@ -43,6 +43,8 @@
 
     .gameContainer {
       display: flex;
+      margin: auto 5%;
+      justify-content: center;
     }
 
     .child {
@@ -56,6 +58,7 @@
       border-radius: 5px;
       max-width: fit-content;
       padding: 2px;
+      margin-right: 5%;
     }
 
     #roomImageContainer img {
@@ -63,22 +66,21 @@
     }
 
     #gameConsole {
+      text-align: left;
       font-size: x-large;
       font-weight: normal;
       float: right;
       width: 30%;
-      height: 5%;
       border: 1px solid white;
       border-radius: 5px;
       background-color: rgba(255, 255, 255, 0.1);
-      max-height: 400px;
+      max-height: 500px;
       overflow-y: auto;
       animation: fadeIn 3s;
-      max-width: fit-content;
+      max-width: 35%;
     }
 
     #commandConsole {
-      display: flex;
       animation: fadeIn 3s;
       padding: auto;
       max-height: 30px;
@@ -291,7 +293,7 @@
   </nav>
   <h1>Text Adventure Game</h1>
   <h3>Welcome to the text adventure game. Type your commands in the input below and press Enter to play.</p>
-    <div class="gameContainer">
+    <div class="gameContainer" , id="gameContainer" style="display: none;">
       <div class="child" id="roomImageContainer"></div>
       <div class="child" id="gameConsole"></div>
       <div class="child" id="commandConsole">

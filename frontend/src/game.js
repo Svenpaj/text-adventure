@@ -10,6 +10,8 @@ function setupEventListeners(game) {
 }
 
 function newGame() {
+    const gameContainer = document.getElementById('gameContainer');
+    gameContainer.style.display = 'flex';
     const game = new TextAdventureGame();
     setupEventListeners(game);
 }

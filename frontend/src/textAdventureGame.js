@@ -30,7 +30,7 @@ class TextAdventureGame {
         }
         else {
             // Initialize any other game state variables here
-            this.playerStats = { health: 20, attack: 3, defense: 0, speed: 10, equippedArmor: null, equippedWeapon: null };
+            this.playerStats = { level: 1, experience: 0, neededExp: 100, health: 20, attack: 5, defense: 0, agility: 2, equippedArmor: null, equippedWeapon: null };
             this.currentRoom = 'start';
             this.inventory = [];
         }
@@ -64,7 +64,7 @@ class TextAdventureGame {
                 writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
                 break;
             case 'stats':
-                const statsText = `Stats: Health=${this.playerStats.health}, Attack=${this.playerStats.attack}, Defense=${this.playerStats.defense}, EquippedArmor=${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, EquippedWeapon=${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
+                const statsText = `Stats: Level: ${this.playerStats.level}, Current EXP: ${this.playerStats.experience}, Next level: ${this.playerStats.neededExp} Health: ${this.playerStats.health}, Attack: ${this.playerStats.attack}, Defense: ${this.playerStats.defense}, Agility: ${this.playerStats.agility}, Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
                 writeText(statsText);
                 break;
             case 'go':
@@ -106,6 +106,17 @@ class TextAdventureGame {
         this.continueGame(); // Function to prompt for the next action or check game state
     }
 
+    levelUp() {
+        this.playerStats.experience -= this.playerStats.neededExp;
+        this.playerStats.level += 1;
+        this.playerStats.neededExp *= 2;
+        this.playerStats.health += this.playerStats.health * 0.3;
+        this.playerStats.attack += this.playerStats.attack * 0.3;
+        this.playerStats.defense += this.playerStats.defense * 0.3;
+        this.playerStats.agility += this.playerStats.agility * 0.3;
+        writeText(`You've leveled up to level ${this.playerStats.level}!`);
+    }
+
     // Game Logic Methods
     look(roomName = this.currentRoom) {
         writeText(`You are in the ${roomName}. And you can see exits to the ${Object.keys(this.rooms[roomName].exits).join(', ')}.`);
@@ -122,7 +133,12 @@ class TextAdventureGame {
         }
         if (this.rooms[roomName].enemies) {
             this.rooms[roomName].enemies.forEach(enemy => {
-                writeText(`You see a ${enemy.name} here.`);
+                if (enemy.alive) {
+                    writeText(`You see a ${enemy.name} here.`);
+                }
+                else {
+                    writeText(`You see a defeated ${enemy.name} here.`);
+                }
             });
         }
     }
@@ -200,19 +216,12 @@ class TextAdventureGame {
         let exit = room.exits[direction];
 
         // First check if the exit is guarded
-        let isGuarded = false;
-        if (exit && typeof exit === 'object' && exit.guarded) {
-            room.enemies.forEach(enemy => {
-                if (enemy.guarding) {
-                    writeText(`The way to the ${direction} is guarded by by a ${enemy.name}.`);
-                    isGuarded = true;
-                    return; // Prevent moving through a guarded exit
-                }
-            });
+        if (exit && typeof exit === 'object') {
+            if (exit.guardedBy.length > 0) {
+                writeText(`The way to the ${direction} is guarded by a ${exit.guardedBy.join(' and ')}.`);
+                return; // Prevent moving through a guarded exit
+            }
         }
-
-        // If exit is guarded, stop futher execution
-        if (isGuarded) { return; }
 
         // If not guarded, then check if the exit is locked
         if (exit && typeof exit === 'object') {
@@ -245,12 +254,24 @@ class TextAdventureGame {
     }
 
     lootEnemy(enemy) {
-        if (enemy.loot && enemy.loot.length > 0) {
+        const room = this.rooms[this.currentRoom];
+        const enemyIndex = room.enemies.findIndex(e => e.name.toLowerCase() === enemy.toLowerCase());
+        if (enemyIndex === -1) {
+            writeText(`There is no ${enemy} here to loot.`);
+            return;
+        }
+        enemy = room.enemies[enemyIndex];
+        if (!enemy.alive && enemy.loot && enemy.loot.length > 0) {
             enemy.loot.forEach(item => {
                 this.inventory.push(item);  // Add loot to player's inventory
-                writeText(`You found ${item.name} on ${enemy.name}.`);
+                writeText(`You found a ${item.name} on the ${enemy.name}'s corpse.`);
             });
-        } else {
+        }
+        else if (enemy.alive) {
+            writeText(`Are you mad!? You can't loot a living ${enemy.name}.`);
+        }
+
+        else {
             writeText(`${enemy.name} had nothing to loot.`);
         }
     }
@@ -310,18 +331,18 @@ class TextAdventureGame {
                     writeText(`You already have armor equipped. Unequip it first.`);
                     return;
                 }
-                this.playerStats.defense += item.defense;
+                const defense = this.playerStats.defense + item.defense;
                 this.playerStats.equippedArmor = item; // Store the equipped armor for reference
-                writeText(`You equipped the ${item.name}. Defense is now ${this.playerStats.defense}.`);
+                writeText(`You equipped the ${item.name}. Your total defense is now ${defense}.`);
                 break;
             case 'weapon':
                 if (this.playerStats.equippedWeapon) {
                     writeText(`You already have a weapon equipped. Unequip it first.`);
                     return;
                 }
-                this.playerStats.attack += item.attack;
+                const attack = this.playerStats.attack + item.attack;
                 this.playerStats.equippedWeapon = item; // Store the equipped weapon for reference
-                writeText(`You equipped the ${item.name}. Attack is now ${this.playerStats.attack}.`);
+                writeText(`You equipped the ${item.name}. Your total attack is now ${attack}.`);
                 break;
             default:
                 writeText('This item cannot be equipped.');
@@ -369,7 +390,6 @@ class TextAdventureGame {
         return Math.floor(Math.random() * 20) + 1;
     }
 
-    // Combat logic
     attackEnemy(enemyName) {
         const room = this.rooms[this.currentRoom];
         if (!room.enemies) {
@@ -383,63 +403,81 @@ class TextAdventureGame {
             return;
         }
 
-        const enemy = room.enemies[enemyIndex];
-        // Simple combat calculation
-        // Testing out diceRoll in combat
-        let pDice = this.rollDice();
-        // add critical hit
-        if (pDice >= 17) {
-            this.attackWithCriticalHit(enemy);
-        } else if (pDice >= 7 && pDice < 17) {
-            this.attackEnemyWithNormalHit(enemy);
+        this.resolveAttack(room.enemies[enemyIndex], room, enemyIndex);
+    }
+
+    resolveAttack(enemy, room, enemyIndex) {
+        const diceRoll = this.rollDice() + this.playerStats.agility; // Add player's agility to the dice roll
+
+        if (diceRoll >= 17) {
+            this.attackWithCriticalHit(enemy, room, enemyIndex);
+        } else if (diceRoll >= 7 && diceRoll < 17) {
+            this.attackEnemyWithNormalHit(enemy, room, enemyIndex);
         } else {
-            this.missedAttack(enemy);
+            this.missedAttack(enemy, room, enemyIndex);
         }
     }
 
-    attackWithCriticalHit(enemy) {
-        enemy.health -= ((this.playerStats.attack * 2) - enemy.defense);
-        writeText(`Critical Hit! You attack the ${enemy.name} for ${((this.playerStats.attack * 2) - enemy.defense)} damage. Its health is now ${enemy.health}.`);
-        this.handleEnemyHealth(enemy);
+    attackWithCriticalHit(enemy, room, enemyIndex) {
+        const damage = ((this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) * 2) - enemy.defense;
+        enemy.health -= damage;
+        writeText(`Critical Hit! You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
+        this.handleEnemyHealth(enemy, room, enemyIndex);
     }
 
-    attackEnemyWithNormalHit(enemy) {
-        enemy.health -= (this.playerStats.attack - enemy.defense);
-        writeText(`You attack the ${enemy.name} for ${(this.playerStats.attack - enemy.defense)} damage. Its health is now ${enemy.health}.`);
-        this.handleEnemyHealth(enemy);
+    attackEnemyWithNormalHit(enemy, room, enemyIndex) {
+        const damage = (this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) - enemy.defense;
+        enemy.health -= damage;
+        writeText(`You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
+        this.handleEnemyHealth(enemy, room, enemyIndex);
     }
 
     missedAttack(enemy) {
         writeText(`You missed the ${enemy.name}!`);
-        this.playerStats.health -= enemy.attack;
-        writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
-        this.handlePlayerHealth();
+        this.enemyAttacksBack(enemy);
     }
 
-    handleEnemyHealth(enemy) {
+    handleEnemyHealth(enemy, room, enemyIndex) {
         if (enemy.health <= 0) {
             writeText(`You defeated the ${enemy.name}!`);
-            this.lootEnemy(enemy);
-            if (enemy.guarding) {
-                for (const direction in room.exits) {
-                    const exit = room.exits[direction];
-                    if (exit && typeof exit === 'object' && exit.guarded) {
-                        writeText(`The ${enemy.name} was guarding the way to the ${direction}.`);
-                        exit.guarded = false; // Remove the guard
-                    }
-                }
-                room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy
+            this.playerStats.experience += enemy.experience;
+            writeText(`You gained ${enemy.experience} experience.`);
+            if (this.playerStats.experience >= this.playerStats.neededExp) {
+                this.levelUp();
             }
+            writeText(`Your current experience is ${this.playerStats.experience}.`);
+            room.enemies[enemyIndex].alive = false; // Mark the enemy as defeated
+            // room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy testing without removing the enemy
+            this.unblockExits(room, enemy);
         } else {
             this.enemyAttacksBack(enemy);
         }
     }
 
+    unblockExits(room, defeatedEnemy) {
+        Object.entries(room.exits).forEach(([direction, exit]) => {
+            // Check if this exit was guarded by the defeated enemy
+            const guardIndex = exit.guardedBy.indexOf(defeatedEnemy.name);
+            if (guardIndex > -1) {
+                // Remove this guard from the list
+                exit.guardedBy.splice(guardIndex, 1);
+
+                // Check if there are no more guards left
+                if (exit.guardedBy.length === 0) {
+                    exit.pathOpen = true;
+                    writeText(`The way to the ${direction} is now clear.`);
+                }
+            }
+        });
+    }
+
+
     enemyAttacksBack(enemy) {
-        let eDice = this.rollDice();
-        if (eDice >= 10) {
-            this.playerStats.health -= (enemy.attack - this.playerStats.defense);
-            writeText(`The ${enemy.name} attacks you back for ${enemy.attack} damage. Your health is now ${this.playerStats.health}.`);
+        const diceRoll = this.rollDice();
+        if (diceRoll >= 10) {
+            const damage = enemy.attack - (this.playerStats.defense + (this.playerStats.equippedArmor ? this.playerStats.equippedArmor.defense : 0));
+            this.playerStats.health -= damage;
+            writeText(`The ${enemy.name} attacks you back for ${damage} damage. Your health is now ${this.playerStats.health}.`);
             this.handlePlayerHealth();
         } else {
             writeText(`The ${enemy.name} missed you!`);
@@ -449,9 +487,11 @@ class TextAdventureGame {
     handlePlayerHealth() {
         if (this.playerStats.health <= 0) {
             writeText('You have been defeated. Game Over.');
-            this.rl.close(); // Assuming rl is a part of this class now
+            this.endGame();
         }
     }
+
+
 
     continueGame() {
         if (this.playerStats.health <= 0) {
