@@ -301,7 +301,7 @@ class TextAdventureGame {
                     writeText('There is nothing to unlock here.');
                 }
             }
-            // Add more interaction types as needed
+            // Add more interaction types as needed when expanding the game
         } else {
             writeText(`You can't use the ${itemName} here.`);
         }
@@ -457,16 +457,21 @@ class TextAdventureGame {
     unblockExits(room, defeatedEnemy) {
         Object.entries(room.exits).forEach(([direction, exit]) => {
             // Check if this exit was guarded by the defeated enemy
-            const guardIndex = exit.guardedBy.indexOf(defeatedEnemy.name);
-            if (guardIndex > -1) {
-                // Remove this guard from the list
-                exit.guardedBy.splice(guardIndex, 1);
+            // Making sure guardedBy is an array before checking
+            if (Array.isArray(exit.guardedBy)) {
+                const guardIndex = exit.guardedBy.indexOf(defeatedEnemy.name);
+                if (guardIndex > -1) {
+                    // Remove this guard from the list
+                    exit.guardedBy.splice(guardIndex, 1);
 
-                // Check if there are no more guards left
-                if (exit.guardedBy.length === 0) {
-                    exit.pathOpen = true;
-                    writeText(`The way to the ${direction} is now clear.`);
+                    // Check if there are no more guards left
+                    if (exit.guardedBy.length === 0) {
+                        exit.pathOpen = true;
+                        writeText(`The way to the ${direction} is now clear.`);
+                    }
                 }
+            } else {
+                console.error(`Error: 'guardedBy is not properly initialized for the exit to the ${direction}.`)
             }
         });
     }
