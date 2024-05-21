@@ -59,12 +59,14 @@ class TextAdventureGame {
     processCommand(command) {
         const [action, ...params] = command.split(' ');
         const target = params.join(' ');
+        let statsText = "";
+        let inventoryText = "";
         switch (action.toLowerCase()) {
             case 'help':
                 writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
                 break;
             case 'stats':
-                const statsText = `Stats: Level: ${this.playerStats.level}, Current EXP: ${this.playerStats.experience}, Next level: ${this.playerStats.neededExp} Health: ${this.playerStats.health}, Attack: ${this.playerStats.attack}, Defense: ${this.playerStats.defense}, Agility: ${this.playerStats.agility}, Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
+                statsText = `Stats: Level: ${this.playerStats.level}, Current EXP: ${this.playerStats.experience}, Next level: ${this.playerStats.neededExp} Health: ${this.playerStats.health}, Attack: ${this.playerStats.attack}, Defense: ${this.playerStats.defense}, Agility: ${this.playerStats.agility}, Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
                 writeText(statsText);
                 break;
             case 'go':
@@ -86,7 +88,7 @@ class TextAdventureGame {
                 this.unequipItem(target);
                 break;
             case 'inventory':
-                const inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
+                inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
                 writeText(inventoryText);
                 break;
             case 'inspect':
@@ -105,6 +107,7 @@ class TextAdventureGame {
         // Optionally, invoke a method to check game state or continue the game loop here.
         this.continueGame(); // Function to prompt for the next action or check game state
     }
+
 
     levelUp() {
         this.playerStats.experience -= this.playerStats.neededExp;
@@ -324,6 +327,9 @@ class TextAdventureGame {
             return;
         }
 
+        let defense = this.playerStats.defense;
+        let attack = this.playerStats.attack;
+
         // Equip the item based on its type
         switch (item.type) {
             case 'armor':
@@ -331,7 +337,7 @@ class TextAdventureGame {
                     writeText(`You already have armor equipped. Unequip it first.`);
                     return;
                 }
-                const defense = this.playerStats.defense + item.defense;
+                defense = this.playerStats.defense + item.defense;
                 this.playerStats.equippedArmor = item; // Store the equipped armor for reference
                 writeText(`You equipped the ${item.name}. Your total defense is now ${defense}.`);
                 break;
@@ -340,7 +346,7 @@ class TextAdventureGame {
                     writeText(`You already have a weapon equipped. Unequip it first.`);
                     return;
                 }
-                const attack = this.playerStats.attack + item.attack;
+                attack = this.playerStats.attack + item.attack;
                 this.playerStats.equippedWeapon = item; // Store the equipped weapon for reference
                 writeText(`You equipped the ${item.name}. Your total attack is now ${attack}.`);
                 break;

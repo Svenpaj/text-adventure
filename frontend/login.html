@@ -233,10 +233,25 @@
     </form>
     <button onclick="typeWriter()">Typewriter effect</button>
     <p id="demo"></p>
+
+    <h1>Play Sound Example</h1>
+    <!-- Audio element -->
+    <audio id="myAudio" src="/sound/sb_indreams.mp3"></audio>
+
+    <!-- Custom controls -->
+    <button onclick="playAudio()">Play</button>
+    <button onclick="pauseAudio()">Pause</button>
+    <button onclick="stopAudio()">Stop</button>
+
+    <!-- Optionally include default controls -->
+    <audio controls>
+        <source src="path/to/your/soundfile.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <script>
         var i = 0;
-        var txt = 'Welcome to the Text Adventure Game!';
-        var speed = 40;
+        var txt = 'This is a demo of the typewriter effect I am creating.';
+        var speed = 50;
 
         function typeWriter() {
             if (i < txt.length) {
@@ -244,6 +259,21 @@
                 i++;
                 setTimeout(typeWriter, speed);
             }
+        }
+
+        var x = document.getElementById("myAudio");
+
+        function playAudio() {
+            x.play();
+        }
+
+        function pauseAudio() {
+            x.pause();
+        }
+
+        function stopAudio() {
+            x.pause();
+            x.currentTime = 0;
         }
     </script>
 </body>
