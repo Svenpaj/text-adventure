@@ -231,50 +231,49 @@
             <div class='text'><a href="/register">Register</a></div>
         </button>
     </form>
-    <button onclick="typeWriter()">Typewriter effect</button>
-    <p id="demo"></p>
+
+    <div id="soundToggle" style="display: block;">
+        <button id="soundButton" onclick="toggleAudio()">Sound</button>
+    </div>
 
     <h1>Play Sound Example</h1>
     <!-- Audio element -->
-    <audio id="myAudio" src="/sound/sb_indreams.mp3"></audio>
+    <audio id="myAudio" src="/sound/sb_indreams.mp3" loop></audio>
 
     <!-- Custom controls -->
     <button onclick="playAudio()">Play</button>
     <button onclick="pauseAudio()">Pause</button>
     <button onclick="stopAudio()">Stop</button>
 
-    <!-- Optionally include default controls -->
-    <audio controls>
-        <source src="path/to/your/soundfile.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
     <script>
-        var i = 0;
-        var txt = 'This is a demo of the typewriter effect I am creating.';
-        var speed = 50;
 
-        function typeWriter() {
-            if (i < txt.length) {
-                document.getElementById("demo").innerHTML += txt.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
-            }
-        }
+        // Testing function controls for audio
 
-        var x = document.getElementById("myAudio");
+        var audio = document.getElementById("myAudio");
+        var soundButton = document.getElementById("soundButton");
 
         function playAudio() {
-            x.play();
+            audio.play();
         }
 
         function pauseAudio() {
-            x.pause();
+            audio.pause();
         }
 
         function stopAudio() {
-            x.pause();
-            x.currentTime = 0;
+            audio.pause();
         }
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                soundButton.textContent = "mute";
+            } else {
+                audio.pause();
+                soundButton.textContent = "unmute";
+            }
+        }
+
     </script>
 </body>
 

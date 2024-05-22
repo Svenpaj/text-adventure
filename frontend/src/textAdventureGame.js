@@ -1,5 +1,5 @@
 import { rooms } from './rooms.js';
-import { writeText } from './writeText.js';
+import { writeText, typeWriter } from './writeText.js';
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -14,7 +14,7 @@ class TextAdventureGame {
         // Initialize the game state
         this.gameConsole = document.getElementById('gameConsole');
         this.commandInput = document.getElementById('commandInput');
-        this.gameCommands = document.getElementById('gameCommands');
+        this.audio = document.getElementById('audio');
         this.setupInputListener();
         if (initialState) {
             console.log('initialState:', initialState)
@@ -63,11 +63,11 @@ class TextAdventureGame {
         let inventoryText = "";
         switch (action.toLowerCase()) {
             case 'help':
-                writeText('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
+                typeWriter('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
                 break;
             case 'stats':
                 statsText = `Stats: Level: ${this.playerStats.level}, Current EXP: ${this.playerStats.experience}, Next level: ${this.playerStats.neededExp} Health: ${this.playerStats.health}, Attack: ${this.playerStats.attack}, Defense: ${this.playerStats.defense}, Agility: ${this.playerStats.agility}, Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
-                writeText(statsText);
+                typeWriter(statsText);
                 break;
             case 'go':
                 this.moveToRoom(target);
@@ -89,7 +89,7 @@ class TextAdventureGame {
                 break;
             case 'inventory':
                 inventoryText = `Inventory: ${this.inventory.map(item => item.name).join(', ')}`;
-                writeText(inventoryText);
+                typeWriter(inventoryText);
                 break;
             case 'inspect':
                 this.inspect(target);
@@ -101,7 +101,7 @@ class TextAdventureGame {
                 this.attackEnemy(target);
                 break;
             default:
-                writeText('Unknown command.');
+                typeWriter('Unknown command.');
                 break;
         }
         // Optionally, invoke a method to check game state or continue the game loop here.
@@ -117,18 +117,18 @@ class TextAdventureGame {
         this.playerStats.attack += this.playerStats.attack * 0.3;
         this.playerStats.defense += this.playerStats.defense * 0.3;
         this.playerStats.agility += this.playerStats.agility * 0.3;
-        writeText(`You've leveled up to level ${this.playerStats.level}!`);
+        typeWriter(`You've leveled up to level ${this.playerStats.level}!`);
     }
 
     // Game Logic Methods
     look(roomName = this.currentRoom) {
-        writeText(`You are in the ${roomName}. And you can see exits to the ${Object.keys(this.rooms[roomName].exits).join(', ')}.`);
+        typeWriter(`You are in the ${roomName}. And you can see exits to the ${Object.keys(this.rooms[roomName].exits).join(', ')}.`);
         if (this.rooms[roomName].detailedDescription) {
-            writeText(this.rooms[roomName].detailedDescription);
+            typeWriter(this.rooms[roomName].detailedDescription);
         }
         if (this.rooms[roomName].items) {
             this.rooms[roomName].items.forEach(item => {
-                writeText(`You spot a ${item.description}`);
+                typeWriter(`You spot a ${item.description}`);
             });
             const imagePath = this.rooms[roomName].imageItems ? `./images/${this.rooms[roomName].imageItems}` : 'none';
             const roomImageContainer = document.getElementById('roomImageContainer');
@@ -137,10 +137,10 @@ class TextAdventureGame {
         if (this.rooms[roomName].enemies) {
             this.rooms[roomName].enemies.forEach(enemy => {
                 if (enemy.alive) {
-                    writeText(`You see a ${enemy.name} here.`);
+                    typeWriter(`You see a ${enemy.name} here.`);
                 }
                 else {
-                    writeText(`You see a defeated ${enemy.name} here.`);
+                    typeWriter(`You see a defeated ${enemy.name} here.`);
                 }
             });
         }
@@ -166,7 +166,7 @@ class TextAdventureGame {
 
         const item = roomItems.find(item => item.name.toLowerCase() === itemName);
         if (item) {
-            writeText(item.description);
+            typeWriter(item.description);
             return true;
         }
         return false;
@@ -176,9 +176,9 @@ class TextAdventureGame {
         const item = this.inventory.find(item => item.name.toLowerCase() === itemName);
         if (item) {
             this.displayItemWithImage(item);
-            writeText(item.description);
+            typeWriter(item.description);
             if (item.type === 'weapon' || item.type === 'armor') {
-                writeText(`Attack: ${item.attack || 0}, Defense: ${item.defense || 0}`);
+                typeWriter(`Attack: ${item.attack || 0}, Defense: ${item.defense || 0}`);
             }
             return true;
         }
@@ -191,10 +191,10 @@ class TextAdventureGame {
 
         const enemy = enemies.find(enemy => enemy.name.toLowerCase() === itemName);
         if (enemy) {
-            writeText(enemy.description);
-            writeText(`Health: ${enemy.health}, Attack: ${enemy.attack}`);
+            typeWriter(enemy.description);
+            typeWriter(`Health: ${enemy.health}, Attack: ${enemy.attack}`);
         } else {
-            writeText(`You don't see a ${itemName} here.`);
+            typeWriter(`You don't see a ${itemName} here.`);
         }
     }
 
@@ -207,21 +207,22 @@ class TextAdventureGame {
 
     showRoomInfo(roomName) {
         // showRoomInfo function implementation
-        writeText(this.rooms[roomName].description);
+        typeWriter(this.rooms[roomName].description);
         this.updateRoomBackground();
     }
 
     async moveToRoom(direction) {
         // moveToRoom function implementation
-        writeText(`You move ${direction}...`);
+        typeWriter(`You move ${direction}...`);
         await wait(1000); // Wait for 1 second per (1000ms) before moving to the new room
         const room = this.rooms[this.currentRoom];
         let exit = room.exits[direction];
 
+
         // First check if the exit is guarded
         if (exit && typeof exit === 'object') {
             if (exit.guardedBy.length > 0) {
-                writeText(`The way to the ${direction} is guarded by a ${exit.guardedBy.join(' and ')}.`);
+                typeWriter(`The way to the ${direction} is guarded by a ${exit.guardedBy.join(' and ')}.`);
                 return; // Prevent moving through a guarded exit
             }
         }
@@ -229,18 +230,20 @@ class TextAdventureGame {
         // If not guarded, then check if the exit is locked
         if (exit && typeof exit === 'object') {
             if (exit.locked) {
-                writeText('The door is locked.');
+                typeWriter('The door is locked.');
                 return; // Prevent moving through a locked door
             }
             exit = exit.roomId; // Proceed with the unlocked roomId
         } else if (!exit) {
-            writeText(`There's no way to go ${direction} from here.`);
+            typeWriter(`There's no way to go ${direction} from here.`);
             return;
         }
 
-        // Move to the new room if the exit isn't locked or is a direct roomId reference
+        // Move to the new room if the exit isn't locked or och guarded is a direct roomId reference
         this.currentRoom = exit;
         this.showRoomInfo(this.currentRoom);
+        this.audio.src = './sound/' + this.currentRoom + '.mp3';
+        this.audio.play();
     }
 
     pickUpItem(itemName) {
@@ -250,9 +253,9 @@ class TextAdventureGame {
         if (itemIndex > -1) {
             const [item] = roomItems.splice(itemIndex, 1); // Remove item from room
             this.inventory.push(item); // Add to inventory
-            writeText(`${item.name} added to inventory.`);
+            typeWriter(`${item.name} added to inventory.`);
         } else {
-            writeText(`There is no ${itemName} here.`);
+            typeWriter(`There is no ${itemName} here.`);
         }
     }
 
@@ -260,29 +263,29 @@ class TextAdventureGame {
         const room = this.rooms[this.currentRoom];
         const enemyIndex = room.enemies.findIndex(e => e.name.toLowerCase() === enemy.toLowerCase());
         if (enemyIndex === -1) {
-            writeText(`There is no ${enemy} here to loot.`);
+            typeWriter(`There is no ${enemy} here to loot.`);
             return;
         }
         enemy = room.enemies[enemyIndex];
         if (!enemy.alive && enemy.loot && enemy.loot.length > 0) {
             enemy.loot.forEach(item => {
                 this.inventory.push(item);  // Add loot to player's inventory
-                writeText(`You found a ${item.name} on the ${enemy.name}'s corpse.`);
+                typeWriter(`You found a ${item.name} on the ${enemy.name}'s corpse.`);
             });
         }
         else if (enemy.alive) {
-            writeText(`Are you mad!? You can't loot a living ${enemy.name}.`);
+            typeWriter(`Are you mad!? You can't loot a living ${enemy.name}.`);
         }
 
         else {
-            writeText(`${enemy.name} had nothing to loot.`);
+            typeWriter(`${enemy.name} had nothing to loot.`);
         }
     }
 
     useItem(itemName) {
         const itemIndex = this.inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
         if (itemIndex === -1) {
-            writeText(`You don't have a ${itemName}.`);
+            typeWriter(`You don't have a ${itemName}.`);
             return;
         }
 
@@ -296,17 +299,17 @@ class TextAdventureGame {
                 const exit = room.exits[interaction.unlocks];
                 if (exit && typeof exit === 'object' && exit.locked) {
                     exit.locked = false; // Unlock the exit
-                    writeText(interaction.message);
+                    typeWriter(interaction.message);
                     if (interaction.consume) {
                         this.inventory.splice(itemIndex, 1); // Optionally remove the item from inventory
                     }
                 } else {
-                    writeText('There is nothing to unlock here.');
+                    typeWriter('There is nothing to unlock here.');
                 }
             }
             // Add more interaction types as needed when expanding the game
         } else {
-            writeText(`You can't use the ${itemName} here.`);
+            typeWriter(`You can't use the ${itemName} here.`);
         }
     }
 
@@ -317,13 +320,13 @@ class TextAdventureGame {
         );
 
         if (itemIndex === -1) {
-            writeText(`You don't have ${itemName} in your inventory.`);
+            typeWriter(`You don't have ${itemName} in your inventory.`);
             return;
         }
 
         const item = this.inventory[itemIndex];
         if (item.equipped) {
-            writeText(`You already have ${item.name} equipped.`);
+            typeWriter(`You already have ${item.name} equipped.`);
             return;
         }
 
@@ -334,24 +337,24 @@ class TextAdventureGame {
         switch (item.type) {
             case 'armor':
                 if (this.playerStats.equippedArmor) {
-                    writeText(`You already have armor equipped. Unequip it first.`);
+                    typeWriter(`You already have armor equipped. Unequip it first.`);
                     return;
                 }
                 defense = this.playerStats.defense + item.defense;
                 this.playerStats.equippedArmor = item; // Store the equipped armor for reference
-                writeText(`You equipped the ${item.name}. Your total defense is now ${defense}.`);
+                typeWriter(`You equipped the ${item.name}. Your total defense is now ${defense}.`);
                 break;
             case 'weapon':
                 if (this.playerStats.equippedWeapon) {
-                    writeText(`You already have a weapon equipped. Unequip it first.`);
+                    typeWriter(`You already have a weapon equipped. Unequip it first.`);
                     return;
                 }
                 attack = this.playerStats.attack + item.attack;
                 this.playerStats.equippedWeapon = item; // Store the equipped weapon for reference
-                writeText(`You equipped the ${item.name}. Your total attack is now ${attack}.`);
+                typeWriter(`You equipped the ${item.name}. Your total attack is now ${attack}.`);
                 break;
             default:
-                writeText('This item cannot be equipped.');
+                typeWriter('This item cannot be equipped.');
                 return;
         }
 
@@ -367,7 +370,7 @@ class TextAdventureGame {
         );
 
         if (itemIndex === -1) {
-            writeText(`You don't have ${itemName} equipped.`);
+            typeWriter(`You don't have ${itemName} equipped.`);
             return;
         }
 
@@ -376,15 +379,15 @@ class TextAdventureGame {
             case 'armor':
                 this.playerStats.defense -= item.defense;
                 this.playerStats.equippedArmor = null; // Clear the reference
-                writeText(`You unequipped the ${item.name}. Defense is now ${this.playerStats.defense}.`);
+                typeWriter(`You unequipped the ${item.name}. Defense is now ${this.playerStats.defense}.`);
                 break;
             case 'weapon':
                 this.playerStats.attack -= item.attack;
                 this.playerStats.equippedWeapon = null; // Clear the reference
-                writeText(`You unequipped the ${item.name}. Attack is now ${this.playerStats.attack}.`);
+                typeWriter(`You unequipped the ${item.name}. Attack is now ${this.playerStats.attack}.`);
                 break;
             default:
-                writeText('This item cannot be unequipped.');
+                typeWriter('This item cannot be unequipped.');
                 return;
         }
 
@@ -399,13 +402,13 @@ class TextAdventureGame {
     attackEnemy(enemyName) {
         const room = this.rooms[this.currentRoom];
         if (!room.enemies) {
-            writeText('There are no enemies here.');
+            typeWriter('There are no enemies here.');
             return;
         }
 
         const enemyIndex = room.enemies.findIndex(enemy => enemy.name.toLowerCase() === enemyName.toLowerCase());
         if (enemyIndex === -1) {
-            writeText(`There is no ${enemyName} here to attack.`);
+            typeWriter(`There is no ${enemyName} here to attack.`);
             return;
         }
 
@@ -427,31 +430,31 @@ class TextAdventureGame {
     attackWithCriticalHit(enemy, room, enemyIndex) {
         const damage = ((this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) * 2) - enemy.defense;
         enemy.health -= damage;
-        writeText(`Critical Hit! You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
+        typeWriter(`Critical Hit! You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
         this.handleEnemyHealth(enemy, room, enemyIndex);
     }
 
     attackEnemyWithNormalHit(enemy, room, enemyIndex) {
         const damage = (this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) - enemy.defense;
         enemy.health -= damage;
-        writeText(`You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
+        typeWriter(`You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
         this.handleEnemyHealth(enemy, room, enemyIndex);
     }
 
     missedAttack(enemy) {
-        writeText(`You missed the ${enemy.name}!`);
+        typeWriter(`You missed the ${enemy.name}!`);
         this.enemyAttacksBack(enemy);
     }
 
     handleEnemyHealth(enemy, room, enemyIndex) {
         if (enemy.health <= 0) {
-            writeText(`You defeated the ${enemy.name}!`);
+            typeWriter(`You defeated the ${enemy.name}!`);
             this.playerStats.experience += enemy.experience;
-            writeText(`You gained ${enemy.experience} experience.`);
+            typeWriter(`You gained ${enemy.experience} experience.`);
             if (this.playerStats.experience >= this.playerStats.neededExp) {
                 this.levelUp();
             }
-            writeText(`Your current experience is ${this.playerStats.experience}.`);
+            typeWriter(`Your current experience is ${this.playerStats.experience}.`);
             room.enemies[enemyIndex].alive = false; // Mark the enemy as defeated
             // room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy testing without removing the enemy
             this.unblockExits(room, enemy);
@@ -473,7 +476,7 @@ class TextAdventureGame {
                     // Check if there are no more guards left
                     if (exit.guardedBy.length === 0) {
                         exit.pathOpen = true;
-                        writeText(`The way to the ${direction} is now clear.`);
+                        typeWriter(`The way to the ${direction} is now clear.`);
                     }
                 }
             } else {
@@ -488,16 +491,16 @@ class TextAdventureGame {
         if (diceRoll >= 10) {
             const damage = enemy.attack - (this.playerStats.defense + (this.playerStats.equippedArmor ? this.playerStats.equippedArmor.defense : 0));
             this.playerStats.health -= damage;
-            writeText(`The ${enemy.name} attacks you back for ${damage} damage. Your health is now ${this.playerStats.health}.`);
+            typeWriter(`The ${enemy.name} attacks you back for ${damage} damage. Your health is now ${this.playerStats.health}.`);
             this.handlePlayerHealth();
         } else {
-            writeText(`The ${enemy.name} missed you!`);
+            typeWriter(`The ${enemy.name} missed you!`);
         }
     }
 
     handlePlayerHealth() {
         if (this.playerStats.health <= 0) {
-            writeText('You have been defeated. Game Over.');
+            typeWriter('You have been defeated. Game Over.');
             this.endGame();
         }
     }
@@ -506,10 +509,10 @@ class TextAdventureGame {
 
     continueGame() {
         if (this.playerStats.health <= 0) {
-            writeText('Game Over. You have been defeated.');
+            typeWriter('Game Over. You have been defeated.');
             this.endGame();
         } else if (this.currentRoom === 'treasureRoom') {
-            writeText('Game Over. You\'ve won!');
+            typeWriter('Game Over. You\'ve won!');
             this.endGame();
         }
         // In a browser environment, no need to explicitly wait for the next command.
@@ -520,11 +523,11 @@ class TextAdventureGame {
         // Disable the command input field to prevent further input.
         this.commandInput.disabled = true;
         // Optionally, you could provide a way to restart the game.
-        writeText('Refresh the page to play again.');
+        typeWriter('Refresh the page to play again.');
     }
 
     startGame() {
-        writeText('Welcome to the adventure game!');
+        typeWriter('Welcome to the adventure game!');
         this.showRoomInfo(this.currentRoom);
     }
 }

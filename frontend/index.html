@@ -7,11 +7,16 @@
   <link rel="stylesheet" href="style.css" type="module">
   <title>Text Adventure Game</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: monospace, serif;
       font-size: large;
       background-color: rgb(33, 33, 33);
       color: white;
+      display: grid;
     }
 
     nav {
@@ -43,7 +48,7 @@
 
     .gameContainer {
       display: flex;
-      margin: auto 5%;
+      margin: auto;
       justify-content: center;
     }
 
@@ -58,11 +63,15 @@
       border-radius: 5px;
       max-width: fit-content;
       padding: 2px;
-      margin-right: 5%;
+      align-items: center;
+      justify-content: center;
+      margin: 10px;
     }
 
     #roomImageContainer img {
       animation: fadeIn 5s;
+      max-width: 100%;
+      width: auto;
     }
 
     #gameConsole {
@@ -76,24 +85,22 @@
       background-color: rgba(255, 255, 255, 0.1);
       max-height: 500px;
       overflow-y: auto;
-      animation: fadeIn 3s;
+      animation: fadeIn 10s;
       max-width: 35%;
+      position: relative;
+      justify-content: center;
+      align-items: center;
     }
 
     #commandConsole {
-      animation: fadeIn 3s;
+      animation: fadeIn 15s;
       padding: auto;
-      max-height: 30px;
+      overflow-y: auto;
       max-width: fit-content;
       align-items: center;
       justify-content: center;
-    }
+      height: 70px;
 
-    #gameCommands {
-      animation: fadeIn 3s;
-      max-width: fit-content;
-      max-height: 400px;
-      height: 5%;
     }
 
     #commandInput {
@@ -300,7 +307,7 @@
         <input type="text" id="commandInput" placeholder="Type command =>">
       </div>
     </div>
-
+    <audio id="audio" loop autoplay></audio>
     <script type="module" src="./src/game.js"></script>
 </body>
 
