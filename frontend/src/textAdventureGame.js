@@ -225,8 +225,6 @@ class TextAdventureGame {
         const room = this.rooms[this.currentRoom];
         let exit = room.exits[direction];
 
-        console.log(this.inFight)
-
         // check if the player is in a fight
         if (this.inFight === true) {
             typeWriter('You are in a fight! You can\'t run away!');
