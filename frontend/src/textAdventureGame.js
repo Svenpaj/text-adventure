@@ -22,6 +22,7 @@ class TextAdventureGame {
             this.playerStats = initialState.playerStats;
             this.inventory = initialState.inventory || [];
             this.rooms = initialState.rooms;
+            this.inFight = initialState.inFight ? true : false;
 
             console.log('this.currentRoom:', this.currentRoom)
             console.log('this.playerStats:', this.playerStats)
@@ -30,9 +31,10 @@ class TextAdventureGame {
         }
         else {
             // Initialize any other game state variables here
-            this.playerStats = { level: 1, experience: 0, neededExp: 100, health: 20, attack: 5, defense: 0, agility: 2, equippedArmor: null, equippedWeapon: null };
+            this.playerStats = { level: 1, experience: 0, neededExp: 100, fullHealth: 20, health: 20, attack: 5, defense: 0, agility: 2, equippedArmor: null, equippedWeapon: null };
             this.currentRoom = 'start';
             this.inventory = [];
+            this.inFight = false;
         }
         this.startGame();
     }
@@ -66,7 +68,7 @@ class TextAdventureGame {
                 typeWriter('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
                 break;
             case 'stats':
-                statsText = `Stats: Level: ${this.playerStats.level}, Current EXP: ${this.playerStats.experience}, Next level: ${this.playerStats.neededExp} Health: ${this.playerStats.health}, Attack: ${this.playerStats.attack}, Defense: ${this.playerStats.defense}, Agility: ${this.playerStats.agility}, Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}, Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
+                statsText = `Stats: Level: ${this.playerStats.level}<br> Current EXP: ${this.playerStats.experience}<br> Next level: ${this.playerStats.neededExp}<br> Health: ${this.playerStats.health}/${this.playerStats.fullHealth}<br> Attack: ${this.playerStats.attack}<br> Defense: ${this.playerStats.defense}<br> Agility: ${this.playerStats.agility},<br> Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}<br> Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
                 typeWriter(statsText);
                 break;
             case 'go':
@@ -113,7 +115,12 @@ class TextAdventureGame {
         this.playerStats.experience -= this.playerStats.neededExp;
         this.playerStats.level += 1;
         this.playerStats.neededExp *= 2;
-        this.playerStats.health += this.playerStats.health * 0.3;
+        this.playerStats.fullHealth += this.playerStats.fullHealth * 0.3;
+        if (this.playerStats.health < this.playerStats.fullHealth / 2) {
+            this.playerStats.health += this.playerStats.fullHealth / 2;
+        } else {
+            this.playerStats.health = this.playerStats.fullHealth;
+        }
         this.playerStats.attack += this.playerStats.attack * 0.3;
         this.playerStats.defense += this.playerStats.defense * 0.3;
         this.playerStats.agility += this.playerStats.agility * 0.3;
@@ -218,6 +225,13 @@ class TextAdventureGame {
         const room = this.rooms[this.currentRoom];
         let exit = room.exits[direction];
 
+        console.log(this.inFight)
+
+        // check if the player is in a fight
+        if (this.inFight === true) {
+            typeWriter('You are in a fight! You can\'t run away!');
+            return;
+        }
 
         // First check if the exit is guarded
         if (exit && typeof exit === 'object') {
@@ -399,6 +413,7 @@ class TextAdventureGame {
         return Math.floor(Math.random() * 20) + 1;
     }
 
+
     attackEnemy(enemyName) {
         const room = this.rooms[this.currentRoom];
         if (!room.enemies) {
@@ -412,10 +427,17 @@ class TextAdventureGame {
             return;
         }
 
+        if (room.enemies[enemyIndex].alive === false) {
+            typeWriter(`You hit the corpse of the ${room.enemies[enemyIndex].name}..`);
+            return;
+        }
+
         this.resolveAttack(room.enemies[enemyIndex], room, enemyIndex);
+        //this.audio.src = './sound/' + room.roomId + 'fight.mp3';
     }
 
     resolveAttack(enemy, room, enemyIndex) {
+        this.inFight = true;
         const diceRoll = this.rollDice() + this.playerStats.agility; // Add player's agility to the dice roll
 
         if (diceRoll >= 17) {
@@ -430,15 +452,27 @@ class TextAdventureGame {
     attackWithCriticalHit(enemy, room, enemyIndex) {
         const damage = ((this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) * 2) - enemy.defense;
         enemy.health -= damage;
-        typeWriter(`Critical Hit! You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
-        this.handleEnemyHealth(enemy, room, enemyIndex);
+        if (enemy.health < 0) {
+            enemy.health = 0;
+            typeWriter(`Critical hit! You attack the ${enemy.name} for ${damage} damage, the ${enemy.name} falls to the ground.`);
+            this.handleEnemyHealth(enemy, room, enemyIndex);
+        } else {
+            typeWriter(`You attack the ${enemy.name} for ${damage} damage, the ${enemy.name}'s health is now ${enemy.health}.`);
+            this.handleEnemyHealth(enemy, room, enemyIndex);
+        }
     }
 
     attackEnemyWithNormalHit(enemy, room, enemyIndex) {
         const damage = (this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) - enemy.defense;
         enemy.health -= damage;
-        typeWriter(`You attack the ${enemy.name} for ${damage} damage. Its health is now ${enemy.health}.`);
-        this.handleEnemyHealth(enemy, room, enemyIndex);
+        if (enemy.health < 0) {
+            enemy.health = 0;
+            typeWriter(`You attack the ${enemy.name} for ${damage} damage, the ${enemy.name} falls to the ground.`);
+            this.handleEnemyHealth(enemy, room, enemyIndex);
+        } else {
+            typeWriter(`You attack the ${enemy.name} for ${damage} damage, the ${enemy.name}'s health is now ${enemy.health}.`);
+            this.handleEnemyHealth(enemy, room, enemyIndex);
+        }
     }
 
     missedAttack(enemy) {
@@ -456,7 +490,13 @@ class TextAdventureGame {
             }
             typeWriter(`Your current experience is ${this.playerStats.experience}.`);
             room.enemies[enemyIndex].alive = false; // Mark the enemy as defeated
+            console.log('enemy:', enemy)
+            console.log(this.inFight)
+            this.inFight = false;
+            console.log(this.inFight)
+
             // room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy testing without removing the enemy
+
             this.unblockExits(room, enemy);
         } else {
             this.enemyAttacksBack(enemy);
@@ -485,13 +525,15 @@ class TextAdventureGame {
         });
     }
 
-
     enemyAttacksBack(enemy) {
+        if (enemy.alive === false) {
+            return;
+        }
         const diceRoll = this.rollDice();
         if (diceRoll >= 10) {
             const damage = enemy.attack - (this.playerStats.defense + (this.playerStats.equippedArmor ? this.playerStats.equippedArmor.defense : 0));
             this.playerStats.health -= damage;
-            typeWriter(`The ${enemy.name} attacks you back for ${damage} damage. Your health is now ${this.playerStats.health}.`);
+            typeWriter(`The ${enemy.name} attacks you for ${damage} damage, your health is now ${this.playerStats.health}.`);
             this.handlePlayerHealth();
         } else {
             typeWriter(`The ${enemy.name} missed you!`);

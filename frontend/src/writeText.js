@@ -45,18 +45,28 @@ function typeWriterInternal(text, currentIndex, callback) {
     const speed = 50;
 
     if (currentIndex < text.length) {
-        gameConsole.innerHTML += text.charAt(currentIndex);
-        gameConsole.scrollTop = gameConsole.scrollHeight;
-        currentIndex++;
+        if (text.charAt(currentIndex) === '<' && text.substring(currentIndex, currentIndex + 4) === '<br>') {
+            gameConsole.innerHTML += '<br>';
+            currentIndex += 4;
+            scrollToText();
+        } else {
+            gameConsole.innerHTML += text.charAt(currentIndex);
+            currentIndex++;
+            scrollToText();
+        }
         setTimeout(() => typeWriterInternal(text, currentIndex, callback), speed);
     } else {
-        //gameConsole.scrollTop = gameConsole.scrollHeight;
+        scrollToText();
         callback();
     }
-
 }
 
 function addEmptyLine() {
     const gameConsole = document.getElementById('gameConsole');
     gameConsole.innerHTML += '<br><br>';
+}
+
+function scrollToText() {
+    const gameConsole = document.getElementById('gameConsole');
+    gameConsole.scrollTop = gameConsole.scrollHeight;
 }

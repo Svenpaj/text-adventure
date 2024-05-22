@@ -15,6 +15,7 @@ export const rooms = {
             south: { roomId: 'start', locked: false, description: 'a wooden door.', guardedBy: [], pathOpened: true },
             west: { roomId: 'library', locked: false, description: 'a strange but beautiful door.', guardedBy: [], pathOpened: true },
             north: { roomId: 'treasureRoom', locked: true, description: 'a big majestic golden door.', guardedBy: ['Goblin', 'Orc'], pathOpened: false },
+            east: { roomId: 'kitchen', locked: false, description: 'a wooden door.', guardedBy: [], pathOpened: true },
         },
         enemies: [
             {
@@ -34,6 +35,23 @@ export const rooms = {
                 consume: true,
             },
         },
+    },
+    kitchen: {
+        description: 'You are in a kitchen. There is a door to the east.',
+        image: 'kitchenBoss.webp',
+        imageItems: 'kitchenItems.webp',
+        exits: {
+            east: { roomId: 'hallway', locked: false, description: 'a wooden door.', guardedBy: ['Butcher'], pathOpened: false },
+        },
+        enemies: [
+            {
+                name: 'Butcher', description: 'a big, burly butcher.', alive: true, health: 30, attack: 4, defense: 1, experience: 300, loot: [{ name: 'Cleaver', description: 'a sharp cleaver.', type: 'weapon', attack: 4, equipped: false }]
+            },
+        ],
+        items: [
+            { name: 'Apple', description: 'a juicy red apple.', type: 'food', health: 5 },
+            { name: 'Bread', description: 'a loaf of bread.', type: 'food', health: 7 },
+        ],
     },
     library: {
         description: 'You are in a dusty old library. There is a door to the east and a strange door to the north.',
