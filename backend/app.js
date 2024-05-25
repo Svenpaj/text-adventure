@@ -172,7 +172,7 @@ app.delete('/api/users/:id', async (req, res) => {
 
 // Open routes
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    res.redirect('/home');
 });
 // fix the login route / register route
 app.get('/login', (req, res) => {
