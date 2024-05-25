@@ -255,14 +255,28 @@
 
     <h1>Play Sound Example</h1>
     <!-- Audio element -->
-    <audio id="myAudio" src="/sound/sb_indreams.mp3" loop></audio>
+    <audio id="myAudio" src="./sound/lobby-time.mp3" autoplay loop></audio>
 
     <!-- Custom controls -->
     <button onclick="playAudio()">Play</button>
     <button onclick="pauseAudio()">Pause</button>
     <button onclick="stopAudio()">Stop</button>
 
+    <div class="control-panel" style="margin-top: 15px;">
+        <label for="volumeControl">Volume: </label>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+    </div>
+
     <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var audio = document.getElementById("myAudio");
+            var volumeControl = document.getElementById("volumeControl");
+
+            volumeControl.addEventListener("input", function () {
+                audio.volume = volumeControl.value;
+            });
+        });
 
         // Testing function controls for audio
 
@@ -271,7 +285,6 @@
 
         function playAudio() {
             audio.play();
-            audio.volume = 0.3;
         }
 
         function pauseAudio() {
@@ -285,7 +298,6 @@
         function toggleAudio() {
             if (audio.paused) {
                 audio.play();
-                audio.volume = 0.3;
                 soundButton.textContent = "mute";
             } else {
                 audio.pause();

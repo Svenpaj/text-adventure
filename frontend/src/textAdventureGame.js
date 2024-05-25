@@ -65,7 +65,7 @@ class TextAdventureGame {
         let inventoryText = "";
         switch (action.toLowerCase()) {
             case 'help':
-                typeWriter('Commands: go [direction], take [item], use [item], equip [item], unequip [item], inventory, look, help');
+                typeWriter('Commands: go [direction], take [item], use [item], eat [item], equip [item], unequip [item], inventory, look, help, stats, attack [enemy], loot [enemy], eat [item], inspect [item]');
                 break;
             case 'stats':
                 statsText = `Stats: Level: ${this.playerStats.level}<br> Current EXP: ${this.playerStats.experience}<br> Next level: ${this.playerStats.neededExp}<br> Health: ${this.playerStats.health}/${this.playerStats.fullHealth}<br> Attack: ${this.playerStats.attack}<br> Defense: ${this.playerStats.defense}<br> Agility: ${this.playerStats.agility},<br> Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}<br> Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
@@ -82,6 +82,9 @@ class TextAdventureGame {
                 break;
             case 'use':
                 this.useItem(target);
+                break;
+            case 'eat':
+                this.food(target);
                 break;
             case 'equip':
                 this.equipItem(target);
@@ -322,6 +325,26 @@ class TextAdventureGame {
             // Add more interaction types as needed when expanding the game
         } else {
             typeWriter(`You can't use the ${itemName} here.`);
+        }
+    }
+
+    food(itemName) {
+        const itemIndex = this.inventory.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
+        if (itemIndex === -1) {
+            typeWriter(`You don't have a ${itemName}.`);
+            return;
+        }
+
+        const item = this.inventory[itemIndex];
+        if (item.type === 'food') {
+            this.playerStats.health += item.health;
+            if (this.playerStats.health > this.playerStats.fullHealth) {
+                this.playerStats.health = this.playerStats.fullHealth;
+            }
+            typeWriter(`You ate the ${item.name}. Your health is now ${this.playerStats.health}.`);
+            this.inventory.splice(itemIndex, 1); // Remove the food item from inventory
+        } else {
+            typeWriter(`You can't eat the ${itemName}.`);
         }
     }
 

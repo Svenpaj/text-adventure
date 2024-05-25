@@ -2,6 +2,10 @@
 
 ## NOT ORDERED LIST
 
+* Fix so that the sound continues (maybe fades?) between login and register pages
+
+* Get perhaps animated backgrounds for all pages?
+
 * Resize images to be the same size, execpt for grand views.
 
 * Styling -> Fix the styling of the game in the browser to look much better and be better aligned.
