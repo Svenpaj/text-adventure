@@ -207,7 +207,11 @@ app.get('/game', (req, res) => {
 
 // TODO - Fix the homepage route to load the game state from the database and pass it to the frontend
 
-// TODO - Fix a gameover route that will redirect to the homepage or give you a heartfelt goodbye message
+app.get('/home', (req, res) => {
+    res.sendFile(join(__dirname, '../frontend/home.html'));
+});
+
+// TODO - Fix a gameover route that will redirect to the homepage or give you a heartfelt goodbye message -- Maybe?
 
 app.use(express.static('frontend'));
 

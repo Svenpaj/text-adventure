@@ -4,46 +4,118 @@
 <head>
     <title>Text Adventure Game</title>
     <style>
+        @font-face {
+            font-family: 'myFont';
+            src:
+                url('./fonts/Merchant.ttf') format('trueType'),
+                url('./fonts/MerchantDouble.ttf') format('trueType'),
+                url('./fonts/MerchantWide.ttf') format('trueType');
+
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'myFont', serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-
-        h1 {
-            margin-top: 50px;
-        }
-
-        p {
-            margin-top: 20px;
-        }
-
-        .button {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
-            font-size: 16px;
-            text-decoration: none;
-            background-color: #4CAF50;
+            font-family: 'myFont', serif;
+            font-size: 40px;
+            font-weight: normal;
+            background-color: rgb(33, 33, 33);
             color: white;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            display: grid;
         }
 
-        .button:hover {
-            background-color: #45a049;
+        button {
+            font-family: 'myFont', serif;
+            font-size: 40px;
+            font-weight: normal;
+            background-color: rgb(33, 33, 33);
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <h1>Welcome to the Text Adventure Game</h1>
-    <p>Embark on an exciting journey filled with mystery and adventure!</p>
+    <h1>Welcome to "Quest of Legends"</h1>
+    <div>
+        <h3>Alpha Version by Svenpaj</h3>
+        <p>Greetings, adventurer!
+            <br><br>
+            Are you ready to embark on an epic journey through a vast, medieval fantasy world? "Quest of Legends" is a
+            text
+            adventure RPG that takes you deep into an enchanting realm filled with intriguing characters, formidable
+            foes, and
+            countless secrets waiting to be uncovered.
+            <br><br>
+            As a hobby developer and DevOps engineer, I have poured my passion for storytelling and technology into
+            creating this
+            immersive experience. Though this is an alpha version, your feedback and support will be invaluable as I
+            continue to
+            refine and expand the game.
+            <br><br>
+        </p>
+        <h3>Features</h3>
+        <ol>
+            <li>
+                Expansive World: Explore diverse regions, from enchanted forests to treacherous mountains.
+            </li>
+            <li>
+                Dynamic Choices: Make decisions that influence the story and shape your character's destiny.
+            </li>
+            <li>
+                Challenging Bosses: Face off against powerful adversaries in epic battles.
+            </li>
+            <li>
+                Dynamic Storytelling: Make choices that shape your adventure and determine your fate.
+            </li>
+        </ol>
+        <h3>
+            What's in the Alpha:
+        </h3>
+        <ol>
+            <li>
+                A sneak peek into the first few chapters of the game.
+            </li>
+            <li>
+                A variety of quests and side missions to complete.
+            </li>
+            <li>
+                First Quest: Embark on your first adventure and face your first challenge.
+            </li>
+            <li>
+                Save/Load System: Save your progress and continue your adventure at any time.
+            </li>
+            <li>
+                Early encounters with some of the game's major characters and bosses.
+            </li>
+            <li>
+                A taste of the interactive and narrative-driven gameplay.
+            </li>
+        </ol>
+
+        <h3>Your Adventure Begins Now</h3>
+        <p>
+            Dive into the world of "Quest of Legends" and be part of its evolution. As an alpha tester, your insights
+            and
+            suggestions will help shape the future of the game. Join our community, share your experiences, and become a
+            key player
+            in crafting this fantastical journey. <br><br> Thank you for your support, and may your quest be legendary!
+            <br><br>
+            Proceed and begin your your journey <button onclick="window.location.href = '/login';">here</button>.
+        </p>
+
+    </div>
     <!-- Don't forget that this is a placeholder and needs to be changed to the real buttons for starting a new adventure or loading an existing saved gameState from the database. as in the original index.html-->
-    <a href="new_adventure.html" class="button">Start New Adventure</a>
-    <a href="load_game.html" class="button">Load Game</a>
+    <script>
+
+    </script>
 </body>
 
 </html>
-<h2>About the Game</h2>
-<p>Experience an immersive text-based adventure where you make choices that shape the outcome of the story. Navigate
-    through captivating scenarios, solve puzzles, and unravel mysteries as you embark on a thrilling journey.</p>

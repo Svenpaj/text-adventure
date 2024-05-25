@@ -65,5 +65,7 @@ function loadGameState() {
 function initializeGame(savedState) {
     // Initialize the game state, load the initial room, etc.
     const game = new TextAdventureGame(savedState);
+    const gameContainer = document.getElementById('gameContainer');
+    gameContainer.style.display = 'flex';
     setupEventListeners(game);
 }
