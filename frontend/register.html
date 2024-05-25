@@ -4,23 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <style>
+        @font-face {
+            font-family: 'myFont';
+            src:
+                url('./fonts/Merchant.ttf') format('trueType'),
+                url('./fonts/MerchantDouble.ttf') format('trueType'),
+                url('./fonts/MerchantWide.ttf') format('trueType');
+
+            font-weight: normal;
+            font-style: normal;
+        }
+
         *,
         ::after,
         ::before {
             box-sizing: border-box;
         }
 
+        * {
+            font-size: 30px;
+        }
+
         body {
             background-color: #212121;
             color: #fff;
-            font-family: monospace, serif;
+            font-family: 'myFont', serif;
             letter-spacing: 0.05em;
         }
 
         h1 {
-            font-size: 23px;
+            font-size: 50px;
         }
 
         .form {
@@ -39,7 +54,7 @@
             border: 0;
             background: transparent;
             color: #fff;
-            font-family: monospace, serif;
+            font-family: 'myFont', serif;
             letter-spacing: 0.05em;
             font-size: 16px;
         }
@@ -60,7 +75,7 @@
             color: #fff;
             letter-spacing: 0.1em;
             font-weight: bold;
-            font-family: monospace;
+            font-family: 'myFont', serif;
             font-size: 16px;
         }
 
@@ -131,6 +146,7 @@
         .block-cube.block-input input {
             position: relative;
             z-index: 2;
+            font-size: 30px;
         }
 
         .block-cube.block-input input:focus~.bg-right .bg-inner,

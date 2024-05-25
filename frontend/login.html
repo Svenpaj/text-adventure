@@ -250,7 +250,7 @@
     </form>
 
     <div id="soundToggle" style="display: block;">
-        <button id="soundButton" onclick="toggleAudio()">Sound</button>
+        <p>TOGGLE MUSIC: <button id="soundButton" onclick="toggleAudio()">Sound</button></p>
     </div>
 
     <h1>Play Sound Example</h1>
@@ -271,6 +271,7 @@
 
         function playAudio() {
             audio.play();
+            audio.volume = 0.3;
         }
 
         function pauseAudio() {
@@ -284,6 +285,7 @@
         function toggleAudio() {
             if (audio.paused) {
                 audio.play();
+                audio.volume = 0.3;
                 soundButton.textContent = "mute";
             } else {
                 audio.pause();
