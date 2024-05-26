@@ -22,7 +22,7 @@ class TextAdventureGame {
             this.playerStats = initialState.playerStats;
             this.inventory = initialState.inventory || [];
             this.rooms = initialState.rooms;
-            this.inFight = initialState.inFight ? true : false;
+            this.inFight = initialState.inFight;
 
             console.log('this.currentRoom:', this.currentRoom)
             console.log('this.playerStats:', this.playerStats)
@@ -31,7 +31,7 @@ class TextAdventureGame {
         }
         else {
             // Initialize any other game state variables here
-            this.playerStats = { level: 1, experience: 0, neededExp: 100, fullHealth: 20, health: 20, attack: 5, defense: 0, agility: 2, equippedArmor: null, equippedWeapon: null };
+            this.playerStats = { level: 1, experience: 0, neededExp: 100, fullHealth: 20, health: 20, attack: 5, defense: 0, agility: 1, strength: 1, equippedArmor: null, equippedWeapon: null };
             this.currentRoom = 'start';
             this.inventory = [];
             this.inFight = false;
@@ -127,6 +127,7 @@ class TextAdventureGame {
         this.playerStats.attack += this.playerStats.attack * 0.3;
         this.playerStats.defense += this.playerStats.defense * 0.3;
         this.playerStats.agility += this.playerStats.agility * 0.3;
+        this.playerStats.strength += this.playerStats.strength * 0.3;
         typeWriter(`You've leveled up to level ${this.playerStats.level}!`);
     }
 
@@ -181,6 +182,8 @@ class TextAdventureGame {
         }
         return false;
     }
+
+    // add in inspect inventory items to show bonus stats for weapons and armor!!!!
 
     inspectInventoryItems(itemName) {
         const item = this.inventory.find(item => item.name.toLowerCase() === itemName);
@@ -386,6 +389,11 @@ class TextAdventureGame {
                 }
                 attack = this.playerStats.attack + item.attack;
                 this.playerStats.equippedWeapon = item; // Store the equipped weapon for reference
+                /* if (item.bonusStats) {
+                     item.bonusStats.forEach(bonus => {
+                         this.playerStats[Object.keys(bonus)[0]] += Object.values(bonus)[0];
+                     });
+                 }*/
                 typeWriter(`You equipped the ${item.name}. Your total attack is now ${attack}.`);
                 break;
             default:
@@ -454,16 +462,28 @@ class TextAdventureGame {
         }
 
         this.resolveAttack(room.enemies[enemyIndex], room, enemyIndex);
-        //this.audio.src = './sound/' + room.roomId + 'fight.mp3';
+        //this.audio.src = './sound/' + room.roomId + 'fight.mp3'; // to add fight music
     }
 
     resolveAttack(enemy, room, enemyIndex) {
+        let bonusAgility = 0;
+        // add in bonus agility from armor!!!! THEN MAKE this two IF statements into one (perhaps turnary operator or function)
+        if (this.playerStats.equippedWeapon && this.playerStats.equippedWeapon.bonusStats) {
+            this.playerStats.equippedWeapon.bonusStats.forEach(bonus => {
+                if (Object.keys(bonus)[0] === 'agility') {
+                    bonusAgility += Object.values(bonus)[0];
+                }
+            });
+        }
+        // add in bonus agility from armor!!!! THEN MAKE this two IF statements into one (perhaps turnary operator or function)
+        const diceBonus = this.playerStats.agility + bonusAgility;
+        const diceRoll = this.rollDice() + diceBonus; // Add player's agility to the dice roll
+        console.log('diceRoll: ' + diceRoll + " " + "player agility bonus: " + diceBonus + " " + "bonus gear agility: " + bonusAgility)
         this.inFight = true;
-        const diceRoll = this.rollDice() + this.playerStats.agility; // Add player's agility to the dice roll
 
         if (diceRoll >= 17) {
             this.attackWithCriticalHit(enemy, room, enemyIndex);
-        } else if (diceRoll >= 7 && diceRoll < 17) {
+        } else if (diceRoll >= 7 && diceRoll <= 16) {
             this.attackEnemyWithNormalHit(enemy, room, enemyIndex);
         } else {
             this.missedAttack(enemy, room, enemyIndex);
@@ -471,9 +491,9 @@ class TextAdventureGame {
     }
 
     attackWithCriticalHit(enemy, room, enemyIndex) {
-        const damage = ((this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) * 2) - enemy.defense;
+        const damage = ((this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) * 2) + this.playerStats.strength - enemy.defense;
         enemy.health -= damage;
-        if (enemy.health < 0) {
+        if (enemy.health <= 0) {
             enemy.health = 0;
             typeWriter(`Critical hit! You attack the ${enemy.name} for ${damage} damage, the ${enemy.name} falls to the ground.`);
             this.handleEnemyHealth(enemy, room, enemyIndex);
@@ -486,7 +506,7 @@ class TextAdventureGame {
     attackEnemyWithNormalHit(enemy, room, enemyIndex) {
         const damage = (this.playerStats.attack + (this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0)) - enemy.defense;
         enemy.health -= damage;
-        if (enemy.health < 0) {
+        if (enemy.health <= 0) {
             enemy.health = 0;
             typeWriter(`You attack the ${enemy.name} for ${damage} damage, the ${enemy.name} falls to the ground.`);
             this.handleEnemyHealth(enemy, room, enemyIndex);

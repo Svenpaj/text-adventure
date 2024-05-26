@@ -9,6 +9,15 @@ function setupEventListeners(game) {
     document.getElementById('loadGameButton').addEventListener('click', () => loadGameState());
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const audio = document.getElementById("audio");
+    const volumeControl = document.getElementById("volumeControl");
+
+    volumeControl.addEventListener("input", function () {
+        audio.volume = volumeControl.value;
+    });
+});
+
 function newGame() {
     const gameContainer = document.getElementById('gameContainer');
     gameContainer.style.display = 'flex';

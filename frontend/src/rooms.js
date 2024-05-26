@@ -20,7 +20,7 @@ export const rooms = {
         enemies: [
             {
                 name: 'Goblin', description: 'little weak goblin.', alive: true, health: 5, attack: 1, defense: 1, experience: 50, loot:
-                    [{ name: 'Dagger', description: 'a rusty dagger.', type: 'weapon', attack: 1, equipped: false }]
+                    [{ name: 'Dagger', description: 'a rusty dagger.', type: 'weapon', attack: 1, equipped: false, bonusStats: [{ agility: 2 }] }]
             },
             {
                 name: 'Orc', description: 'big, strong orc.', alive: true, health: 10, attack: 2, defense: 1, experience: 100, loot: [
