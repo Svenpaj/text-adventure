@@ -2,7 +2,9 @@
 
 ## NOT ORDERED LIST
 
-* Fix so that the sound continues (maybe fades?) between login and register pages
+* FIX absolut paths everywhere so it works on (Ubuntu Server) running in pm2.
+
+* Fix so that the sound continues (maybe fades?) between login and register pages.
 
 * Get perhaps animated backgrounds for all pages?
 
