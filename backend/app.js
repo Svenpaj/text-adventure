@@ -213,7 +213,7 @@ app.get('/home', (req, res) => {
 
 // TODO - Fix a gameover route that will redirect to the homepage or give you a heartfelt goodbye message -- Maybe?
 
-app.use(express.static('frontend'));
+app.use(express.static(join(__dirname, '../frontend')));
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

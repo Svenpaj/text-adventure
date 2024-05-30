@@ -405,7 +405,7 @@ class TextAdventureGame {
         item.equipped = true;
     }
 
-
+    // Fix so that weapon is not subtracting from attack when unequipped ( look at equipItem for reference )
     unequipItem(itemName) {
         // Search for the item regardless of its type but ensure it is equipped.
         const itemIndex = this.inventory.findIndex(item =>
