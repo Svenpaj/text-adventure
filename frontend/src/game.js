@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function newGame() {
     const gameContainer = document.getElementById('gameContainer');
-    gameContainer.style.display = 'flex';
+    gameContainer.style.display = 'block';
     const game = new TextAdventureGame();
     setupEventListeners(game);
 }

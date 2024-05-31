@@ -52,12 +52,14 @@
     }
 
     h1,
+    h2,
     h3 {
       text-align: center;
     }
 
     p {
-      margin-top: 5px;
+      margin-top: 10px;
+      margin-left: auto;
       display: flex;
       justify-content: center;
     }
@@ -72,7 +74,6 @@
       flex: 1;
       margin: 10px;
       padding: 20px;
-      border: 1px solid white;
     }
 
     #roomImageContainer {
@@ -81,28 +82,28 @@
       padding: 2px;
       align-items: center;
       justify-content: center;
-      margin: 10px;
+      margin: auto;
     }
 
     #roomImageContainer img {
       animation: fadeIn 5s;
-      max-width: 100%;
-      width: auto;
+      max-width: 80vw;
+      max-height: 60vh;
     }
 
     #gameConsole {
       text-align: left;
       font-size: 50px;
+      padding: 2px;
+      margin: 10px;
       font-weight: normal;
-      float: right;
-      width: 30%;
-      border: 1px solid white;
+      width: 50vw;
+      max-width: 1152px;
       border-radius: 5px;
       background-color: rgba(255, 255, 255, 0.1);
       max-height: 500px;
       overflow-y: auto;
       animation: fadeIn 10s;
-      max-width: 35%;
       position: relative;
       justify-content: center;
       align-items: center;
@@ -321,17 +322,16 @@
     </div>
 
   </nav>
-  <h1>Text Adventure Game</h1>
-  <h3>Welcome to the text adventure game. Type your commands in the input below and press Enter to play.</p>
-    <div class="gameContainer" , id="gameContainer" style="display: none;">
-      <div class="child" id="roomImageContainer"></div>
-      <div class="child" id="gameConsole"></div>
-      <div class="child" id="commandConsole">
-        <input type="text" id="commandInput" placeholder="Type command =>">
-      </div>
+  <h2>Quest of Legends</h2>
+  <div class="gameContainer" , id="gameContainer" style="display: none;">
+    <div class="child" id="roomImageContainer"></div>
+    <div class="child" id="gameConsole"></div>
+    <div class="child" id="commandConsole">
+      <input type="text" id="commandInput" placeholder="Type command =>">
     </div>
-    <audio id="audio" loop autoplay></audio>
-    <script type="module" src="./src/game.js"></script>
+  </div>
+  <audio id="audio" loop autoplay></audio>
+  <script type="module" src="./src/game.js"></script>
 </body>
 
 </html>

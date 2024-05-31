@@ -2,7 +2,7 @@ export const rooms = {
     start: {
         description: 'You are in a small room. There is a door to the north.',
         detailedDescription: `The room has stone walls, cool and imposing, their texture rough under the fingertips. The tapestries on the floor, despite their age, still hint at the vibrant stories they once depicted. The wooden door to the north stands slightly open, as if inviting the curious to discover the secrets it guards. Amidst the quiet, the only sounds are the soft rustle of the scrolls and the occasional creak of the old wooden furniture, each piece whispering tales of the past. This room, a small chapter in the castle's grand history, holds the weight of untold stories.`,
-        image: 'summer4.png',
+        image: 'summer6.png',
         exits: {
             north: { roomId: 'hallway', locked: false, description: 'a wooden door.', guardedBy: [], pathOpened: true },
         },

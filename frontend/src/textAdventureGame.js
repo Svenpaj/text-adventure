@@ -39,9 +39,6 @@ class TextAdventureGame {
         this.startGame();
     }
 
-
-
-
     setupInputListener() {
         this.commandInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && this.commandInput.value.trim() !== '') {
@@ -61,7 +58,7 @@ class TextAdventureGame {
                 typeWriter('Commands: go [direction], take [item], use [item], eat [item], equip [item], unequip [item], inventory, look, help, stats, attack [enemy], loot [enemy], eat [item], inspect [item]');
                 break;
             case 'stats':
-                statsText = `Stats: Level: ${this.playerStats.level}<br> Current EXP: ${this.playerStats.experience}<br> Next level: ${this.playerStats.neededExp}<br> Health: ${this.playerStats.health}/${this.playerStats.fullHealth}<br> Attack: ${this.playerStats.attack}<br> Defense: ${this.playerStats.defense}<br> Agility: ${this.playerStats.agility},<br> Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}<br> Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
+                statsText = `Stats: Level: ${this.playerStats.level}<br> Current EXP: ${this.playerStats.experience}<br> Next level: ${this.playerStats.neededExp}<br> Health: ${this.playerStats.health}/${this.playerStats.fullHealth}<br> Attack: ${this.playerStats.attack}<br> Defense: ${this.playerStats.defense}<br> Agility: ${this.playerStats.agility}<br> Strength: ${this.playerStats.strength}<br> Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}<br> Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
                 typeWriter(statsText);
                 break;
             case 'go':
@@ -117,10 +114,10 @@ class TextAdventureGame {
         } else {
             this.playerStats.health = this.playerStats.fullHealth;
         }
-        this.playerStats.attack += this.playerStats.attack * 0.3;
-        this.playerStats.defense += this.playerStats.defense * 0.3;
-        this.playerStats.agility += this.playerStats.agility * 0.3;
-        this.playerStats.strength += this.playerStats.strength * 0.3;
+        this.playerStats.attack += this.playerStats.attack + 2;
+        this.playerStats.defense += this.playerStats.defense + 1;
+        this.playerStats.agility += this.playerStats.agility + 1;
+        this.playerStats.strength += this.playerStats.strength + 1;
         typeWriter(`You've leveled up to level ${this.playerStats.level}!`);
     }
 
