@@ -39,14 +39,7 @@ class TextAdventureGame {
         this.startGame();
     }
 
-    updateRoomBackground() {
-        const room = this.rooms[this.currentRoom];
-        const imagePath = room.image ? `./images/${room.image}` : 'none';
 
-        const roomImageContainer = document.getElementById('roomImageContainer');
-        roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${room.name}">`;
-
-    }
 
 
     setupInputListener() {
@@ -209,6 +202,15 @@ class TextAdventureGame {
         } else {
             typeWriter(`You don't see a ${itemName} here.`);
         }
+    }
+
+    updateRoomBackground() {
+        const room = this.rooms[this.currentRoom];
+        const imagePath = room.image ? `./images/${room.image}` : 'none';
+
+        const roomImageContainer = document.getElementById('roomImageContainer');
+        roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${room.name}">`;
+
     }
 
     displayItemWithImage(item) {
@@ -420,12 +422,12 @@ class TextAdventureGame {
         const item = this.inventory[itemIndex];
         switch (item.type) {
             case 'armor':
-                this.playerStats.defense -= item.defense;
+                //this.playerStats.defense -= item.defense;
                 this.playerStats.equippedArmor = null; // Clear the reference
                 typeWriter(`You unequipped the ${item.name}. Defense is now ${this.playerStats.defense}.`);
                 break;
             case 'weapon':
-                this.playerStats.attack -= item.attack;
+                //this.playerStats.attack -= item.attack;
                 this.playerStats.equippedWeapon = null; // Clear the reference
                 typeWriter(`You unequipped the ${item.name}. Attack is now ${this.playerStats.attack}.`);
                 break;
@@ -467,7 +469,7 @@ class TextAdventureGame {
 
     resolveAttack(enemy, room, enemyIndex) {
         let bonusAgility = 0;
-        // add in bonus agility from armor!!!! THEN MAKE this two IF statements into one (perhaps turnary operator or function)
+        // add in bonus agility from weapon!!!! THEN MAKE this two IF statements into one (perhaps turnary operator or function)
         if (this.playerStats.equippedWeapon && this.playerStats.equippedWeapon.bonusStats) {
             this.playerStats.equippedWeapon.bonusStats.forEach(bonus => {
                 if (Object.keys(bonus)[0] === 'agility') {
@@ -475,7 +477,15 @@ class TextAdventureGame {
                 }
             });
         }
-        // add in bonus agility from armor!!!! THEN MAKE this two IF statements into one (perhaps turnary operator or function)
+
+        if (this.playerStats.equippedArmor && this.playerStats.equippedArmor.bonusStats) {
+            this.playerStats.equippedArmor.bonusStats.forEach(bonus => {
+                if (Object.keys(bonus)[0] === 'agility') {
+                    bonusAgility += Object.values(bonus)[0];
+                }
+            });
+        }
+
         const diceBonus = this.playerStats.agility + bonusAgility;
         const diceRoll = this.rollDice() + diceBonus; // Add player's agility to the dice roll
         console.log('diceRoll: ' + diceRoll + " " + "player agility bonus: " + diceBonus + " " + "bonus gear agility: " + bonusAgility)
