@@ -79,7 +79,7 @@ app.post('/api/login', async (req, res) => {
                 req.session.userId = user.id;
                 console.log(username, ": ", user.id, ' has logged in')
                 console.log(req.session);
-                return res.redirect('/game');
+                return res.redirect('/home');
             } else {
                 // Passwords do not match
                 return res.status(401).send('Incorrect username or password');
@@ -172,7 +172,7 @@ app.delete('/api/users/:id', async (req, res) => {
 
 // Open routes
 app.get('/', (req, res) => {
-    res.redirect('/home');
+    res.redirect('/start');
 });
 // fix the login route / register route
 app.get('/login', (req, res) => {
@@ -200,18 +200,26 @@ app.get('/game', (req, res) => {
     if (!req.session.userId) {
         return res.redirect('/login');
     }
-
-    // TODO - Load the game state from the database and pass it to the frontend from the homepage and do not instantly redirect to the game page
     res.sendFile(join(__dirname, '../frontend/index.html'));
 });
 
-// TODO - Fix the homepage route to load the game state from the database and pass it to the frontend
-
-app.get('/home', (req, res) => {
-    res.sendFile(join(__dirname, '../frontend/home.html'));
+app.get('/howtoplay', (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    res.sendFile(join(__dirname, '../frontend/howtoplay.html'));
 });
 
-// TODO - Fix a gameover route that will redirect to the homepage or give you a heartfelt goodbye message -- Maybe?
+app.get('/start', (req, res) => {
+    res.sendFile(join(__dirname, '../frontend/start.html'));
+});
+
+app.get('/home', (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    res.sendFile(join(__dirname, '../frontend/home.html'));
+});
 
 app.use(express.static(join(__dirname, '../frontend')));
 
