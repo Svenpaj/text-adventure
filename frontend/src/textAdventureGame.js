@@ -32,7 +32,7 @@ class TextAdventureGame {
         else {
             // Initialize any other game state variables here
             this.playerStats = { level: 1, experience: 0, neededExp: 100, fullHealth: 20, health: 20, attack: 5, defense: 0, agility: 1, strength: 1, equippedArmor: null, equippedWeapon: null };
-            this.currentRoom = 'start';
+            this.currentRoom = 'plainsStart';
             this.inventory = [];
             this.inFight = false;
         }
@@ -58,7 +58,7 @@ class TextAdventureGame {
                 typeWriter('Commands: go [direction], take [item], use [item], eat [item], equip [item], unequip [item], inventory, look, help, stats, attack [enemy], loot [enemy], eat [item], inspect [item]');
                 break;
             case 'stats':
-                statsText = `Stats: Level: ${this.playerStats.level}<br> Current EXP: ${this.playerStats.experience}<br> Next level: ${this.playerStats.neededExp}<br> Health: ${this.playerStats.health}/${this.playerStats.fullHealth}<br> Attack: ${this.playerStats.attack}<br> Defense: ${this.playerStats.defense}<br> Agility: ${this.playerStats.agility}<br> Strength: ${this.playerStats.strength}<br> Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}<br> Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
+                statsText = `Stats: Level: ${this.playerStats.level}<br> Current EXP: ${this.playerStats.experience}<br> Next level: ${this.playerStats.neededExp}<br> Health: ${this.playerStats.health}/${this.playerStats.fullHealth}<br> Attack: ${this.playerStats.attack} (+${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.attack : 0})<br> Defense: ${this.playerStats.defense} (+${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.defense : 0})<br> Agility: ${this.playerStats.agility}<br> Strength: ${this.playerStats.strength}<br> Armor: ${this.playerStats.equippedArmor ? this.playerStats.equippedArmor.name : 'None'}<br> Weapon: ${this.playerStats.equippedWeapon ? this.playerStats.equippedWeapon.name : 'None'}`;
                 typeWriter(statsText);
                 break;
             case 'go':
@@ -123,15 +123,17 @@ class TextAdventureGame {
 
     // Game Logic Methods
     look(roomName = this.currentRoom) {
-        typeWriter(`You are in the ${roomName}. And you can see exits to the ${Object.keys(this.rooms[roomName].exits).join(', ')}.`);
-        if (this.rooms[roomName].detailedDescription) {
-            typeWriter(this.rooms[roomName].detailedDescription);
+        if (this.rooms[roomName].description) {
+            typeWriter(this.rooms[roomName].description);
+            typeWriter(`You can see a path leading: ${Object.keys(this.rooms[roomName].exits).join(', ')}.`);
         }
         if (this.rooms[roomName].items) {
             this.rooms[roomName].items.forEach(item => {
                 typeWriter(`You spot a ${item.description}`);
             });
-            const imagePath = this.rooms[roomName].imageItems ? `./images/${this.rooms[roomName].imageItems}` : 'none';
+        }
+        if (this.rooms[roomName].imageItems) {
+            const imagePath = this.rooms[roomName].imageItems;
             const roomImageContainer = document.getElementById('roomImageContainer');
             roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${this.rooms[roomName].name}">`;
         }
@@ -180,8 +182,10 @@ class TextAdventureGame {
         if (item) {
             this.displayItemWithImage(item);
             typeWriter(item.description);
-            if (item.type === 'weapon' || item.type === 'armor') {
-                typeWriter(`Attack: ${item.attack || 0}, Defense: ${item.defense || 0}`);
+
+            // Maybe fix to not write out bonus stats if they are not there
+            if (item.type === 'weapon' || item.type === 'armor' && item.bonusStats) {
+                typeWriter(`Attack: ${item.attack || 0}, Defense: ${item.defense || 0}, Bonus Stats: ${item.bonusStats ? item.bonusStats.map(bonus => Object.keys(bonus)[0] + ': ' + Object.values(bonus)[0]).join(', ') : 'None'}`);
             }
             return true;
         }
@@ -259,6 +263,7 @@ class TextAdventureGame {
         // Move to the new room if the exit isn't locked or och guarded is a direct roomId reference
         this.currentRoom = exit;
         this.showRoomInfo(this.currentRoom);
+        // rewrite the audio source to the new room with substring or split do remove the numbers at the end of the name
         this.audio.src = './sound/' + this.currentRoom + '.mp3';
         this.audio.play();
     }
@@ -323,6 +328,9 @@ class TextAdventureGame {
                 } else {
                     typeWriter('There is nothing to unlock here.');
                 }
+            }
+            if (!interaction.unlocks && interaction.message) {
+                typeWriter(interaction.message);
             }
             // Add more interaction types as needed when expanding the game
         } else {
@@ -466,7 +474,7 @@ class TextAdventureGame {
 
     resolveAttack(enemy, room, enemyIndex) {
         let bonusAgility = 0;
-        // add in bonus agility from weapon!!!! THEN MAKE this two IF statements into one (perhaps turnary operator or function)
+        // THEN MAKE this two IF statements into one (perhaps turnary operator or function)
         if (this.playerStats.equippedWeapon && this.playerStats.equippedWeapon.bonusStats) {
             this.playerStats.equippedWeapon.bonusStats.forEach(bonus => {
                 if (Object.keys(bonus)[0] === 'agility') {
@@ -543,6 +551,7 @@ class TextAdventureGame {
             this.inFight = false;
             console.log(this.inFight)
 
+            // No longer need to remove the enemy from the room, just need to them to be marked as dead
             // room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy testing without removing the enemy
 
             this.unblockExits(room, enemy);
@@ -617,7 +626,7 @@ class TextAdventureGame {
     }
 
     startGame() {
-        typeWriter('Welcome to the adventure game!');
+        typeWriter('Welcome to Quest of legends!');
         this.showRoomInfo(this.currentRoom);
     }
 }
