@@ -18,15 +18,28 @@ body {
     font-family: 'myFont', serif;
     font-size: 40px;
     font-weight: normal;
-    background-color: rgb(33, 33, 33);
+    background-color: transparent;
     color: white;
     display: grid;
+}
+
+body,
+canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: -1;
+
 }
 
 nav {
     display: flex;
     align-items: center;
-    background-color: rgba(33, 33, 33);
+    background-color: black;
+    margin-top: 1%;
+    height: fit-content;
 }
 
 button {
@@ -45,6 +58,7 @@ h1,
 h2,
 h3 {
     text-align: center;
+    margin: auto;
 }
 
 p {
@@ -86,7 +100,7 @@ p {
     max-width: 1400px;
     border-radius: 5px;
 
-    max-height: 500px;
+    height: 300px;
     overflow-y: auto;
     animation: fadeIn 10s;
     position: relative;
