@@ -32,7 +32,7 @@ class TextAdventureGame {
         else {
             // Initialize any other game state variables here
             this.playerStats = { level: 1, experience: 0, neededExp: 100, fullHealth: 20, health: 20, attack: 5, defense: 0, agility: 1, strength: 1, equippedArmor: null, equippedWeapon: null };
-            this.currentRoom = 'plainsStart';
+            this.currentRoom = 'start';
             this.inventory = [];
             this.inFight = false;
         }
@@ -114,10 +114,10 @@ class TextAdventureGame {
         } else {
             this.playerStats.health = this.playerStats.fullHealth;
         }
-        this.playerStats.attack += this.playerStats.attack + 2;
-        this.playerStats.defense += this.playerStats.defense + 1;
-        this.playerStats.agility += this.playerStats.agility + 1;
-        this.playerStats.strength += this.playerStats.strength + 1;
+        this.playerStats.attack += 2;
+        this.playerStats.defense += 1;
+        this.playerStats.agility += 1;
+        this.playerStats.strength += 1;
         typeWriter(`You've leveled up to level ${this.playerStats.level}!`);
     }
 
@@ -140,7 +140,7 @@ class TextAdventureGame {
         if (this.rooms[roomName].enemies) {
             this.rooms[roomName].enemies.forEach(enemy => {
                 if (enemy.alive) {
-                    typeWriter(`You see a ${enemy.name} here.`);
+                    typeWriter(`You see a ${enemy.description} here.`);
                 }
                 else {
                     typeWriter(`You see a defeated ${enemy.name} here.`);
@@ -223,7 +223,7 @@ class TextAdventureGame {
 
     showRoomInfo(roomName) {
         // showRoomInfo function implementation
-        typeWriter(this.rooms[roomName].description);
+        typeWriter(this.rooms[roomName].detailedDescription);
         this.updateRoomBackground();
     }
 
@@ -396,12 +396,12 @@ class TextAdventureGame {
                 }
                 attack = this.playerStats.attack + item.attack;
                 this.playerStats.equippedWeapon = item; // Store the equipped weapon for reference
-                /* if (item.bonusStats) {
-                     item.bonusStats.forEach(bonus => {
-                         this.playerStats[Object.keys(bonus)[0]] += Object.values(bonus)[0];
-                     });
-                 }*/
                 typeWriter(`You equipped the ${item.name}. Your total attack is now ${attack}.`);
+                if (item.bonusStats) {
+                    item.bonusStats.forEach(bonus => {
+                        typeWriter(`You gain ${Object.values(bonus)[0]} ${Object.keys(bonus)[0]} from the ${item.name}.`);
+                    });
+                }
                 break;
             default:
                 typeWriter('This item cannot be equipped.');
