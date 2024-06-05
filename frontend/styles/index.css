@@ -87,7 +87,7 @@ p {
 }
 
 #roomImageContainer img {
-    animation: fadeIn 5s;
+    animation: fadeIn 2s;
     max-width: 80vw;
     max-height: 60vh;
 }
@@ -102,7 +102,7 @@ p {
 
     height: 300px;
     overflow-y: auto;
-    animation: fadeIn 10s;
+    animation: fadeIn 2s;
     position: relative;
     justify-content: center;
     align-items: center;
@@ -113,7 +113,7 @@ p {
 }
 
 #commandConsole {
-    animation: fadeIn 15s;
+    animation: fadeIn 2s;
     padding: auto;
     overflow-y: auto;
     max-width: fit-content;

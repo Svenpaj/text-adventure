@@ -42,7 +42,7 @@ function processQueue() {
 
 function typeWriterInternal(text, currentIndex, callback) {
     const gameConsole = document.getElementById('gameConsole');
-    const speed = 20;
+    const speed = 1;
 
     if (currentIndex < text.length) {
         if (text.charAt(currentIndex) === '<' && text.substring(currentIndex, currentIndex + 4) === '<br>') {

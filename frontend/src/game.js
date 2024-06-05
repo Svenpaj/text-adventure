@@ -3,7 +3,6 @@ import { TextAdventureGame } from './textAdventureGame.js';
 setupEventListeners();
 
 function setupEventListeners(game) {
-    // Assuming you have buttons in your HTML for saving/loading
     document.getElementById('newGameButton').addEventListener('click', () => newGame());
     document.getElementById('saveGameButton').addEventListener('click', () => saveGameState(game));
     document.getElementById('loadGameButton').addEventListener('click', () => loadGameState());
@@ -19,8 +18,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function newGame() {
+    const newGameButton = document.getElementById('newGameButton');
     const gameContainer = document.getElementById('gameContainer');
     gameContainer.style.display = 'block';
+    newGameButton.style.display = 'none';
     const game = new TextAdventureGame();
     setupEventListeners(game);
 }
