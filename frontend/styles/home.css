@@ -21,9 +21,13 @@ body {
     background-color: rgb(33, 33, 33);
     color: white;
     display: grid;
+    background-image: url('../images/background5.webp');
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-body,
+/*body,
 canvas {
     position: absolute;
     width: 100%;
@@ -31,7 +35,7 @@ canvas {
     margin: 0;
     padding: 0;
     z-index: -1;
-}
+}*/
 
 nav {
     display: flex;

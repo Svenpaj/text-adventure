@@ -102,7 +102,7 @@ export const rooms = {
     start: {
         description: 'You are on a field.',
         detailedDescription: 'As you begin your journey, you find yourself in a wide, open field. The sun is shining brightly, casting a warm, inviting light over the landscape. Birds sing melodiously from unseen perches, their songs harmonizing with the gentle rustle of the grass swaying in the breeze. A vibrant tapestry of flowers spreads out around you, their colors vivid and their scent sweet in the air. Amidst the floral display, rabbits and squirrels hop and scurry about, adding a touch of lively charm to the serene scene.',
-        image: 'summer5.png',
+        image: 'start.webp',
         exits: {
             north: { roomId: 'plains8', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             south: { roomId: 'plains7', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
@@ -125,7 +125,7 @@ export const rooms = {
     plains1: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself venturing deeper into the field. The sun shines brilliantly, casting a warm, golden glow over the landscape. A gentle breeze whispers through the air, carrying with it the melodic songs of distant birds. The scent of wildflowers mingles with the breeze, filling the air with a fragrant, heady perfume. The grass sways rhythmically, as if dancing to the unheard music of the wind, its gentle movements instilling a sense of peace and tranquility within you.<br>Suddenly, your senses sharpen as you detect a faint, rasping sound emanating from the nearby bushes. Could it be the elusive Nonnalids, the tiny flower people, hidden among the blossoms and leaves?',
-        image: 'summer5.png',
+        image: 'plains1.webp',
         exits: {
             north: { roomId: 'plains6', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             south: { roomId: 'plains5', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
@@ -151,7 +151,7 @@ export const rooms = {
     plains2: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far out on the field to the west, where the landscape dramatically drops off into a sheer cliff. The cliff\'s edge looms ahead, its rugged face making it impossible to climb down.You\'ll need to find another way forward. Far below, you can hear the distant roar of the ocean, its rhythmic waves crashing against unseen shores.<br>The peacefulness and the breathtaking beauty of the surrounding nature compel you to pause and savor the moment. The sun casts a golden hue over the rolling fields, and a gentle breeze carries the scent of salt and wildflowers. As you take in the serene landscape, your eyes catch sight of something intriguing in the far distance to the south—a thin plume of smoke rising from what appears to be a chimney.',
-        image: 'summer2.png',
+        image: 'plains2.webp',
         exits: {
             north: { roomId: 'plains4', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             south: { roomId: 'plains3', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
@@ -169,7 +169,7 @@ export const rooms = {
     plains3: {
         description: 'You are at a house.',
         detailedDescription: 'You follow the path south and find yourself in a small clearing.Before you stands a quaint house, its well- maintained appearance suggesting it has been lovingly cared for over the years.A small garden surrounds the house, vibrant with life—animals scurry about, and a variety of plants flourish in neat rows.<br>As you enter the garden, you notice a farmer diligently tending to her crops. She looks up and greets you with a warm smile, her friendly demeanor filling you with a sense of calm and peace. Close to the house, several pots brim with flowers in a dazzling array of colors, almost resembling a rainbow. You see vibrant orange, sunny yellow, lush green, deep blue, and rich indigo blooms. However, two pots remain empty, awaiting their turn to add to the spectrum.',
-        image: 'summer1.png',
+        image: 'plains3.webp',
         exits: {
             north: { roomId: 'plains2', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             east: { roomId: 'plains5', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
@@ -205,7 +205,7 @@ export const rooms = {
     plains4: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far out in the northern field. To the north, a dense forest looms, but no viable path leads directly through it from here. However, you notice a path winding eastward, flanked by bushes and trees. The distant sound of the ocean whispers from the west, its rhythmic waves adding to the serene atmosphere.<br>The sun shines brightly in a clear blue sky, dotted with a few fluffy white clouds. Birds sing melodiously, their songs blending harmoniously with the gentle rustling of the grass swaying in the breeze. The tranquility of the scene fills you with a deep sense of calmness and peace.',
-        image: 'summer4.png',
+        image: 'plains4.webp',
         exits: {
             south: { roomId: 'plains2', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
             east: { roomId: 'plains6', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
@@ -222,7 +222,7 @@ export const rooms = {
     plains5: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far out in the southern field, where the vast expanse stretches out before you. To the south, a formidable mountain wall rises, offering no visible path forward. However, you notice paths leading both west and north, their borders lined with dense bushes.<br>The distant sound of the ocean whispers from the west, mingling with the sight of smoke curling from a distant chimney. The sun shines brightly in a clear blue sky, adorned with a few fluffy white clouds. Birds sing melodiously, their tunes harmonizing with the gentle rustling of the grass swaying in the breeze. The tranquil scene fills you with a deep sense of calmness and peace.',
-        image: 'summer3.png',
+        image: 'plains5.webp',
         exits: {
             north: { roomId: 'plains1', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             east: { roomId: 'plains7', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
@@ -240,7 +240,7 @@ export const rooms = {
     plains6: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far out in the northern field, staring at the forest ahead. The forest appears dark and dense, exuding an aura of danger and foreboding. There is no visible entry into the woods from here.<br>The distant sound of the ocean whispers from the west, its rhythmic waves barely perceptible. Though the sun shines brightly in a clear blue sky, dotted with a few white clouds, the birds\' songs have taken on a sorrowful tone, adding to the unsettling atmosphere.The grass sways gently in the breeze, but its soothing effect is overshadowed by the eerie howls of wolves and the sight of wild beasts prowling in the distance.<br>An uneasy feeling settles over you, heightening your senses as you take in the ominous scene.',
-        image: 'summer4.png',
+        image: 'plains6.webp',
         exits: {
             south: { roomId: 'plains1', locked: false, description: 'a path leading south.', guardedBy: ['Wolfs'], pathOpened: false },
             west: { roomId: 'plains4', locked: false, description: 'a path leading west.', guardedBy: ['Wolfs'], pathOpened: false },
@@ -255,7 +255,7 @@ export const rooms = {
     plains7: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far out in the southern field, where the vast expanse stretches out before you. To the south, a formidable mountain wall rises, blocking any passage in that direction. However, you notice paths leading east, north, and west, each surrounded by tall grass.<br>As you scan the area, you spot a small camp with two travelers nearby. They could be bandits, their presence adding a hint of tension to the otherwise serene scene. The sun shines brightly in a clear blue sky, adorned with a few fluffy white clouds. Birds sing melodiously, their tunes harmonizing with the gentle rustling of the grass swaying in the breeze.<br>Despite the tranquility of the environment, the presence of the travelers keeps you slightly on edge, a subtle reminder to stay vigilant.',
-        image: 'summer3.png',
+        image: 'plains7.webp',
         exits: {
             north: { roomId: 'start', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             east: { roomId: 'plains11', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
@@ -275,7 +275,7 @@ export const rooms = {
     plains8: {
         description: 'You are on a field.',
         detailedDescription: 'You have reached the end of the field. Before you lies a forest, dark and dense, exuding an aura of danger and mystery. The only visible entry into the woods stands before you, a narrow, shadowy path that seems to beckon yet warn at the same time.<br>In the distance to the north, you hear the haunting howls of wolves, their cries echoing through the heavy atmosphere. The sense of unease grows stronger, weighing down on you as you contemplate your next move.<br>You must decide: Do you dare to venture into the foreboding forest, braving the unknown perils that lie ahead? Or do you turn back, returning to the relative safety of the field?',
-        image: 'summer4.png',
+        image: 'plains8.webp',
         exits: {
             south: { roomId: 'start', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
             north: { roomId: 'plainsBoss', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
@@ -291,7 +291,7 @@ export const rooms = {
     plains9: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far to the north, out on the open field. Ahead of you lies a forest, its dark and twisted trees forming an impenetrable barrier with no visible path leading inside. The forest exudes an eerie, unsettling aura, filling you with a deep sense of dread.<br>From the east, you hear faint voices carried on the wind, and see smoke rising from what appears to be a campfire far away in the distance. Perhaps this is where the travelers you encountered to the south came from. The sense of unease intensifies as you realize you might not be alone.<br>Every rustle of the grass, every whisper of the wind, makes you feel like you are being watched. Your senses are heightened, and you find yourself on edge, uncertain of what might be lurking just out of sight.',
-        image: 'summer4.png',
+        image: 'plains9.webp',
         exits: {
             south: { roomId: 'plains10', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
             west: { roomId: 'plains8', locked: false, description: 'a path leading west.', guardedBy: [], pathOpened: true },
@@ -311,7 +311,7 @@ export const rooms = {
     plains10: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far to the east, out on the open field. The wind is blowing from the east, carrying the salty scent of the sea. In the distance, you can hear the rhythmic sound of the ocean\'s waves crashing against the shore.<br>Before you, a clear path stretches out, leading north, south, and further east. As you stand there, you catch the faint sound of quiet conversation uttering words of a dire need of "wolf pelt", coming from the ground. Looking closer, you realize you have stumbled upon a Nonnalid village, home to the tiny flower people. They move about, their delicate forms blending with the vibrant flowers around them.<br>The Nonnalids are harmless, their presence adding a touch of magic to the landscape. The proximity of the ocean feels tangible now, the salty breeze and distant waves assuring you that you are drawing nearer to the coast.',
-        image: 'summer4.png',
+        image: 'plains10.webp',
         exits: {
             north: { roomId: 'plains9', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             south: { roomId: 'plains11', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
@@ -341,7 +341,7 @@ export const rooms = {
     plains11: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far to the south, out on the expansive field. The field stretches out before you, ending at a towering mountain wall to the south. There is no visible path leading through the mountains from here. However, you see paths branching off to the east, north, and west, each bordered by tall, gently swaying grass.<br>Nothing in particular catches your attention in the immediate vicinity. The sun is shining brightly, casting a warm glow over the landscape, while the sky remains a clear blue, dotted with a few fluffy white clouds. Birds are singing sweetly, their melodies blending with the soft rustling of the grass in the breeze. The scene is peaceful, filling you with a sense of calm.',
-        image: 'summer3.png',
+        image: 'plains11.webp',
         exits: {
             north: { roomId: 'plains10', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             east: { roomId: 'plains12', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
@@ -351,7 +351,7 @@ export const rooms = {
     plains12: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself as far southeast as you can go. A path stretches out ahead, leading north. To the east, the ocean crashes against the cliffs far below, its rhythmic sound echoing through the air. Your eyes catch a glimpse of a cave in the mountain wall, partially obscured by shadows. What could this cave be? A sense of curiosity and wonder stirs within you.<br>As you contemplate the cave, a low growling sound emanates from its depths, unmistakably the rumble of a bear. Should you go and investigate the cave, drawn by the promise of discovery, or heed the warning growls and proceed with caution?',
-        image: 'summer2.png',
+        image: 'plains12.webp',
         exits: {
             north: { roomId: 'plains13', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             west: { roomId: 'plains11', locked: false, description: 'a path leading west.', guardedBy: [], pathOpened: true },
@@ -361,7 +361,7 @@ export const rooms = {
     plains13: {
         description: 'You are on a field.',
         detailedDescription: 'You have wandered far to the east. Below the cliffs to the east, the ocean stretches out, its waves crashing against the rocky shore, filling the air with the soothing sound of the sea. A clear path lies before you, offering routes to the south, west, and north.<br>To the north, you notice a campfire and hear faint voices drifting on the breeze. Could this be a travelers\' camp? The sight fills you with a mix of calm and relaxation, soothed by the natural beauty around you, yet tinged with nervousness about the unknown travelers.',
-        image: 'summer2.png',
+        image: 'plains13.webp',
         exits: {
             north: { roomId: 'plains14', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             west: { roomId: 'plains10', locked: false, description: 'a path leading west.', guardedBy: [], pathOpened: true },
@@ -379,7 +379,7 @@ export const rooms = {
     plains14: {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself in the far northeast, where the field meets the ocean. The waves crash against the cliffs below, filling the air with the soothing melody of the sea. A path stretches out before you, leading south and west.<br>As you stand there, you notice a camp close by, its flickering flames casting a warm glow over the area. The sound of voices drifts on the breeze, carried from the campfire. The presence of travelers adds a sense of mystery and intrigue to the serene landscape, but something about their hushed tones and wary glances makes you uneasy. These travelers might not be friendly, reminding you that you must stay vigilant in this vast world.',
-        image: 'summer2.png',
+        image: 'plains14.webp',
         exits: {
             south: { roomId: 'plains13', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
             west: { roomId: 'plains9', locked: false, description: 'a path leading west.', guardedBy: [], pathOpened: true },
@@ -403,7 +403,7 @@ export const rooms = {
     bearCave: {
         description: 'You are at the entrance of a cave.',
         detailedDescription: 'You stand at the entrance of a dark and foreboding cave. The air is cool and damp, the scent of earth and moss filling your nostrils. The cave\'s mouth yawns wide before you, its depths shrouded in shadow. A low growling sound emanates from within, unmistakably the rumble of a bear.<br>Do you dare to enter the cave, braving the unknown dangers that lie within? Or do you heed the warning growls and retreat to the safety of the open field?',
-        image: 'caveEntrance.webp',
+        image: 'bearCave.webp',
         exits: {
             north: { roomId: 'plains12', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             south: { roomId: 'bearCaveInterior', locked: false, description: 'a path leading south.', guardedBy: ['Bear'], pathOpened: false },
@@ -417,7 +417,8 @@ export const rooms = {
     bearCaveInterior: {
         description: 'You are inside a cave.',
         detailedDescription: 'You find yourself inside the dark and cavernous cave. The air is cool and musty, the scent of earth and dampness clinging to your skin. The cave walls are rough and uneven, their surfaces slick with moisture. The dim light filtering in from the entrance casts eerie shadows that dance and flicker across the stone.<br>As you cautiously move deeper into the cave, the growling sound grows louder, reverberating off the walls. You know that the bear is close, its presence a looming threat in the darkness. The cave stretches out before you, its twists and turns hiding untold dangers within.<br>Do you press on, determined to face the bear and claim the treasure rumored to be hidden within the cave? Or do you retreat, unwilling to risk your life in pursuit of uncertain rewards?',
-        image: 'caveInterior.webp',
+        image: 'bearCaveInterior.webp',
+        imageEnemies: 'bearBoss.webp',
         exits: {
             north: { roomId: 'bearCave', locked: false, description: 'a path leading north.', guardedBy: ['Grizzly'], pathOpened: true },
         },
