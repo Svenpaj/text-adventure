@@ -77,6 +77,10 @@ p {
 
 }
 
+#saveGameButton {
+    display: none;
+}
+
 #roomImageContainer {
     border-radius: 5px;
     max-width: fit-content;

@@ -20,8 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
 function newGame() {
     const newGameButton = document.getElementById('newGameButton');
     const gameContainer = document.getElementById('gameContainer');
+    const saveGameButton = document.getElementById('saveGameButton');
     gameContainer.style.display = 'block';
     newGameButton.style.display = 'none';
+    saveGameButton.style.display = 'block';
     const game = new TextAdventureGame();
     setupEventListeners(game);
 }
