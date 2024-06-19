@@ -12,6 +12,7 @@
 * {
     box-sizing: border-box;
     font-family: 'myFont', serif;
+    text-shadow: 2px 2px 4px black;
 }
 
 body {
