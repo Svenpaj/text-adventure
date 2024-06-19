@@ -71,6 +71,7 @@ p {
     display: flex;
     margin: auto;
     justify-content: center;
+    align-items: center;
 }
 
 .child {
@@ -88,13 +89,13 @@ p {
     padding: 2px;
     align-items: center;
     justify-content: center;
-    margin: auto;
+    margin: auto auto 2vh auto;
 }
 
 #roomImageContainer img {
     animation: fadeIn 2s;
     max-width: 80vw;
-    max-height: 60vh;
+    max-height: 50vh;
 }
 
 #gameConsole {
