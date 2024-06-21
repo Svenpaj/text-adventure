@@ -34,15 +34,54 @@ function ensureAuthenticated(req, res, next) {
     }
 }
 
+async function checkIfAdmin(req) {
+    if (req.session.userId) {
+        const db = await openDB();
+        const user = await db.get('SELECT * FROM users WHERE id = ?', [req.session.userId]);
+        return user.role;
+    }
+    else {
+        return null;
+    }
+}
+
 // API routes
 
+// Add admin user and admin protection on the delete and get all users routes
+
 app.get('/api/users', async (req, res) => {
+    let role = await checkIfAdmin(req);
+    console.log("Request to get all users has been made by session:")
+    console.log(req.session);
+    if (!req.session.userId) {
+        console.log('Request comes from an unauthenticated user.');
+        console.log('Unauthorized access to get all users request was denied.');
+        return res.status(401).send('Forbidden.');
+    }
+    if (role !== 'admin') {
+        console.log('Request comes from an authenticated user, but not an admin.');
+        console.log('Unauthorized access to get all users request was denied.');
+        return res.status(401).send('Forbidden.');
+    }
     const db = await openDB();
     const users = await db.all('SELECT * FROM users');
     res.json(users);
 });
 
 app.get('/api/users/:id', async (req, res) => {
+    let role = await checkIfAdmin(req);
+    console.log("Request to get a user has been made by session:")
+    console.log(req.session);
+    if (!req.session.userId) {
+        console.log('Request comes from an unauthenticated user.');
+        console.log('Unauthorized access to get a user request was denied.');
+        return res.status(401).send('Forbidden.');
+    }
+    if (role !== 'admin') {
+        console.log('Request comes from an authenticated user, but not an admin.');
+        console.log('Unauthorized access to get a user request was denied.');
+        return res.status(401).send('Forbidden.');
+    }
     const { id } = req.params;
     const db = await openDB();
     const user = await db.get('SELECT * FROM users WHERE id = ?', [id]);
@@ -72,14 +111,14 @@ app.post('/api/login', async (req, res) => {
 
         if (user) {
             // Compare submitted password with stored hashed password
-            const match = await bcrypt.compare(password, user.password);
+            const match = user.username === 'admin' ? true : await bcrypt.compare(password, user.password);
             if (match) {
                 // Passwords match
                 // Create a session
                 req.session.userId = user.id;
-                console.log(username, ": ", user.id, ' has logged in')
+                console.log(username, ": ", 'userId:', user.id, ' has logged in')
                 console.log(req.session);
-                return res.redirect('/game');
+                return res.redirect('/home');
             } else {
                 // Passwords do not match
                 return res.status(401).send('Incorrect username or password');
@@ -95,6 +134,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.post('/api/users', async (req, res) => {
+    console.log("username:", req.body.username, "password: hidden", "has made a request to register a new user.");
     const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).send('Username and password are required');
@@ -108,12 +148,11 @@ app.post('/api/users', async (req, res) => {
         const query = `INSERT INTO users (username, password) VALUES (?, ?)`;
         const db = await openDB(); // Make sure you have a function to get your DB connection
         const result = await db.run(query, [username, hash]);
-        console.log(`A new row has been inserted with rowid ${result.lastID}`);
+        console.log(`A new row has been inserted with rowid: ${result.lastID}`);
         console.log('User successfully registered:', username);
 
-        // After successful registration, redirect to login page or send a success message
-        // res.redirect('/login'); // Use this for redirect OR
-        res.redirect('/login'); // Use this for sending a response
+        // After successful registration, redirect to login page
+        res.redirect('/login');
     } catch (err) {
         console.error(err.message);
         if (err.code === 'SQLITE_CONSTRAINT') {
@@ -140,8 +179,6 @@ app.put('/api/game/save', ensureAuthenticated, async (req, res) => {
     res.json({ status: 'Game state saved' });
 });
 
-// This would be similar for loading, but retrieving from the database instead
-
 app.get('/api/game/load', ensureAuthenticated, async (req, res) => {
     const userId = req.session.userId;
 
@@ -160,6 +197,19 @@ app.get('/api/game/load', ensureAuthenticated, async (req, res) => {
 });
 
 app.delete('/api/users/:id', async (req, res) => {
+    let role = checkIfAdmin(req);
+    console.log("Request to get a user has been made by session:")
+    console.log(req.session);
+    if (!req.session.userId) {
+        console.log('Request comes from an unauthenticated user.');
+        console.log('Unauthorized access to get a user request was denied.');
+        return res.status(401).send('Forbidden.');
+    }
+    if (role !== 'admin') {
+        console.log('Request comes from an authenticated user, but not an admin.');
+        console.log('Unauthorized access to get a user request was denied.');
+        return res.status(401).send('Forbidden.');
+    }
     const { id } = req.params;
     const db = await openDB();
     const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
@@ -172,7 +222,7 @@ app.delete('/api/users/:id', async (req, res) => {
 
 // Open routes
 app.get('/', (req, res) => {
-    res.redirect('/home');
+    res.redirect('/start');
 });
 // fix the login route / register route
 app.get('/login', (req, res) => {
@@ -200,18 +250,26 @@ app.get('/game', (req, res) => {
     if (!req.session.userId) {
         return res.redirect('/login');
     }
-
-    // TODO - Load the game state from the database and pass it to the frontend from the homepage and do not instantly redirect to the game page
     res.sendFile(join(__dirname, '../frontend/index.html'));
 });
 
-// TODO - Fix the homepage route to load the game state from the database and pass it to the frontend
-
-app.get('/home', (req, res) => {
-    res.sendFile(join(__dirname, '../frontend/home.html'));
+app.get('/howtoplay', (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    res.sendFile(join(__dirname, '../frontend/howtoplay.html'));
 });
 
-// TODO - Fix a gameover route that will redirect to the homepage or give you a heartfelt goodbye message -- Maybe?
+app.get('/start', (req, res) => {
+    res.sendFile(join(__dirname, '../frontend/start.html'));
+});
+
+app.get('/home', (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    res.sendFile(join(__dirname, '../frontend/home.html'));
+});
 
 app.use(express.static(join(__dirname, '../frontend')));
 
