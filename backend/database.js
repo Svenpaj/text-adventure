@@ -1,5 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
+import dotenv from 'dotenv';
 
 // Open a database connection
 async function openDB() {
@@ -10,6 +11,8 @@ async function openDB() {
 }
 
 async function setup() {
+    dotenv.config();
+    let adminPassword = process.env.ADMIN_PASSWORD;
     const db = await openDB();
     await db.exec(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +28,7 @@ async function setup() {
         modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`);
-    await db.exec(`INSERT OR IGNORE INTO users (username, password, role) VALUES ('admin', 'admin', 'admin')`);
+    await db.exec(`INSERT OR IGNORE INTO users (username, password, role) VALUES ('admin', '${adminPassword}', 'admin')`);
 
     console.log('Connected to the SQLite database.');
 }
