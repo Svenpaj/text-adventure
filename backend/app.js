@@ -118,7 +118,7 @@ app.post('/api/login', async (req, res) => {
                 req.session.userId = user.id;
                 console.log(username, ": ", 'userId:', user.id, ' has logged in')
                 console.log(req.session);
-                return res.redirect('/home');
+                return res.redirect(303, '/home');
             } else {
                 // Passwords do not match
                 return res.status(401).send('Incorrect username or password');
@@ -197,7 +197,8 @@ app.get('/api/game/load', ensureAuthenticated, async (req, res) => {
 });
 
 app.delete('/api/users/:id', async (req, res) => {
-    let role = checkIfAdmin(req);
+    let role = await checkIfAdmin(req);
+    console.log(role)
     console.log("Request to get a user has been made by session:")
     console.log(req.session);
     if (!req.session.userId) {
@@ -210,13 +211,15 @@ app.delete('/api/users/:id', async (req, res) => {
         console.log('Unauthorized access to get a user request was denied.');
         return res.status(401).send('Forbidden.');
     }
-    const { id } = req.params;
-    const db = await openDB();
-    const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
-    if (result.changes > 0) {
-        res.send('User deleted successfully');
-    } else {
-        res.status(404).send('User not found');
+    if (role === 'admin') {
+        const { id } = req.params;
+        const db = await openDB();
+        const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
+        if (result.changes > 0) {
+            res.send('User deleted successfully');
+        } else {
+            res.status(404).send('User not found');
+        }
     }
 });
 
