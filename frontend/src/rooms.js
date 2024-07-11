@@ -168,7 +168,7 @@ export const rooms = {
     },
     plains3: {
         description: 'You are at a house.',
-        detailedDescription: 'You follow the path south and find yourself in a small clearing.Before you stands a quaint house, its well- maintained appearance suggesting it has been lovingly cared for over the years.A small garden surrounds the house, vibrant with life—animals scurry about, and a variety of plants flourish in neat rows.<br>As you enter the garden, you notice a farmer diligently tending to her crops. She looks up and greets you with a warm smile, her friendly demeanor filling you with a sense of calm and peace. Close to the house, several pots brim with flowers in a dazzling array of colors, almost resembling a rainbow. You see vibrant orange, sunny yellow, lush green, deep blue, and rich indigo blooms. However, two pots remain empty, awaiting their turn to add to the spectrum.',
+        detailedDescription: 'You follow the path south and find yourself in a small clearing. Before you stands a quaint house, its well- maintained appearance suggesting it has been lovingly cared for over the years.A small garden surrounds the house, vibrant with life—animals scurry about, and a variety of plants flourish in neat rows.<br>As you enter the garden, you notice a farmer diligently tending to her crops. She looks up and greets you with a warm smile, her friendly demeanor filling you with a sense of calm and peace. Close to the house, several pots brim with flowers in a dazzling array of colors, almost resembling a rainbow. You see vibrant orange, sunny yellow, lush green, deep blue, and rich indigo blooms. However, two pots remain empty, awaiting their turn to add to the spectrum.',
         image: 'plains3.webp',
         exits: {
             north: { roomId: 'plains2', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
@@ -182,7 +182,7 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Farmer', description: 'a friendly farmer.', alive: true, health: 15, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Pitchfork', description: 'a rusty pitchfork.', type: 'weapon', attack: 2, equipped: false }]
+                name: 'Farmer', description: 'a friendly farmer.', dialogue: 'Oh! Hello there young adventurer. TEST', alive: true, health: 15, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Pitchfork', description: 'a rusty pitchfork.', type: 'weapon', attack: 2, equipped: false }]
             },
             {
                 name: 'Chicken', description: 'a small chicken.', alive: true, health: 2, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Egg', description: 'a fresh egg.', type: 'food', health: 3 }]
@@ -403,7 +403,8 @@ export const rooms = {
     bearCave: {
         description: 'You are at the entrance of a cave.',
         detailedDescription: 'You stand at the entrance of a dark and foreboding cave. The air is cool and damp, the scent of earth and moss filling your nostrils. The cave\'s mouth yawns wide before you, its depths shrouded in shadow. A low growling sound emanates from within, unmistakably the rumble of a bear.<br>Do you dare to enter the cave, braving the unknown dangers that lie within? Or do you heed the warning growls and retreat to the safety of the open field?',
-        image: 'bearCave.webp',
+        image: 'outsideCave.webp',
+        enemyImage: 'caveBear.webp',
         exits: {
             north: { roomId: 'plains12', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             south: { roomId: 'bearCaveInterior', locked: false, description: 'a path leading south.', guardedBy: ['Bear'], pathOpened: false },
@@ -418,7 +419,7 @@ export const rooms = {
         description: 'You are inside a cave.',
         detailedDescription: 'You find yourself inside the dark and cavernous cave. The air is cool and musty, the scent of earth and dampness clinging to your skin. The cave walls are rough and uneven, their surfaces slick with moisture. The dim light filtering in from the entrance casts eerie shadows that dance and flicker across the stone.<br>As you cautiously move deeper into the cave, the growling sound grows louder, reverberating off the walls. You know that the bear is close, its presence a looming threat in the darkness. The cave stretches out before you, its twists and turns hiding untold dangers within.<br>Do you press on, determined to face the bear and claim the treasure rumored to be hidden within the cave? Or do you retreat, unwilling to risk your life in pursuit of uncertain rewards?',
         image: 'bearCaveInterior.webp',
-        imageEnemies: 'bearBoss.webp',
+        enemyImage: 'caveBearBoss.webp',
         exits: {
             north: { roomId: 'bearCave', locked: false, description: 'a path leading north.', guardedBy: ['Grizzly'], pathOpened: true },
         },
@@ -440,7 +441,17 @@ export const rooms = {
             },
         },
     },
+    plainsBoss: {
+        description: 'You are in the enterence of a forest.',
+        detailedDescription: 'You try to enter the forest and you emediatly encounter a lurking bandit blocking your path.He does not look friendly, and you can see that he is ready to fight.',
+        image: 'plainsBoss.webp',
+        enemyImage: 'lurkingBandit.webp',
 
-    // Maybe changing setup with multiple enemies as just one object with multiple enemies OR just one array with an object with enemy with multiple stats, making looting etc easier to handle. FOR NOW: array with objects. have not tested but perhaps looting is not working as intended. with multiple enemies with the same name. TEST THIS!
+
+    },
+
+
 };
+
+// Maybe changing setup with multiple enemies as just one object with multiple enemies OR just one array with an object with enemy with multiple stats, making looting etc easier to handle. FOR NOW: array with objects. have not tested but perhaps looting is not working as intended. with multiple enemies with the same name. TEST THIS!
 

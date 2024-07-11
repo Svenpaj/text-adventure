@@ -49,6 +49,10 @@ class TextAdventureGame {
     }
 
     processCommand(command) {
+        const synonyms = {
+        };
+
+
         const [action, ...params] = command.split(' ');
         const target = params.join(' ');
         let statsText = "";
@@ -56,6 +60,9 @@ class TextAdventureGame {
         switch (action.toLowerCase()) {
             case 'help':
                 typeWriter('Commands: go [direction], take [item], use [item], eat [item], equip [item], unequip [item], inventory, look, help, stats, attack [enemy], loot [enemy], eat [item], inspect [item]');
+                break;
+            case 'talk':
+                this.talk(target);
                 break;
             case 'stats':
                 statsText = this.statsText();
@@ -103,7 +110,32 @@ class TextAdventureGame {
         this.continueGame(); // Function to prompt for the next action or check game state
     }
 
+    talk(target) {
+        const room = this.rooms[this.currentRoom];
+        if (!room.enemies) {
+            return typeWriter('There are no one to speak with here.');
+        }
+
+        if (!target) {
+            return typeWriter('Who do you want to talk to?');
+        }
+
+        if (target === 'myself') {
+            return typeWriter('You talk to yourself. You feel a bit silly.');
+        }
+
+        const targetIndex = room.enemies.findIndex(enemy => enemy.name.toLowerCase() === target.toLowerCase());
+
+        if (targetIndex === -1) {
+            return typeWriter(`There is no ${target} here to talk to.`);
+        }
+
+        const dialogue = room.enemies[targetIndex].dialogue ? room.enemies[0].dialogue : 'Cant find the dialogue for this character.';
+        return typeWriter(dialogue);
+    }
+
     inventoryText() {
+        typeWriter('Inventory:');
         const categorizedInventory = this.inventory.reduce((acc, item) => {
             const itemType = item.type || 'misc';
             if (!acc[itemType]) {
@@ -367,12 +399,12 @@ class TextAdventureGame {
             typeWriter(`You don't have a ${itemName}.`);
             return;
         }
- 
+     
         // const item = this.inventory[itemIndex]; // I might take away this line
- 
+     
         const room = this.rooms[this.currentRoom];
         const interaction = room.interactions?.[itemName.toLowerCase()];
- 
+     
         if (interaction) {
             if (interaction.unlocks) {
                 const exit = room.exits[interaction.unlocks];
@@ -575,9 +607,9 @@ class TextAdventureGame {
             return;
         }
 
-        if (room.ememyImage) {
+        if (room.enemyImage) {
             const roomImageContainer = document.getElementById('roomImageContainer');
-            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${room.ememyImage}" alt="${room.name}">`;
+            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${room.enemyImage}" alt="${room.name}">`;
         }
 
         const enemyIndex = room.enemies.findIndex(enemy => enemy.name.toLowerCase() === enemyName.toLowerCase());

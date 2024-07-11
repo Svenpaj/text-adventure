@@ -225,6 +225,7 @@ app.delete('/api/users/:id', async (req, res) => {
 
 // Open routes
 app.get('/', (req, res) => {
+    console.log('A visitor has accessed the root page.');
     res.redirect('/start');
 });
 // fix the login route / register route
