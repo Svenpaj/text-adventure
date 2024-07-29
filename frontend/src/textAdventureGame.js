@@ -48,9 +48,51 @@ class TextAdventureGame {
         });
     }
 
+    // Break out synonyms into a separate file later
+
+    // Add a method to handle synonyms
+
+
+
     processCommand(command) {
         const synonyms = {
+            'n': 'go north',
+            's': 'go south',
+            'e': 'go east',
+            'w': 'go west',
+            'go n': 'go north',
+            'go s': 'go south',
+            'go e': 'go east',
+            'go w': 'go west',
+            'go north': 'go north',
+            'go south': 'go south',
+            'go east': 'go east',
+            'go west': 'go west',
+            'observe': 'look',
+            'investigate': 'look',
+            'explore': 'look',
+            'examine': 'inspect',
+            'i': 'inventory',
+            'bag': 'inventory',
+            'inv': 'inventory',
+            'equipment': 'inventory',
+            'eq': 'inventory',
         };
+
+        command = removeFillerWords(command);
+
+        function removeFillerWords(command) {
+            const fillerWords = ['to', 'the', 'with', 'a', 'an', 'in', 'on', 'at', 'from', 'for', 'of'];
+            const words = command.split(' ');
+            const filteredWords = words.filter(word => !fillerWords.includes(word.toLowerCase()));
+            return filteredWords.join(' ');
+        }
+
+        if (synonyms[command]) {
+            command = synonyms[command];
+        }
+
+        console.log(command)
 
 
         const [action, ...params] = command.split(' ');
@@ -103,7 +145,7 @@ class TextAdventureGame {
                 this.attackEnemy(target);
                 break;
             default:
-                typeWriter('Unknown command.');
+                typeWriter('Nothing happends.');
                 break;
         }
         // Optionally, invoke a method to check game state or continue the game loop here.
@@ -269,8 +311,10 @@ class TextAdventureGame {
             this.displayItemWithImage(item);
             typeWriter(item.description);
 
+            // && item.bonusStats
+
             // Maybe fix to not write out bonus stats if they are not there
-            if (item.type === 'weapon' || item.type === 'armor' && item.bonusStats) {
+            if (item.type === 'weapon' || item.type === 'armor') {
                 typeWriter(`Attack: ${item.attack || 0}, Defense: ${item.defense || 0}, Bonus Stats: ${item.bonusStats ? item.bonusStats.map(bonus => Object.keys(bonus)[0] + ': ' + Object.values(bonus)[0]).join(', ') : 'None'}`);
             }
             return true;
@@ -308,6 +352,7 @@ class TextAdventureGame {
 
     showRoomInfo(roomName) {
         // showRoomInfo function implementation
+        typeWriter('Lore: ');
         typeWriter(this.rooms[roomName].detailedDescription);
         this.updateRoomBackground();
     }
@@ -381,6 +426,7 @@ class TextAdventureGame {
         if (!enemy.alive && enemy.loot && enemy.loot.length > 0) {
             enemy.loot.forEach(item => {
                 this.inventory.push(item);  // Add loot to player's inventory
+                enemy.loot = []; // Clear the enemy's loot
                 typeWriter(`You found a ${item.name} on the ${enemy.name}'s corpse.`);
             });
         }
@@ -702,9 +748,9 @@ class TextAdventureGame {
             typeWriter(`Your current experience is ${this.playerStats.experience}.`);
             room.enemies[enemyIndex].alive = false; // Mark the enemy as defeated
             console.log('enemy:', enemy)
-            console.log(this.inFight)
+            console.log('In fight: ' + this.inFight)
             this.inFight = false;
-            console.log(this.inFight)
+            console.log('In fight: ' + this.inFight)
 
             // No longer need to remove the enemy from the room, just need to them to be marked as dead
             // room.enemies.splice(enemyIndex, 1); // Remove the defeated enemy testing without removing the enemy
@@ -721,6 +767,16 @@ class TextAdventureGame {
         Object.entries(room.exits).forEach(([direction, exit]) => {
             // Check if this exit was guarded by the defeated enemy
             // Making sure guardedBy is an array before checking
+
+            // This !Array.isArray(exit.guardedBy) check is a temporary fix for the issue
+            // where the guardedBy property is not properly initialized in the room data.
+            // Test this with acual guardedby and see if it works
+            // right now sometimes the console.error is triggered when and enemy is defeated that is not guarding anything
+            if (!Array.isArray(exit.guardedBy)) {
+                return;
+            }
+
+
             if (Array.isArray(exit.guardedBy)) {
                 const guardIndex = exit.guardedBy.indexOf(defeatedEnemy.name);
                 if (guardIndex > -1) {

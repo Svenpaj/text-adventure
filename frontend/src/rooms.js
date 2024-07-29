@@ -389,7 +389,7 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Travelers', description: 'a few travelers.', alive: true, health: 60, attack: 4, defense: 1, experience: 200, loot: [{ name: 'Sharp dagger', description: 'a sharp dagger.', type: 'weapon', attack: 3, equipped: false, bonusStats: [{ agility: 2 }] }, { name: 'Longsword', description: 'a sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', description: 'sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'Healing potion', description: 'a healing potion.', type: 'food', health: 25 }]
+                name: 'Travelers', description: 'a few travelers.', alive: true, health: 80, attack: 15, defense: 3, experience: 400, loot: [{ name: 'Sharp dagger', description: 'a sharp dagger.', type: 'weapon', attack: 3, equipped: false, bonusStats: [{ agility: 2 }] }, { name: 'Longsword', description: 'a sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', description: 'sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'Healing potion', description: 'a healing potion.', type: 'food', health: 25 }]
             },
         ],
         interactions: {
