@@ -117,8 +117,8 @@ export const rooms = {
             },
         ],
         items: [
-            { name: 'Flower', description: 'a beautiful flower.', pickup: true, guardedBy: [], type: 'food', health: 2 },
-            { name: 'Stick', description: 'a sturdy stick.', pickup: true, guardedBy: [], type: 'weapon', attack: 1, equipped: false, bonusStats: [{ agility: 1 }] },
+            { name: 'Flower', image: 'flower.webp', description: 'a beautiful flower.', pickup: true, guardedBy: [], type: 'food', health: 2 },
+            { name: 'Stick', image: 'stick.webp', description: 'a sturdy stick.', pickup: true, guardedBy: [], type: 'weapon', attack: 1, equipped: false, bonusStats: [{ agility: 1 }] },
             { name: 'Max', image: 'excalibur.webp', description: 'The mythical divine sword once wielded by mighty King Arthur. Said to destroy anything it touches.', pickup: true, guardedBy: [], type: 'weapon', attack: 50, bonusStats: [{ agility: 20 }, { strength: 10 }] },
         ],
     },
@@ -134,18 +134,18 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbit', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Carrot', description: 'a crunchy carrot.', type: 'food', health: 5 }]
+                name: 'Rabbit', image: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Carrot', description: 'a crunchy carrot.', type: 'food', health: 5 }]
             },
             {
                 name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', description: 'a shiny acorn.', type: 'food', health: 3 }]
             },
             {
-                name: "Nonnalid", description: "a small peaceful creature that's commonly called 'Flower people'.", alive: true, health: 5, attack: 1, defense: 1, experience: 20, loot: [{ name: 'Purple flower', description: 'beautiful purple flower.', type: 'food', health: 2 }]
+                name: "Nonnalid", description: "a small peaceful creature that's commonly called 'Flower people'.", alive: true, health: 5, attack: 1, defense: 1, experience: 20, loot: [{ name: 'Purple flower', image: 'purpleFlower.webp', description: 'beautiful purple flower.', type: 'food', health: 2 }]
             },
         ],
         items: [
-            { name: 'Flower', description: 'a beautiful flower.', pickup: true, type: 'food', health: 2 },
-            { name: 'Stick', description: 'a sturdy stick.', pickup: true, type: 'weapon', attack: 1, equipped: false },
+            { name: 'Flower', image: 'flower.webp', description: 'a beautiful flower.', pickup: true, type: 'food', health: 2 },
+            { name: 'Stick', image: 'stick.webp', description: 'a sturdy stick.', pickup: true, type: 'weapon', attack: 1, equipped: false },
         ],
     },
     plains2: {
@@ -159,7 +159,7 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbit', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10
+                name: 'Rabbit', image: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10
             },
             {
                 name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', description: 'a shiny acorn.', type: 'food', health: 3 }]
@@ -213,7 +213,7 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbit', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Rabbit meat', description: 'a piece of rabbit meat.', type: 'food', health: 5 }]
+                name: 'Rabbit', image: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Rabbit meat', image: 'rabbitMeat.webp', description: 'a piece of rabbit meat.', type: 'food', health: 5 }]
             },
             {
                 name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10
@@ -231,7 +231,7 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Snake', description: 'a small black snake.', alive: true, health: 3, attack: 0, defense: 0, experience: 10
+                name: 'Snake', image: 'snake.webp', description: 'a small black snake.', alive: true, health: 3, attack: 0, defense: 0, experience: 10
             },
             {
                 name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10
@@ -243,16 +243,17 @@ export const rooms = {
         detailedDescription: 'You find yourself far out in the northern field, staring at the forest ahead. The forest appears dark and dense, exuding an aura of danger and foreboding. There is no visible entry into the woods from here.<br>The distant sound of the ocean whispers from the west, its rhythmic waves barely perceptible. Though the sun shines brightly in a clear blue sky, dotted with a few white clouds, the birds\' songs have taken on a sorrowful tone, adding to the unsettling atmosphere.The grass sways gently in the breeze, but its soothing effect is overshadowed by the eerie howls of wolves and the sight of wild beasts prowling in the distance.<br>An uneasy feeling settles over you, heightening your senses as you take in the ominous scene.',
         image: 'plains6.webp',
         exits: {
-            south: { roomId: 'plains1', locked: false, description: 'a path leading south.', guardedBy: ['Wolfs'], pathOpened: false },
-            west: { roomId: 'plains4', locked: false, description: 'a path leading west.', guardedBy: ['Wolfs'], pathOpened: false },
-            east: { roomId: 'plains8', locked: false, description: 'a path leading east.', guardedBy: ['Wolfs'], pathOpened: false },
+            south: { roomId: 'plains1', locked: false, description: 'a path leading south.', guardedBy: ['Wolves'], pathOpened: false },
+            west: { roomId: 'plains4', locked: false, description: 'a path leading west.', guardedBy: ['Wolves'], pathOpened: false },
+            east: { roomId: 'plains8', locked: false, description: 'a path leading east.', guardedBy: ['Wolves'], pathOpened: false },
         },
         items: [
-            { name: 'Red flower', description: 'beautiful red flower.', type: 'food', health: 2 }
+            { name: 'Red flower', image: 'redFlower.webp', description: 'beautiful red flower.', type: 'food', health: 2 }
         ],
         enemies: [
             {
-                name: 'Wolves', description: 'two dangerous wolves.', alive: true, health: 20, attack: 2, defense: 1, experience: 50, loot: [{ name: 'Wolf pelt', description: 'a wolf pelt.', type: 'armor', defense: 1, equipped: false }]
+                name: 'Wolves', description: 'two dangerous wolves.', alive: true, health: 20, attack: 2, defense: 1, experience: 50, loot: [{ name: 'Wolf pelt', description: 'a wolf pelt.', type: 'armor', defense: 1, equipped: false },
+                { name: 'Wolf meat', image: 'wolfMeat.webp', description: 'a piece of wolf meat.', type: 'food', health: 20, equipped: false }]
             },
         ],
     },
@@ -272,7 +273,7 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Travelers', description: 'two shady looking travelers.', alive: true, health: 30, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Dagger', description: 'a rusty dagger.', type: 'weapon', attack: 1, equipped: false, bonusStats: [{ agility: 1 }] }, { name: 'Short Sword', description: 'a rusty short sword.', type: 'weapon', attack: 4, equipped: false }]
+                name: 'Travelers', image: 'shadyTravelers.webp', description: 'two shady looking travelers.', alive: true, health: 30, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Dagger', image: 'dagger.webp', description: 'a rusty dagger.', type: 'weapon', attack: 4, equipped: false, bonusStats: [{ agility: 1 }] }, { name: 'Short Sword', image: 'shortSword.webp', description: 'a short sword.', type: 'weapon', attack: 5, equipped: false }]
             },
         ],
     },
@@ -308,7 +309,7 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Wolves', description: 'two big grey wolves', alive: true, health: 25, attack: 3, defense: 1, experience: 50, loot: [{ name: 'Wolf pelt', description: 'a wolf pelt.', type: 'armor', defense: 1, equipped: false }]
+                name: 'Wolves', description: 'two big grey wolves', alive: true, health: 25, attack: 3, defense: 1, experience: 50, loot: [{ name: 'Wolf pelt', image: 'wolfPelt.webp', description: 'a wolf pelt.', type: 'armor', defense: 2, equipped: false }]
             },
         ],
     },
@@ -324,14 +325,14 @@ export const rooms = {
         },
         enemies: [
             {
-                name: "Nonnalids", description: "the whole village of Nonnalids.", alive: true, health: 100, attack: 2, defense: 1, experience: -100, loot: [{ name: 'Grand flower', description: 'beautiful magic flower.', type: 'food', health: 30 }]
+                name: "Nonnalids", description: "the whole village of Nonnalids.", alive: true, health: 100, attack: 2, defense: 1, experience: -100, loot: [{ name: 'Grand flower', image: 'flower.webp', description: 'beautiful magic flower.', type: 'food', health: 30 }]
             },
             {
-                name: "Chief Nonnalid", description: "a chief Nonnalid whoms responsability is to take care and rule over a Nonnalid village.", alive: true, health: 20, attack: 2, defense: 4, experience: 50, loot: [{ name: 'Red flower', description: 'beautiful red flower.', type: 'food', health: 2 }]
+                name: "Chief Nonnalid", description: "a chief Nonnalid whoms responsability is to take care and rule over a Nonnalid village.", alive: true, health: 20, attack: 2, defense: 4, experience: 50, loot: [{ name: 'Red flower', image: 'redFlower', description: 'beautiful red flower.', type: 'food', health: 2 }]
             },
         ],
         items: [
-            { name: 'Flower', description: 'beautiful flower.', pickup: true, type: 'food', health: 2 },
+            { name: 'Flower', image: 'flower.webp', description: 'beautiful flower.', pickup: true, type: 'food', health: 2 },
             { name: 'Stick', description: 'sturdy stick.', pickup: true, type: 'weapon', attack: 1, equipped: false },
             { name: 'Water pouch', description: 'a pouch of water.', pickup: true, type: 'food', health: 3 },
         ],
@@ -373,7 +374,7 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbits', description: 'pack of fluffy white rabbits.', alive: true, health: 6, attack: 0, defense: 0, experience: 20, loot: [{ name: 'Rabbit meat', description: 'a piece of rabbit meat.', type: 'food', health: 5 }]
+                name: 'Rabbits', image: 'rabbits.webp', description: 'pack of fluffy white rabbits.', alive: true, health: 6, attack: 0, defense: 0, experience: 20, loot: [{ name: 'Rabbit meat', image: 'rabbitMeat.webp', description: 'a piece of rabbit meat.', type: 'food', health: 5 }]
             },
         ],
         items: [
@@ -393,14 +394,14 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Travelers', description: 'a few travelers.', alive: true, health: 80, attack: 15, defense: 3, experience: 400, loot: [{ name: 'Sharp dagger', description: 'A sharp dagger.', type: 'weapon', attack: 3, equipped: false, bonusStats: [{ agility: 2 }] }, { name: 'Longsword', description: 'A sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', description: 'Sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'Healing potion', description: 'A healing potion.', type: 'food', health: 25 }]
+                name: 'Travelers', description: 'a few travelers.', alive: true, health: 80, attack: 15, defense: 3, experience: 400, loot: [{ name: 'Sharp dagger', image: 'sharpDagger.webp', description: 'A sharp dagger.', type: 'weapon', attack: 3, equipped: false, bonusStats: [{ agility: 2 }] }, { name: 'Longsword', image: 'shortSword.webp', description: 'A sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', image: 'leatherArmor.webp', description: 'Sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'Healing potion', description: 'A healing potion.', type: 'food', health: 25 }]
             },
         ],
         interactions: {
             'bear claw': {
                 message: 'You show the bear claw to the travelers. They gasp in surprise and awe, recognizing the mark of the bear that guards the cave to the south. "You have faced the bear and emerged victorious," one of the travelers exclaims. "For this brave deed, we shall reward you with something special. Take this as a token of our gratitude. The key should fit a treasure chest hidden in the cave."',
                 consume: true, // Whether the item should be removed from the inventory after use
-                reward: [{ name: 'Longsword', description: 'a sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', description: 'sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'treasure key', description: 'a key to a treasure chest.', type: 'key' }]
+                reward: [{ name: 'Longsword', image: 'shortSword.webp', description: 'a sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', image: 'leatherArmor.webp', description: 'sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'treasure key', image: 'treasureKey.webp', description: 'a key to a treasure chest.', type: 'key' }]
             },
         },
     },
@@ -409,14 +410,13 @@ export const rooms = {
         detailedDescription: 'You stand at the entrance of a dark and foreboding cave. The air is cool and damp, the scent of earth and moss filling your nostrils. The cave\'s mouth yawns wide before you, its depths shrouded in shadow. A low growling sound emanates from within, unmistakably the rumble of a bear.<br>Do you dare to enter the cave, braving the unknown dangers that lie within? Or do you heed the warning growls and retreat to the safety of the open field?',
         image: 'outsideCave.webp',
         image2: 'bearCaveNoBear.webp',
-        enemyImage: 'caveBear.webp',
         exits: {
             north: { roomId: 'plains12', locked: false, description: 'a path leading north.', guardedBy: [], pathOpened: true },
             south: { roomId: 'bearCaveInterior', locked: false, description: 'a path leading south.', guardedBy: ['Bear'], pathOpened: false },
         },
         enemies: [
             {
-                name: 'Bear', description: 'a large and fierce bear.', alive: true, health: 50, attack: 5, defense: 2, experience: 100, loot: [{ name: 'Bear claw', description: 'a sharp bear claw.', type: 'weapon', attack: 4, equipped: false }, { name: 'Bear fur', description: 'a bear fur.', type: 'armor', defense: 2, equipped: false }]
+                name: 'Bear', image: 'caveBear.webp', description: 'a large and fierce bear.', alive: true, health: 50, attack: 5, defense: 2, experience: 100, loot: [{ name: 'Bear claw', description: 'a sharp bear claw.', type: 'weapon', attack: 4, equipped: false }, { name: 'Bear fur', image: 'bearFur.webp', description: 'a bear fur.', type: 'armor', defense: 2, equipped: false }]
             },
         ],
     },
@@ -424,7 +424,6 @@ export const rooms = {
         description: 'You are inside a cave.',
         detailedDescription: 'You find yourself inside the dark and cavernous cave. The air is cool and musty, the scent of earth and dampness clinging to your skin. The cave walls are rough and uneven, their surfaces slick with moisture. The dim light filtering in from the entrance casts eerie shadows that dance and flicker across the stone.<br>As you cautiously move deeper into the cave, the growling sound grows louder, reverberating off the walls. You know that the bear is close, its presence a looming threat in the darkness. The cave stretches out before you, its twists and turns hiding untold dangers within.<br>Do you press on, determined to face the bear and claim the treasure rumored to be hidden within the cave? Or do you retreat, unwilling to risk your life in pursuit of uncertain rewards?',
         image: 'bearCaveInterior.webp',
-        enemyImage: 'caveBearBoss.webp',
         exits: {
             north: { roomId: 'bearCave', locked: false, description: 'a path leading north.', guardedBy: ['Grizzly'], pathOpened: true },
         },
@@ -433,7 +432,7 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Grizzly', description: 'a large and fierce grizzly called "Akakabuto" in folk lore.', alive: true, health: 100, attack: 5, defense: 2, experience: 200, loot: [{ name: 'Grizzly claw', description: 'a giant sharp bear claw.', type: 'weapon', attack: 6, equipped: false }, { name: 'Grizzly fur', description: 'a bear fur.', type: 'armor', defense: 5, equipped: false }]
+                name: 'Grizzly', image: 'caveBearBoss.webp', description: 'a large and fierce grizzly called "Akakabuto" in folk lore.', alive: true, health: 100, attack: 5, defense: 2, experience: 200, loot: [{ name: 'Grizzly claw', description: 'a giant sharp bear claw.', type: 'weapon', attack: 6, equipped: false }, { name: 'Grizzly fur', image: 'bearFur.webp', description: 'a bear fur.', type: 'armor', defense: 5, equipped: false }]
             },
         ],
         // Fix so that interactions are giving you a reward into your inventory. and fix so that an item can be guarded by enemies.
@@ -442,7 +441,7 @@ export const rooms = {
                 unlocks: 'Treasure chest',
                 message: 'You use the treasure key to unlock the treasure chest. Inside, you find a gleaming golden amulet, its intricate design catching the dim light and casting shimmering reflections across the cave walls. The amulet feels warm to the touch, pulsing with a faint magical energy. As you slip it around your neck, you feel a surge of power and protection wash over you.',
                 consume: true, // Whether the item should be removed from the inventory after use
-                reward: [{ name: 'Golden amulet', description: 'magical golden amulet.', type: 'armor', defense: 5, equipped: true }, { name: 'Tyriels Arm', description: "a gleaming silver sword. Often called 'Tyriels Arm'.", type: 'weapon', attack: 7, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }]
+                reward: [{ name: 'Golden amulet', description: 'magical golden amulet.', type: 'armor', defense: 5, equipped: true }, { name: 'Tyriels Arm', image: 'tyrielsArm.webp', description: "a gleaming silver sword. Often called 'Tyriels Arm'.", type: 'weapon', attack: 10, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }]
             },
         },
     },
@@ -450,21 +449,20 @@ export const rooms = {
         description: 'You are in the enterence of a forest.',
         detailedDescription: 'You try to enter the forest and you emediatly encounter a lurking bandit blocking your path. He announces his name revealing himself as "Yorn the Assassin". He does not look friendly, and you can see that he is ready to fight.',
         image: 'plains8.webp',
-        enemyImage: 'lurkingBandit.webp',
         exits: {
             north: { roomId: 'forest1', locked: false, description: 'a path leading north.', guardedBy: ['Yorn'], pathOpened: false },
             south: { roomId: 'plains8', locked: false, description: 'a path leading south.', guardedBy: ['Yorn'], pathOpened: false },
         },
         enemies: [
             {
-                name: 'Yorn', description: 'Yorn the Assassin is feared amongest these parts for being involved with several shady quests. And never leaving a witness', boss: true, friendly: false, alive: true, health: 120, attack: 2, defense: 2, experience: 1000, loot: [{ name: 'Tyriels Hand', description: "A gleaming silver sword. Often called 'Tyriels Hand'.", type: 'weapon', attack: 7, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }]
+                name: 'Yorn', image: 'lurkingBandit.webp', imageDead: 'lurkingBanditDead.webp', description: 'Yorn the Assassin is feared amongest these parts for being involved with several shady quests. And never leaving a witness', boss: true, friendly: false, alive: true, health: 120, attack: 2, defense: 2, experience: 1000, loot: [{ name: 'Tyriels Hand', image: 'tyrielsHand.webp', description: "A gleaming silver sword. Often called 'Tyriels Hand'.", type: 'weapon', attack: 7, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }]
             },
         ],
         interactions: {
             'tyriels arm': {
                 message: 'You show the silver sword to the lurking bandit. He gasps in surprise and awe, recognizing the sword as the legendary "Tyriels Arm". "You have found the fabled sword," he exclaims. "You must be a very seasoned adventurer. For this great deed, I shall reward you with something special. Take this as a token of my gratitude. The sword should serve you well on your journey."',
                 consume: false, // Whether the item should be removed from the inventory after use
-                reward: [{ name: 'Tyriels Hand', description: "A gleaming short silver sword. Often called 'Tyriels Hand'.", type: 'weapon', attack: 7, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }],
+                reward: [{ name: 'Tyriels Hand', image: 'tyrielsHand.webp', description: "A gleaming short silver sword. Often called 'Tyriels Hand'.", type: 'weapon', attack: 7, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }],
                 friendly: true,
             },
         },

@@ -299,7 +299,7 @@ class TextAdventureGame {
         }
         // Lastly, check the room's enemies
         this.inspectRoomEnemies(normalizedItemName);
-        await wait(10000);
+        // await wait(10000);
         this.updateRoomBackground();
     }
 
@@ -689,13 +689,6 @@ class TextAdventureGame {
             return;
         }
 
-        // I don't need this anymore, since I'm using image property in the enemy object
-        // This worked when I only had one enemy per room
-        if (room.enemyImage) {
-            const roomImageContainer = document.getElementById('roomImageContainer');
-            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${room.enemyImage}" alt="${room.name}">`;
-        }
-
         const enemyIndex = room.enemies.findIndex(enemy => enemy.name.toLowerCase() === enemyName.toLowerCase());
         if (enemyIndex === -1) {
             typeWriter(`There is no ${enemyName} here to attack.`);
@@ -782,8 +775,13 @@ class TextAdventureGame {
         this.enemyAttacksBack(enemy);
     }
 
-    handleEnemyHealth(enemy, room, enemyIndex) {
+    async handleEnemyHealth(enemy, room, enemyIndex) {
         if (enemy.health <= 0) {
+            if (enemy.imageDead) {
+                const roomImageContainer = document.getElementById('roomImageContainer');
+                roomImageContainer.innerHTML = `<img id="roomBG" src="./images/enemies/${enemy.imageDead}" alt="${enemy.name}">`;
+                await wait(5000);
+            }
             typeWriter(`You defeated the ${enemy.name}!`);
             this.playerStats.experience += enemy.experience;
             typeWriter(`You gained ${enemy.experience} experience.`);
