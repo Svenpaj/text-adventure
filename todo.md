@@ -18,6 +18,8 @@
 
 * Create special abilities.
 
+* Remember to add Divine Blessings from bosses to be collected in the Silver Vial given from the farmer!
+
 * Create boss fights.
 
 * Give the player stats, that will reflect on health, damage, defence and (possibly mana).

@@ -31,7 +31,7 @@ class TextAdventureGame {
         }
         else {
             // Initialize any other game state variables here
-            this.playerStats = { level: 1, experience: 0, neededExp: 100, fullHealth: 20, health: 20, attack: 100, defense: 0, agility: 1, strength: 1, equippedArmor: null, equippedWeapon: null };
+            this.playerStats = { level: 1, experience: 0, neededExp: 100, fullHealth: 20, health: 20, attack: 1, defense: 0, agility: 1, strength: 1, equippedArmor: null, equippedWeapon: null };
             this.currentRoom = 'start';
             this.inventory = [];
             this.inFight = false;
@@ -64,14 +64,9 @@ class TextAdventureGame {
             'go s': 'go south',
             'go e': 'go east',
             'go w': 'go west',
-            'go north': 'go north',
-            'go south': 'go south',
-            'go east': 'go east',
-            'go west': 'go west',
             'observe': 'look',
             'investigate': 'look',
             'explore': 'look',
-            'examine': 'inspect',
             'i': 'inventory',
             'bag': 'inventory',
             'inv': 'inventory',
@@ -82,7 +77,7 @@ class TextAdventureGame {
         command = removeFillerWords(command);
 
         function removeFillerWords(command) {
-            const fillerWords = ['to', 'the', 'with', 'a', 'an', 'in', 'on', 'at', 'from', 'for', 'of'];
+            const fillerWords = ['to', 'the', 'with', 'a', 'an', 'in', 'on', 'at', 'from', 'for', 'of', 'up'];
             const words = command.split(' ');
             const filteredWords = words.filter(word => !fillerWords.includes(word.toLowerCase()));
             return filteredWords.join(' ');
@@ -101,7 +96,7 @@ class TextAdventureGame {
         let inventoryText = "";
         switch (action.toLowerCase()) {
             case 'help':
-                typeWriter('Commands: go [direction], take [item], use [item], eat [item], equip [item], unequip [item], inventory, look, help, stats, attack [enemy], loot [enemy], eat [item], inspect [item]');
+                typeWriter('Commands: go [direction], take/pickup [item], use [item], give [item], eat [item], equip [item], unequip [item], inventory, look, help, stats, attack [enemy], loot [enemy], eat [item], inspect [item]');
                 break;
             case 'talk':
                 this.talk(target);
@@ -111,15 +106,21 @@ class TextAdventureGame {
                 typeWriter(statsText);
                 break;
             case 'go':
+            case 'move':
+            case 'walk':
                 this.moveToRoom(target);
                 break;
             case 'take':
+            case 'pick':
                 this.pickUpItem(target);
                 break;
             case 'loot':
+            case 'search':
                 this.lootEnemy(target);
                 break;
             case 'use':
+            case 'give':
+            case 'show':
                 this.useItem(target);
                 break;
             case 'eat':
@@ -172,8 +173,8 @@ class TextAdventureGame {
             return typeWriter(`There is no ${target} here to talk to.`);
         }
 
-        const dialogue = room.enemies[targetIndex].dialogue ? room.enemies[0].dialogue : 'Cant find the dialogue for this character.';
-        return typeWriter(dialogue);
+        const dialogue = room.enemies[targetIndex].dialogue ? `The ${target} says: ` + room.enemies[targetIndex].dialogue : `The ${target} doesn't seem to respond.`;
+        return (typeWriter(`You try talking with the ${target}`), typeWriter(dialogue));
     }
 
     inventoryText() {
@@ -242,7 +243,7 @@ class TextAdventureGame {
         } else {
             this.playerStats.health = this.playerStats.fullHealth;
         }
-        this.playerStats.attack += 2;
+        this.playerStats.attack += 5;
         this.playerStats.defense += 1;
         this.playerStats.agility += 1;
         this.playerStats.strength += 1;
@@ -257,9 +258,11 @@ class TextAdventureGame {
         }
         if (this.rooms[roomName].items) {
             this.rooms[roomName].items.forEach(item => {
-                typeWriter(`You spot ${item.description}`);
+                typeWriter(`You spot ${item.name}.`);
             });
         }
+
+        // Not using this anymore, since I'm using image per item and enemy instead
         if (this.rooms[roomName].imageItems) {
             const imagePath = this.rooms[roomName].imageItems;
             const roomImageContainer = document.getElementById('roomImageContainer');
@@ -267,7 +270,10 @@ class TextAdventureGame {
         }
         if (this.rooms[roomName].enemies) {
             this.rooms[roomName].enemies.forEach(enemy => {
-                if (enemy.alive) {
+                if (enemy.alive && enemy.boss) {
+                    typeWriter(`You see ${enemy.name} here. ${enemy.description}`);
+                }
+                else if (enemy.alive && !enemy.boss) {
                     typeWriter(`You see ${enemy.description}`);
                 }
                 else {
@@ -277,18 +283,24 @@ class TextAdventureGame {
         }
     }
 
-    inspect(itemName) {
+    async inspect(itemName) {
         const normalizedItemName = itemName.toLowerCase();
         // First check the room's items
         if (this.inspectRoomItems(normalizedItemName)) {
+            await wait(10000);
+            this.updateRoomBackground();
             return;
         }
         // Then check the player's inventory
         if (this.inspectInventoryItems(normalizedItemName)) {
+            await wait(10000);
+            this.updateRoomBackground();
             return;
         }
         // Lastly, check the room's enemies
         this.inspectRoomEnemies(normalizedItemName);
+        await wait(10000);
+        this.updateRoomBackground();
     }
 
     inspectRoomItems(itemName) {
@@ -297,7 +309,8 @@ class TextAdventureGame {
 
         const item = roomItems.find(item => item.name.toLowerCase() === itemName);
         if (item) {
-            typeWriter(item.description);
+            typeWriter(`You inspect: "${item.name}". ${item.description}`);
+            item.image ? this.displayItemWithImage(item) : null;
             return true;
         }
         return false;
@@ -308,8 +321,8 @@ class TextAdventureGame {
     inspectInventoryItems(itemName) {
         const item = this.inventory.find(item => item.name.toLowerCase() === itemName);
         if (item) {
-            this.displayItemWithImage(item);
-            typeWriter(item.description);
+            item.image ? this.displayItemWithImage(item) : null;
+            typeWriter(`You inspect: "${item.name}". ${item.description}`);
 
             // && item.bonusStats
 
@@ -338,15 +351,25 @@ class TextAdventureGame {
     updateRoomBackground() {
         const room = this.rooms[this.currentRoom];
         const imagePath = room.image ? `./images/${room.image}` : 'none';
+        const imagePath2 = room.image2 ? `./images/${room.image2}` : 'none';
+
+        let aliveEnemies = [];
+
+        aliveEnemies = room.enemies?.map(enemy => enemy.alive);
 
         const roomImageContainer = document.getElementById('roomImageContainer');
         roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath}" style="margin: auto;" alt="${room.name}">`;
+
+        if (room.image2 && aliveEnemies.includes(false)) {
+            const roomImageContainer = document.getElementById('roomImageContainer');
+            roomImageContainer.innerHTML = `<img id="roomBG" src="${imagePath2}" style="margin: auto;" alt="${room.name}">`;
+        }
     }
 
     displayItemWithImage(item) {
         if (item.image) {
             const roomImageContainer = document.getElementById('roomImageContainer');
-            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${item.image}" alt="${item.name}" style="width: 100%;">`;
+            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/items/${item.image}" alt="${item.name}" style="width: 100%;">`;
         }
     }
 
@@ -483,6 +506,11 @@ class TextAdventureGame {
         const room = this.rooms[this.currentRoom];
         const interaction = room.interactions?.[itemName.toLowerCase()];
 
+        const bossesWithFriendAttribute = room.enemies?.map(enemy => enemy.boss && !enemy.friendly ? enemy : null);
+
+        const bossToBeFriend = bossesWithFriendAttribute.length === 1 ? bossesWithFriendAttribute[0] : null;
+
+
         if (interaction) {
             if (interaction.unlocks) {
                 // Check if the item to be unlocked is a room exit or a room item
@@ -495,11 +523,14 @@ class TextAdventureGame {
                     if (interaction.consume) {
                         this.inventory.splice(itemIndex, 1); // Optionally remove the item from inventory
                     }
-                } else if (roomItem && roomItem.locked) {
-                    if (roomItem.guardedBy) {
-                        typeWriter(`The ${roomItem.name} is guarded by the ${roomItem.guardedBy}.`);
-                        return;
-                    }
+                }
+
+                if (roomItem.guardedBy.length > 0) {
+                    typeWriter(`The ${roomItem.name} is guarded by the ${roomItem.guardedBy}.`);
+                    return;
+                }
+
+                if (roomItem.locked) {
                     roomItem.locked = false; // Unlock the room item
                     typeWriter(interaction.message);
                     interaction.reward.forEach(rewardItem => {
@@ -526,6 +557,11 @@ class TextAdventureGame {
                 if (interaction.consume) {
                     this.inventory.splice(itemIndex, 1); // Optionally remove the item from inventory
                 }
+            }
+            if (interaction.friendly) {
+                typeWriter(`${bossToBeFriend.name} seems to like you and is now considered friendly.`);
+                bossToBeFriend.friendly = true;
+                this.unblockExits(room, bossToBeFriend);
             }
 
             // Add more interaction types as needed when expanding the game
@@ -653,6 +689,8 @@ class TextAdventureGame {
             return;
         }
 
+        // I don't need this anymore, since I'm using image property in the enemy object
+        // This worked when I only had one enemy per room
         if (room.enemyImage) {
             const roomImageContainer = document.getElementById('roomImageContainer');
             roomImageContainer.innerHTML = `<img id="roomBG" src="./images/${room.enemyImage}" alt="${room.name}">`;
@@ -663,6 +701,13 @@ class TextAdventureGame {
             typeWriter(`There is no ${enemyName} here to attack.`);
             return;
         }
+
+        let enemyImage = room.enemies[enemyIndex].image;
+        const roomImageContainer = document.getElementById('roomImageContainer');
+        if (!roomImageContainer.innerHTML.includes(enemyImage)) {
+            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/enemies/${enemyImage}" alt="${room.enemies[enemyIndex].name}">`;
+        }
+
 
         if (room.enemies[enemyIndex].alive === false) {
             typeWriter(`You hit the lifeless body of the ${room.enemies[enemyIndex].name}.. You feel a faint regret about it.`);
@@ -742,9 +787,12 @@ class TextAdventureGame {
             typeWriter(`You defeated the ${enemy.name}!`);
             this.playerStats.experience += enemy.experience;
             typeWriter(`You gained ${enemy.experience} experience.`);
-            if (this.playerStats.experience >= this.playerStats.neededExp) {
+
+            // Fix this to a loop that checks if the player has enough experience to level up multiple times!!!! PRIO // FIXED with while loop
+            while (this.playerStats.experience >= this.playerStats.neededExp) {
                 this.levelUp();
             }
+
             typeWriter(`Your current experience is ${this.playerStats.experience}.`);
             room.enemies[enemyIndex].alive = false; // Mark the enemy as defeated
             console.log('enemy:', enemy)
@@ -764,6 +812,7 @@ class TextAdventureGame {
     }
 
     unblockExits(room, defeatedEnemy) {
+        if (!room.exits) return;
         Object.entries(room.exits).forEach(([direction, exit]) => {
             // Check if this exit was guarded by the defeated enemy
             // Making sure guardedBy is an array before checking
@@ -772,7 +821,10 @@ class TextAdventureGame {
             // where the guardedBy property is not properly initialized in the room data.
             // Test this with acual guardedby and see if it works
             // right now sometimes the console.error is triggered when and enemy is defeated that is not guarding anything
+            // This is still not working as intendeds, at the start and you kill the rabbit and the error is triggered
+
             if (!Array.isArray(exit.guardedBy)) {
+                console.error(`Error: 'guardedBy is not properly initialized for the exit to the ${direction}.`);
                 return;
             }
 
@@ -789,14 +841,14 @@ class TextAdventureGame {
                         typeWriter(`The way to the ${direction} is now clear.`);
                     }
                 }
-            } else {
-                console.error(`Error: 'guardedBy is not properly initialized for the exit to the ${direction}.`)
             }
         });
     }
     unblockItems(room, defeatedEnemy) {
         if (!room.items) return;
         Object.entries(room.items).forEach(([item, itemObj]) => {
+            console.log('itemObj:', itemObj)
+            console.log('item:', item)
             // Check if this exit was guarded by the defeated enemy
             // Making sure guardedBy is an array before checking
             if (Array.isArray(itemObj.guardedBy)) {
@@ -807,12 +859,11 @@ class TextAdventureGame {
 
                     // Check if there are no more guards left
                     if (itemObj.guardedBy.length === 0) {
-                        itemObj.locked = false;
                         typeWriter(`The ${itemObj.name} is no longer guarded.`);
                     }
                 }
             } else {
-                console.error(`Error: 'guardedBy is not properly initialized for the exit to the ${item}.`)
+                console.error(`Error: 'guardedBy is not properly initialized for the item ${itemObj.name}.`)
             }
         });
     }
