@@ -110,10 +110,10 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbits', image: 'rabbit.webp', description: 'a pack of fluffy rabbits.', dialogue: '*squeak* *squeak* bitch..', alive: true, health: 5, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Carrot', description: 'a crunchy carrot.', type: 'food', health: 5 }]
+                name: 'Rabbits', image: 'rabbit.webp', inspectImage: 'rabbit.webp', description: 'a pack of fluffy rabbits.', dialogue: '*squeak* *squeak* bitch..', alive: true, health: 5, attack: 0, defense: 0, experience: 10,
             },
             {
-                name: 'Squrriel', description: 'a cute squrriel.', dialogue: '*squeak* *squeak*', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', description: 'a shiny acorn.', type: 'food', health: 3 }]
+                name: 'Squrriel', image: 'squrriel.webp', description: 'a cute squrriel.', dialogue: '*squeak* *squeak*', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', image: 'acorn.webp', description: 'a shiny acorn.', type: 'food', health: 3 }]
             },
         ],
         items: [
@@ -134,13 +134,13 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbit', image: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Carrot', description: 'a crunchy carrot.', type: 'food', health: 5 }]
+                name: 'Rabbit', image: 'rabbit.webp', inspectImage: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Rabbit meat', image: 'rabbitMeat.webp', description: 'a piece of rabbit meat.', type: 'food', health: 5 }]
             },
             {
-                name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', description: 'a shiny acorn.', type: 'food', health: 3 }]
+                name: 'Squrriel', image: 'squrriel.webp', inspectImage: 'squrriel.webp', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', image: 'acorn.webp', description: 'a shiny acorn.', type: 'food', health: 3 }]
             },
             {
-                name: "Nonnalid", description: "a small peaceful creature that's commonly called 'Flower people'.", alive: true, health: 5, attack: 1, defense: 1, experience: 20, loot: [{ name: 'Purple flower', image: 'purpleFlower.webp', description: 'beautiful purple flower.', type: 'food', health: 2 }]
+                name: "Nonnalid", image: 'nonnalid.webp', description: "a small peaceful creature that's commonly called 'Flower people'.", alive: true, health: 5, attack: 1, defense: 1, experience: 20, loot: [{ name: 'Purple flower', image: 'purpleFlower.webp', description: 'beautiful purple flower.', type: 'food', health: 2 }]
             },
         ],
         items: [
@@ -159,10 +159,10 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbit', image: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10
+                name: 'Rabbit', image: 'rabbit.webp', inspectImage: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10
             },
             {
-                name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', description: 'a shiny acorn.', type: 'food', health: 3 }]
+                name: 'Squrriel', image: 'squrriel.webp', inspectImage: 'squrriel.webp', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10, loot: [{ name: 'Acorn', image: 'acorn.webp', description: 'a shiny acorn.', type: 'food', health: 3 }]
             },
         ],
     },
@@ -175,20 +175,19 @@ export const rooms = {
             east: { roomId: 'plains5', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
         },
         items: [
-            { name: 'Apple', description: 'a juicy red apple.', pickup: true, type: 'food', health: 5 },
-            { name: 'Cabbage', description: 'a fresh cabbage.', pickup: true, type: 'food', health: 7 },
-            { name: 'Water pouch', description: 'a pouch of water.', pickup: true, type: 'food', health: 3 },
-            { name: 'Bread', description: 'a loaf of bread.', pickup: true, type: 'food', health: 7 },
+            { name: 'Apple', image: 'apple.webp', description: 'a juicy red apple.', pickup: true, type: 'food', health: 5 },
+            { name: 'Water pouch', image: 'waterPouch.webp', description: 'a pouch of water.', pickup: true, type: 'food', health: 3 },
+            { name: 'Bread', image: 'bread.webp', description: 'a loaf of bread.', pickup: true, type: 'food', health: 7 },
         ],
         enemies: [
             {
-                name: 'Farmer', description: 'a friendly farmer.', dialogue: 'Oh! Hello there young adventurer.', alive: true, health: 15, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Pitchfork', description: 'a rusty pitchfork.', type: 'weapon', attack: 2, equipped: false }]
+                name: 'Farmer', image: 'farmer.webp', description: 'a friendly farmer.', dialogue: 'Oh! Hello there young adventurer.', alive: true, health: 15, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Pitchfork', image: 'pitchfork.webp', description: 'a rusty pitchfork.', type: 'weapon', attack: 2, equipped: false }]
             },
             {
-                name: 'Chicken', description: 'a small chicken.', alive: true, health: 2, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Egg', description: 'a fresh egg.', type: 'food', health: 3 }]
+                name: 'Chicken', image: 'chicken2.webp', fightImage: 'chickenFight.webp', description: 'a small chicken.', alive: true, health: 15, attack: 0, defense: 0, experience: 25, loot: [{ name: 'Egg', image: 'egg.webp', description: 'a fresh egg.', type: 'food', health: 3 }]
             },
             {
-                name: 'Cow', description: 'a big cow.', alive: true, health: 10, attack: 1, defense: 1, experience: 50, loot: [{ name: 'Milk', description: 'a bucket of milk.', type: 'food', health: 5 }]
+                name: 'Cow', image: 'cow.webp', fightImage: 'cowFight.webp', description: 'a big cow.', alive: true, health: 10, attack: 1, defense: 1, experience: 50, loot: [{ name: 'Milk', image: 'milk.webp', description: 'a bucket of milk.', type: 'food', health: 5 }]
             },
         ],
         interactions: {
@@ -199,7 +198,7 @@ export const rooms = {
             'red flower': {
                 message: 'You hand the red flower to the farmer. She smiles and giggles with delight, her eyes twinkling as she cradles the blossom. "I adore red flowers," she tells you warmly, "and for this lovely gift, I shall give you something in return."<br>The farmer begins to recount an old tale. "Once, there was a man who was a great warrior, but his life took a dark turn when a witch cursed him, transforming him into a fearsome werewolf. This half-man, half-wolf creature began to terrorize our village, spreading fear and chaos.<br>"One day, a young girl from the village found herself face-to-face with the beast. Despite her fear, she defended herself with the only weapon she had—a silver spoon. Miraculously, she managed to escape, and the tale of her bravery became legend." Finally, the farmer hands you a small silver vial. "I believe this vial will be of use to you on your journey. May it bring you luck and protection."',
                 consume: true, // Whether the item should be removed from the inventory after use
-                reward: { name: 'Blessings Vial', description: 'a magical small silver vial said to be able to store divine blessings from the old gods.', type: 'misc' }
+                reward: { name: 'Blessings Vial', image: 'silverVial.webp', description: 'a magical small silver vial said to be able to store divine blessings from the old gods.', type: 'misc' }
             },
         },
     },
@@ -213,10 +212,10 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Rabbit', image: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 3, attack: 0, defense: 0, experience: 10, loot: [{ name: 'Rabbit meat', image: 'rabbitMeat.webp', description: 'a piece of rabbit meat.', type: 'food', health: 5 }]
+                name: 'Rabbit', image: 'rabbit.webp', inspectImage: 'rabbit.webp', description: 'a fluffy white rabbit.', alive: true, health: 4, attack: 0, defense: 0, experience: 15, loot: [{ name: 'Rabbit meat', image: 'rabbitMeat.webp', description: 'a piece of rabbit meat.', type: 'food', health: 10 }]
             },
             {
-                name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10
+                name: 'Squrriel', image: 'squrriel.webp', inspectImage: 'squrriel.webp', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10
             },
         ],
     },
@@ -231,10 +230,10 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Snake', image: 'snake.webp', description: 'a small black snake.', alive: true, health: 3, attack: 0, defense: 0, experience: 10
+                name: 'Snake', image: 'snake.webp', inspectImage: 'snake.webp', description: 'a small black snake.', alive: true, health: 10, attack: 0, defense: 0, experience: 20
             },
             {
-                name: 'Squrriel', description: 'a cute squrriel.', alive: true, health: 2, attack: 1, defense: 0, experience: 10
+                name: 'Squrriel', image: 'squrriel.webp', inspectImage: 'squrriel.webp', description: 'a cute squrriel.', alive: true, health: 5, attack: 1, defense: 0, experience: 10
             },
         ],
     },
@@ -242,6 +241,7 @@ export const rooms = {
         description: 'You are on a field.',
         detailedDescription: 'You find yourself far out in the northern field, staring at the forest ahead. The forest appears dark and dense, exuding an aura of danger and foreboding. There is no visible entry into the woods from here.<br>The distant sound of the ocean whispers from the west, its rhythmic waves barely perceptible. Though the sun shines brightly in a clear blue sky, dotted with a few white clouds, the birds\' songs have taken on a sorrowful tone, adding to the unsettling atmosphere.The grass sways gently in the breeze, but its soothing effect is overshadowed by the eerie howls of wolves and the sight of wild beasts prowling in the distance.<br>An uneasy feeling settles over you, heightening your senses as you take in the ominous scene.',
         image: 'plains6.webp',
+        image2: 'plains6-2.webp',
         exits: {
             south: { roomId: 'plains1', locked: false, description: 'a path leading south.', guardedBy: ['Wolves'], pathOpened: false },
             west: { roomId: 'plains4', locked: false, description: 'a path leading west.', guardedBy: ['Wolves'], pathOpened: false },
@@ -252,7 +252,7 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Wolves', description: 'two dangerous wolves.', alive: true, health: 20, attack: 2, defense: 1, experience: 50, loot: [{ name: 'Wolf pelt', description: 'a wolf pelt.', type: 'armor', defense: 1, equipped: false },
+                name: 'Wolf', image: 'wolf.webp', fightImage: 'wolfFight.webp', description: 'a dangerous wolves.', alive: true, health: 20, attack: 2, defense: 1, experience: 50, loot: [{ name: 'Wolf pelt', image: 'wolfPelt.webp', description: 'a wolf pelt.', type: 'armor', defense: 1, equipped: false },
                 { name: 'Wolf meat', image: 'wolfMeat.webp', description: 'a piece of wolf meat.', type: 'food', health: 20, equipped: false }]
             },
         ],
@@ -267,13 +267,13 @@ export const rooms = {
             west: { roomId: 'plains5', locked: false, description: 'a path leading west.', guardedBy: [], pathOpened: true },
         },
         items: [
-            { name: 'Red mushroom', description: 'a red mushroom.', pickup: true, type: 'food', health: -3 },
-            { name: 'Brown mushroom', description: 'a brown mushroom.', pickup: true, type: 'food', health: 3 },
-            { name: 'White mushroom', description: 'a white mushroom.', pickup: true, type: 'food', health: 3 },
+            { name: 'Red mushroom', image: 'redMushroom.webp', description: 'a red mushroom.', pickup: true, type: 'food', health: -3 },
+            { name: 'Brown mushroom', image: 'brownMushroom.webp', description: 'a brown mushroom.', pickup: true, type: 'food', health: 3 },
+            { name: 'White mushroom', image: 'whiteMushroom.webp', description: 'a white mushroom.', pickup: true, type: 'food', health: 3 },
         ],
         enemies: [
             {
-                name: 'Travelers', image: 'shadyTravelers.webp', description: 'two shady looking travelers.', alive: true, health: 30, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Dagger', image: 'dagger.webp', description: 'a rusty dagger.', type: 'weapon', attack: 4, equipped: false, bonusStats: [{ agility: 1 }] }, { name: 'Short Sword', image: 'shortSword.webp', description: 'a short sword.', type: 'weapon', attack: 5, equipped: false }]
+                name: 'Travelers', image: 'shadyTravelers.webp', fightImage: 'shadyTravelersFight.webp', description: 'two shady looking travelers.', alive: true, health: 30, attack: 1, defense: 1, experience: 100, loot: [{ name: 'Dagger', image: 'dagger.webp', description: 'a rusty dagger.', type: 'weapon', attack: 4, equipped: false, bonusStats: [{ agility: 1 }] }, { name: 'Short Sword', image: 'shortSword.webp', description: 'a short sword.', type: 'weapon', attack: 5, equipped: false }]
             },
         ],
     },
@@ -289,7 +289,7 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Foxes', description: 'two small red foxes.', alive: true, health: 15, attack: 1, defense: 1, experience: 20, loot: [{ name: 'Fox fur', description: 'a fox fur.', type: 'armor', defense: 1, equipped: false }]
+                name: 'Knuckle Fox', image: 'fox.webp', fightImage: 'foxFight.webp', description: 'a knuckle fox, they are very dangerous to fight.', alive: true, health: 35, attack: 5, defense: 2, experience: 60, loot: [{ name: 'Fox fur', image: 'foxPelt.webp', description: 'fur from a fox.', type: 'armor', defense: 1, equipped: false }]
             },
         ],
     },
@@ -303,13 +303,13 @@ export const rooms = {
             east: { roomId: 'plains14', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
         },
         items: [
-            { name: 'Mushroom', description: 'a red mushroom, usually not safe to eat.', pickup: true, type: 'food', health: -3 },
-            { name: 'Mushroom', description: 'a brown mushroom.', pickup: true, type: 'food', health: 3 },
-            { name: 'Mushroom', description: 'a white mushroom.', pickup: true, type: 'food', health: 3 },
+            { name: 'Red mushroom', description: 'a red mushroom, usually not safe to eat.', pickup: true, type: 'food', health: -3 },
+            { name: 'Brown mushroom', description: 'a brown mushroom.', pickup: true, type: 'food', health: 3 },
+            { name: 'White mushroom', description: 'a white mushroom.', pickup: true, type: 'food', health: 3 },
         ],
         enemies: [
             {
-                name: 'Wolves', description: 'two big grey wolves', alive: true, health: 25, attack: 3, defense: 1, experience: 50, loot: [{ name: 'Wolf pelt', image: 'wolfPelt.webp', description: 'a wolf pelt.', type: 'armor', defense: 2, equipped: false }]
+                name: 'Wolf', image: 'wolf.webp', fightImage: 'wolfFight.webp', description: 'a big grey wolf', alive: true, health: 30, attack: 5, defense: 1, experience: 45, loot: [{ name: 'Wolf pelt', image: 'wolfPelt.webp', description: 'a wolf pelt.', type: 'armor', defense: 2, equipped: false }]
             },
         ],
     },
@@ -325,21 +325,22 @@ export const rooms = {
         },
         enemies: [
             {
-                name: "Nonnalids", description: "the whole village of Nonnalids.", alive: true, health: 100, attack: 2, defense: 1, experience: -100, loot: [{ name: 'Grand flower', image: 'flower.webp', description: 'beautiful magic flower.', type: 'food', health: 30 }]
+                name: "Nonnalids", image: 'nonnalid.webp', inspectImage: 'nonnalid.webp', description: "the whole village of Nonnalids.", alive: true, health: 100, attack: 2, defense: 1, experience: -100, loot: [{ name: 'Grand flower', image: 'grandFlower.webp', description: 'beautiful magic flower.', type: 'food', health: 200 }]
             },
             {
-                name: "Chief Nonnalid", description: "a chief Nonnalid whoms responsability is to take care and rule over a Nonnalid village.", alive: true, health: 20, attack: 2, defense: 4, experience: 50, loot: [{ name: 'Red flower', image: 'redFlower', description: 'beautiful red flower.', type: 'food', health: 2 }]
+                name: "Chief Nonnalid", description: "a chief Nonnalid whoms responsability is to take care and rule over a Nonnalid village.", alive: true, health: 20, attack: 2, defense: 4, experience: 50, loot: [{ name: 'Red flower', image: 'redFlower.webp', description: 'beautiful red flower.', type: 'food', health: 2 }]
             },
         ],
         items: [
             { name: 'Flower', image: 'flower.webp', description: 'beautiful flower.', pickup: true, type: 'food', health: 2 },
-            { name: 'Stick', description: 'sturdy stick.', pickup: true, type: 'weapon', attack: 1, equipped: false },
-            { name: 'Water pouch', description: 'a pouch of water.', pickup: true, type: 'food', health: 3 },
+            { name: 'Stick', image: 'stick.webp', description: 'sturdy stick.', pickup: true, type: 'weapon', attack: 1, equipped: false },
+            { name: 'Water pouch', image: 'waterPouch.webp', description: 'a pouch of water.', pickup: true, type: 'food', health: 3 },
         ],
         interactions: {
             'wolf pelt': {
                 message: 'You present the wolf pelt to the Nonnalid chief. The chief smiles and giggles, his delicate form quivering with delight. "This wolf pelt will keep everyone in the village warm during the cold seasons," he tells you gratefully. "For this generous gift, I shall give you something in return."<br>The chief\'s expression becomes more serious as he shares a secret with you. "To the north, there is a cave that holds a treasure. But to enter, you must speak a secret phrase." Leaning closer, he whispers, "The phrase is: \'The moon is shining bright tonight.\'"',
                 consume: true, // Whether the item should be removed from the inventory after use
+                reward: { name: 'Grand flower', image: 'grandFlower.webp', description: 'beautiful magic flower.', type: 'food', health: 200 }
             },
         },
     },
@@ -394,7 +395,7 @@ export const rooms = {
         ],
         enemies: [
             {
-                name: 'Travelers', description: 'a few travelers.', alive: true, health: 80, attack: 15, defense: 3, experience: 400, loot: [{ name: 'Sharp dagger', image: 'sharpDagger.webp', description: 'A sharp dagger.', type: 'weapon', attack: 3, equipped: false, bonusStats: [{ agility: 2 }] }, { name: 'Longsword', image: 'shortSword.webp', description: 'A sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', image: 'leatherArmor.webp', description: 'Sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'Healing potion', description: 'A healing potion.', type: 'food', health: 25 }]
+                name: 'Travelers', image: 'travelersCamp.webp', fightImage: 'travelersCampFight.webp', description: 'a few travelers.', alive: true, health: 80, attack: 15, defense: 3, experience: 400, loot: [{ name: 'Sharp dagger', image: 'sharpDagger.webp', description: 'A sharp dagger.', type: 'weapon', attack: 3, equipped: false, bonusStats: [{ agility: 2 }] }, { name: 'Longsword', image: 'shortSword.webp', description: 'A sharp longsword.', type: 'weapon', attack: 6, equipped: false, bonusStats: [{ strength: 2 }] }, { name: 'Leather armor', image: 'leatherArmor.webp', description: 'Sturdy set of leather armor.', type: 'armor', defense: 3, equipped: false }, { name: 'Healing potion', image: 'healthPotion.webp', description: 'A healing potion.', type: 'food', health: 25 }]
             },
         ],
         interactions: {
@@ -416,7 +417,7 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Bear', image: 'caveBear.webp', description: 'a large and fierce bear.', alive: true, health: 50, attack: 5, defense: 2, experience: 100, loot: [{ name: 'Bear claw', description: 'a sharp bear claw.', type: 'weapon', attack: 4, equipped: false }, { name: 'Bear fur', image: 'bearFur.webp', description: 'a bear fur.', type: 'armor', defense: 2, equipped: false }]
+                name: 'Bear', image: 'caveBear.webp', fightImage: 'caveBear.webp', inspectImage: 'bear.webp', description: 'a large and fierce bear.', alive: true, health: 50, attack: 5, defense: 2, experience: 100, loot: [{ name: 'Bear claw', image: 'bearClaw.webp', description: 'a sharp set of bear claws.', type: 'weapon', attack: 4, equipped: false }, { name: 'Bear fur', image: 'bearFur.webp', description: 'a bear fur.', type: 'armor', defense: 2, equipped: false }]
             },
         ],
     },
@@ -428,11 +429,11 @@ export const rooms = {
             north: { roomId: 'bearCave', locked: false, description: 'a path leading north.', guardedBy: ['Grizzly'], pathOpened: true },
         },
         items: [
-            { name: 'Treasure chest', description: 'Ornate treasure chest.', pickup: false, type: 'container', locked: true, guardedBy: ['Grizzly'] },
+            { name: 'Treasure chest', image: 'treasureChestMedium.webp', description: 'Ornate treasure chest.', pickup: false, type: 'container', locked: true, guardedBy: ['Grizzly'] },
         ],
         enemies: [
             {
-                name: 'Grizzly', image: 'caveBearBoss.webp', description: 'a large and fierce grizzly called "Akakabuto" in folk lore.', alive: true, health: 100, attack: 5, defense: 2, experience: 200, loot: [{ name: 'Grizzly claw', description: 'a giant sharp bear claw.', type: 'weapon', attack: 6, equipped: false }, { name: 'Grizzly fur', image: 'bearFur.webp', description: 'a bear fur.', type: 'armor', defense: 5, equipped: false }]
+                name: 'Grizzly', image: 'caveBearBoss.webp', description: 'a large and fierce grizzly called "Akakabuto" in folk lore.', alive: true, health: 100, attack: 5, defense: 2, experience: 200, loot: [{ name: 'Grizzly claw', image: 'grizzlyClaw.webp', description: 'a giant sharp set of grizzly claw.', type: 'weapon', attack: 6, equipped: false }, { name: 'Grizzly fur', image: 'bearFur.webp', description: 'a bear fur.', type: 'armor', defense: 5, equipped: false }]
             },
         ],
         // Fix so that interactions are giving you a reward into your inventory. and fix so that an item can be guarded by enemies.
@@ -455,7 +456,7 @@ export const rooms = {
         },
         enemies: [
             {
-                name: 'Yorn', image: 'lurkingBandit.webp', imageDead: 'lurkingBanditDead.webp', description: 'Yorn the Assassin is feared amongest these parts for being involved with several shady quests. And never leaving a witness', boss: true, friendly: false, alive: true, health: 120, attack: 2, defense: 2, experience: 1000, loot: [{ name: 'Tyriels Hand', image: 'tyrielsHand.webp', description: "A gleaming silver sword. Often called 'Tyriels Hand'.", type: 'weapon', attack: 7, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }]
+                name: 'Yorn', image: 'lurkingBandit.webp', fightImage: 'lurkingBanditFight.webp', description: 'Yorn the Slayer is feared amongest these parts for being involved with several shady quests. And never leaving a witness', boss: true, friendly: false, alive: true, health: 120, attack: 2, defense: 2, experience: 1000, loot: [{ name: 'Tyriels Hand', image: 'tyrielsHand.webp', description: "A gleaming silver sword. Often called 'Tyriels Hand'.", type: 'weapon', attack: 7, bonusStats: [{ agility: 2 }, { strength: 2 }], equipped: false }]
             },
         ],
         interactions: {
@@ -468,6 +469,23 @@ export const rooms = {
         },
 
 
+    },
+    forest1: {
+        description: 'You are in a forest.',
+        detailedDescription: 'You find yourself at the edge of a dense forest. The trees loom tall and imposing, their branches reaching skyward to form a canopy that blocks out much of the sunlight. The forest floor is covered in a thick layer of fallen leaves and twigs, crunching underfoot as you move.<br>Ahead of you, the path winds deeper into the forest, disappearing into the shadows cast by the dense foliage. The air is cool and damp, the scent of pine and earth mingling with the sound of rustling leaves and distant bird calls. The atmosphere is both peaceful and eerie, the quiet broken only by the occasional creaking of branches and the whisper of the wind through the trees.',
+        image: 'forest1.webp',
+        exits: {
+            south: { roomId: 'plainsBoss', locked: false, description: 'a path leading south.', guardedBy: [], pathOpened: true },
+            east: { roomId: 'forest2', locked: false, description: 'a path leading east.', guardedBy: [], pathOpened: true },
+        },
+        enemies: [
+            {
+                name: 'Bandits', image: 'bandit.webp', description: 'a shady looking bandit.', alive: true, health: 20, attack: 2, defense: 1, experience: 50, loot: [{ name: 'Dagger', image: 'dagger.webp', description: 'a rusty dagger.', type: 'weapon', attack: 4, equipped: false }]
+            },
+            {
+                name: 'Wolf', image: 'wolf.webp', description: 'a hungry looking wolf.', alive: true, health: 15, attack: 2, defense: 1, experience: 30, loot: [{ name: 'Wolf pelt', image: 'wolfPelt.webp', description: 'a wolf pelt.', type: 'armor', defense: 1, equipped: false }]
+            },
+        ],
     },
 
 };

@@ -2,6 +2,8 @@
 
 ## NOT ORDERED LIST
 
+* Need images for mushrooms
+
 * Fix so that the admin password also is hashed. (Do this in the database.js) *
 
 * Fix so that the sound continues (maybe fades?) between login and register pages.

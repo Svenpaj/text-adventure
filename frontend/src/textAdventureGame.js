@@ -153,8 +153,16 @@ class TextAdventureGame {
         this.continueGame(); // Function to prompt for the next action or check game state
     }
 
-    talk(target) {
+
+    // Add a image update on talking to an enemy
+    async talk(target) {
         const room = this.rooms[this.currentRoom];
+        const roomImageContainer = document.getElementById('roomImageContainer');
+        const targetIndex = room.enemies.findIndex(enemy => enemy.name.toLowerCase() === target.toLowerCase());
+        const image = room.enemies[targetIndex].inspectImage ? room.enemies[targetIndex].inspectImage : room.enemies[targetIndex].image;
+        console.log('image:', image)
+        const dialogue = room.enemies[targetIndex].dialogue ? `The ${target} says: ` + room.enemies[targetIndex].dialogue : `The ${target} doesn't seem to respond.`;
+
         if (!room.enemies) {
             return typeWriter('There are no one to speak with here.');
         }
@@ -167,14 +175,14 @@ class TextAdventureGame {
             return typeWriter('You talk to yourself. You feel a bit silly.');
         }
 
-        const targetIndex = room.enemies.findIndex(enemy => enemy.name.toLowerCase() === target.toLowerCase());
-
         if (targetIndex === -1) {
             return typeWriter(`There is no ${target} here to talk to.`);
         }
 
-        const dialogue = room.enemies[targetIndex].dialogue ? `The ${target} says: ` + room.enemies[targetIndex].dialogue : `The ${target} doesn't seem to respond.`;
-        return (typeWriter(`You try talking with the ${target}`), typeWriter(dialogue));
+        roomImageContainer.innerHTML = `<img id="roomBG" src="./images/enemies/${image}" alt="${room.enemies[targetIndex].name}">`;
+        typeWriter(`You try talking with the ${target}`), typeWriter(dialogue);
+        await wait(6000);
+        this.updateRoomBackground();
     }
 
     inventoryText() {
@@ -193,7 +201,7 @@ class TextAdventureGame {
         return Object.entries(categorizedInventory).map(([type, items]) => {
             const typeText = type === 'misc' ? '' : `${type.charAt(0).toUpperCase() + type.slice(1)}:`;
             const itemsText = Object.values(items).map(item => `${item.name} x${item.count}`).join(', ');
-            return `${typeText} ${itemsText}`;
+            return `${typeText} ${itemsText} <br>`;
         }).join('<br>');
     }
 
@@ -287,19 +295,19 @@ class TextAdventureGame {
         const normalizedItemName = itemName.toLowerCase();
         // First check the room's items
         if (this.inspectRoomItems(normalizedItemName)) {
-            await wait(10000);
+            await wait(4000);
             this.updateRoomBackground();
             return;
         }
         // Then check the player's inventory
         if (this.inspectInventoryItems(normalizedItemName)) {
-            await wait(10000);
+            await wait(4000);
             this.updateRoomBackground();
             return;
         }
         // Lastly, check the room's enemies
         this.inspectRoomEnemies(normalizedItemName);
-        // await wait(10000);
+        await wait(4000);
         this.updateRoomBackground();
     }
 
@@ -335,16 +343,20 @@ class TextAdventureGame {
         return false;
     }
 
+    // Add an inspect image to the enemy that is different than the fight image
     inspectRoomEnemies(itemName) {
         const enemies = this.rooms[this.currentRoom].enemies;
         if (!enemies) return;
 
         const enemy = enemies.find(enemy => enemy.name.toLowerCase() === itemName);
         if (enemy) {
+            this.displayEnemyWithImage(enemy);
             typeWriter(enemy.description); // change to detailed description
             typeWriter(`Health: ${enemy.health}, Attack: ${enemy.attack}`);
+            return true;
         } else {
             typeWriter(`You don't see a ${itemName} here.`);
+            return false;
         }
     }
 
@@ -370,6 +382,15 @@ class TextAdventureGame {
         if (item.image) {
             const roomImageContainer = document.getElementById('roomImageContainer');
             roomImageContainer.innerHTML = `<img id="roomBG" src="./images/items/${item.image}" alt="${item.name}" style="width: 100%;">`;
+        }
+    }
+
+    displayEnemyWithImage(enemy) {
+        const image = enemy.inspectImage ? enemy.inspectImage : enemy.image;
+
+        if (image) {
+            const roomImageContainer = document.getElementById('roomImageContainer');
+            roomImageContainer.innerHTML = `<img id="roomBG" src="./images/enemies/${image}" alt="${enemy.name}" style="width: 100%;">`;
         }
     }
 
@@ -695,7 +716,7 @@ class TextAdventureGame {
             return;
         }
 
-        let enemyImage = room.enemies[enemyIndex].image;
+        let enemyImage = room.enemies[enemyIndex].fightImage ? room.enemies[enemyIndex].fightImage : room.enemies[enemyIndex].image;
         const roomImageContainer = document.getElementById('roomImageContainer');
         if (!roomImageContainer.innerHTML.includes(enemyImage)) {
             roomImageContainer.innerHTML = `<img id="roomBG" src="./images/enemies/${enemyImage}" alt="${room.enemies[enemyIndex].name}">`;
@@ -786,7 +807,7 @@ class TextAdventureGame {
             this.playerStats.experience += enemy.experience;
             typeWriter(`You gained ${enemy.experience} experience.`);
 
-            // Fix this to a loop that checks if the player has enough experience to level up multiple times!!!! PRIO // FIXED with while loop
+            // Fix this to a loop that checks if the player has enough experience to level up multiple times // Fixed
             while (this.playerStats.experience >= this.playerStats.neededExp) {
                 this.levelUp();
             }
